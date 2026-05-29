@@ -1,0 +1,106 @@
+/* Auth page styles - responsive split layout */
+html, body {
+  height: 100%;
+}
+.auth-split {
+  min-height: 100vh;
+  display: flex;
+  align-items: stretch;
+}
+.auth-left {
+  flex: 1 1 60%;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  padding: 72px 80px;
+  color: #fff;
+  background: linear-gradient(135deg, #fd7e14 0%, #fd7e14 100%);
+}
+.auth-left .auth-head {
+  max-width: 560px;
+}
+.auth-left h1 {
+  color: #fff;
+  font-size: 2.2rem;
+  line-height: 1.15;
+}
+.auth-left p.lead {
+  color: rgba(255,255,255,0.95);
+}
+
+.auth-right {
+  width: 420px;
+  max-width: 100%;
+  background: #ffffff;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 36px 32px;
+}
+.auth-card-inner {
+  width: 100%;
+  max-width: 380px;
+}
+
+.btn-social {
+  border: 1px solid #e6e6e6;
+  text-align: left;
+  padding-left: 14px;
+}
+.btn-social i {
+  width: 24px;
+  text-align: center;
+}
+
+.or-sep {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+}
+.or-sep .line { flex: 1; height: 1px; background: #e9ecef; }
+
+@media (max-width: 991.98px) {
+  .auth-left { display: none; }
+  .auth-right { width: 100%; padding: 28px; }
+  .auth-card-inner { max-width: 100%; }
+}
+
+/* Minor form niceties */
+.form-control-lg { padding: 1rem .75rem; font-size: 1rem; }
+.btn-primary { background: #fd7e14; border-color: #fd7e14; }
+
+/* Make logos scale nicely */
+.auth-brand img { height: 48px; width: auto; }
+
+/* Accessibility */
+.btn-social:focus { box-shadow: 0 0 0 3px rgba(0,123,255,0.15); outline: none; }
+
+/* Locale switch in auth layout */
+.auth-locale {
+  position: absolute;
+  top: 18px;
+  right: 22px;
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+}
+.auth-locale .dropdown-toggle {
+  background: transparent;
+  border: 0;
+  color: rgba(0,0,0,0.6);
+  padding: 6px 10px;
+}
+.auth-locale .dropdown-menu { min-width: 120px; }
+
+/* Topbar for auth pages */
+.auth-topbar {
+  background: #ffffff;
+  border-bottom: 1px solid #eef0f2;
+  padding: 10px 28px;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+}
+.auth-topbar .auth-brand { gap: 0.5rem; }
+.auth-topbar .auth-brand .site-name { font-weight: 700; color: #ff7a00; }
+.auth-split { margin-top: 8px; }
