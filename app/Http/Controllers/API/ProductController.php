@@ -5,6 +5,7 @@ namespace App\Http\Controllers\API;
 use App\Http\Controllers\Controller;
 use App\Models\Product;
 use App\Models\ProductImage;
+use App\Models\ProductVariant;
 use App\Models\ProductVideo;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Log;
@@ -16,13 +17,22 @@ class ProductController extends Controller
 {
     use ActionLogTrait;
 
+    public function __construct()
+    {
+        $this->middleware('auth:sanctum');
+        $this->middleware('permission:product-list|product-create|product-edit|product-delete', ['only' => ['index','show']]);
+        $this->middleware('permission:product-create', ['only' => ['store']]);
+        $this->middleware('permission:product-edit', ['only' => ['update','uploadImages','uploadVideo','deleteImage','deleteVideo','setPrimaryImage']]);
+        $this->middleware('permission:product-delete', ['only' => ['destroy']]);
+    }
+
     public function index(Request $request)
     {
         $products = Product::query()
             ->when($request->filled('category_id'), fn ($query) => $query->where('category_id', $request->category_id))
             ->when($request->filled('company_id'), fn ($query) => $query->where('company_id', $request->company_id))
             ->when($request->filled('status'), fn ($query) => $query->where('status', $request->status))
-            ->with('images', 'videos', 'category')
+            ->with('images', 'videos', 'category', 'variants')
             ->orderBy('name')
             ->paginate($request->get('per_page', 15));
 
@@ -54,6 +64,16 @@ class ProductController extends Controller
             'primary_image_index' => 'nullable|integer|min:0|max:9',
             'video' => 'nullable|file|mimes:mp4,avi,mov,mkv|max:102400',
             'thumbnail' => 'nullable|image|mimes:jpeg,png,jpg|max:2048',
+            'variants' => 'sometimes|array',
+            'variants.*.id' => 'nullable|integer|exists:product_variants,id',
+            'variants.*.size' => 'nullable|string|max:255',
+            'variants.*.color' => 'nullable|string|max:255',
+            'variants.*.sku' => 'nullable|string|max:255',
+            'variants.*.barcode' => 'nullable|string|max:255',
+            'variants.*.quantity' => 'nullable|integer|min:0',
+            'variants.*.price' => 'nullable|numeric|min:0',
+            'variants.*.discount_price' => 'nullable|numeric|min:0',
+            'variants.*.cost_price' => 'nullable|numeric|min:0',
         ]);
 
         $data['slug'] = $data['slug'] ?? Str::slug($data['name']);
@@ -73,6 +93,8 @@ class ProductController extends Controller
             $this->processProductVideo($product, $request);
         }
 
+        $this->processProductVariants($product, $request);
+
         Log::info('Product created', array_merge($this->actionLogContext($request), [
             'product_id' => $product->id,
             'name' => $product->name,
@@ -81,13 +103,13 @@ class ProductController extends Controller
 
         return response()->json([
             'message' => 'Product created successfully',
-            'product' => $product->load('images', 'videos'),
+            'product' => $product->load('images', 'videos', 'variants'),
         ], 201);
     }
 
     public function show(Product $product)
     {
-        $product->load('images', 'videos', 'category', 'company');
+        $product->load('images', 'videos', 'category', 'company', 'variants');
         return response()->json($product);
     }
 
@@ -115,6 +137,16 @@ class ProductController extends Controller
             'primary_image_index' => 'nullable|integer|min:0|max:9',
             'video' => 'nullable|file|mimes:mp4,avi,mov,mkv|max:102400',
             'thumbnail' => 'nullable|image|mimes:jpeg,png,jpg|max:2048',
+            'variants' => 'sometimes|array',
+            'variants.*.id' => 'nullable|integer|exists:product_variants,id',
+            'variants.*.size' => 'nullable|string|max:255',
+            'variants.*.color' => 'nullable|string|max:255',
+            'variants.*.sku' => 'nullable|string|max:255',
+            'variants.*.barcode' => 'nullable|string|max:255',
+            'variants.*.quantity' => 'nullable|integer|min:0',
+            'variants.*.price' => 'nullable|numeric|min:0',
+            'variants.*.discount_price' => 'nullable|numeric|min:0',
+            'variants.*.cost_price' => 'nullable|numeric|min:0',
         ]);
 
         if (!isset($data['slug']) && isset($data['name'])) {
@@ -131,6 +163,8 @@ class ProductController extends Controller
             $this->processProductVideo($product, $request);
         }
 
+        $this->processProductVariants($product, $request);
+
         Log::info('Product updated', array_merge($this->actionLogContext($request), [
             'product_id' => $product->id,
             'updated' => array_keys($data),
@@ -138,7 +172,7 @@ class ProductController extends Controller
 
         return response()->json([
             'message' => 'Product updated successfully',
-            'product' => $product->load('images', 'videos'),
+            'product' => $product->load('images', 'videos', 'variants'),
         ]);
     }
 
@@ -191,6 +225,36 @@ class ProductController extends Controller
         }
 
         return null;
+    }
+
+    protected function processProductVariants(Product $product, Request $request): void
+    {
+        if (!$request->filled('variants') || !is_array($request->input('variants'))) {
+            return;
+        }
+
+        foreach ($request->input('variants') as $variantData) {
+            $variantAttributes = [
+                'size' => $variantData['size'] ?? null,
+                'color' => $variantData['color'] ?? null,
+                'sku' => $variantData['sku'] ?? null,
+                'barcode' => $variantData['barcode'] ?? null,
+                'quantity' => $variantData['quantity'] ?? 0,
+                'price' => $variantData['price'] ?? null,
+                'discount_price' => $variantData['discount_price'] ?? null,
+                'cost_price' => $variantData['cost_price'] ?? null,
+            ];
+
+            if (!empty($variantData['id'])) {
+                $variant = $product->variants()->find($variantData['id']);
+                if ($variant) {
+                    $variant->update($variantAttributes);
+                    continue;
+                }
+            }
+
+            $product->variants()->create($variantAttributes);
+        }
     }
 
     public function destroy(Product $product)

@@ -13,6 +13,15 @@ class CompanyController extends Controller
 {
     use ActionLogTrait;
 
+    public function __construct()
+    {
+        $this->middleware('auth:sanctum');
+        $this->middleware('permission:company-list|company-create|company-edit|company-delete', ['only' => ['index','show']]);
+        $this->middleware('permission:company-create', ['only' => ['store']]);
+        $this->middleware('permission:company-edit', ['only' => ['update']]);
+        $this->middleware('permission:company-delete', ['only' => ['destroy']]);
+    }
+
     public function index(Request $request)
     {
         $companies = Company::query()

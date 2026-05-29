@@ -60,6 +60,20 @@ class Product extends Model
         return $this->hasMany(ProductVideo::class);
     }
 
+    public function variants()
+    {
+        return $this->hasMany(ProductVariant::class);
+    }
+
+    public function findVariant(?int $variantId = null, ?string $size = null, ?string $color = null)
+    {
+        return $this->variants()
+            ->when($variantId, fn ($query) => $query->where('id', $variantId))
+            ->when($size, fn ($query) => $query->where('size', $size))
+            ->when($color, fn ($query) => $query->where('color', $color))
+            ->first();
+    }
+
     public function primaryImage()
     {
         return $this->hasOne(ProductImage::class)->where('is_primary', true);

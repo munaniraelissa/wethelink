@@ -46,20 +46,35 @@
                         <div class="border-top flex-grow-1"></div>
                     </div>
 
-                    <form action="#" method="POST">
+                    <div id="errorAlert" class="alert alert-danger alert-dismissible fade hide" role="alert" style="display: none;">
+                        <strong>Error!</strong> <span id="errorMessage"></span>
+                        <button type="button" class="close" data-dismiss="alert" aria-label="Close">
+                            <span aria-hidden="true">&times;</span>
+                        </button>
+                    </div>
+
+                    <form id="signupForm">
                         <div class="form-group">
-                            <label for="name" class="font-weight-bold">{{ __('cms.auth.full_name') }}</label>
-                            <input type="text" id="name" name="name" class="form-control form-control-lg" placeholder="{{ __('cms.auth.full_name') }}" required>
+                            <label for="firstname" class="font-weight-bold">{{ __('cms.auth.first_name') }}</label>
+                            <input type="text" id="firstname" name="firstname" class="form-control form-control-lg" placeholder="{{ __('cms.auth.first_name') }}" required>
+                        </div>
+                        <div class="form-group">
+                            <label for="lastname" class="font-weight-bold">{{ __('cms.auth.last_name') }}</label>
+                            <input type="text" id="lastname" name="lastname" class="form-control form-control-lg" placeholder="{{ __('cms.auth.last_name') }}" required>
                         </div>
                         <div class="form-group">
                             <label for="email" class="font-weight-bold">{{ __('cms.auth.email') }}</label>
                             <input type="email" id="email" name="email" class="form-control form-control-lg" placeholder="{{ __('cms.auth.email') }}" required>
                         </div>
                         <div class="form-group">
+                            <label for="telephone" class="font-weight-bold">{{ __('cms.auth.telephone') }}</label>
+                            <input type="tel" id="telephone" name="telephone" class="form-control form-control-lg" placeholder="{{ __('cms.auth.telephone') }}" required>
+                        </div>
+                        <div class="form-group">
                             <label for="password" class="font-weight-bold">{{ __('cms.auth.password') }}</label>
                             <input type="password" id="password" name="password" class="form-control form-control-lg" placeholder="{{ __('cms.auth.password') }}" required>
                         </div>
-                        <button type="submit" class="btn btn-primary btn-block btn-lg py-3">{{ __('cms.auth.create_account_button') }}</button>
+                        <button type="submit" class="btn btn-primary btn-block btn-lg py-3" id="submitBtn">{{ __('cms.auth.create_account_button') }}</button>
                     </form>
 
                     <p class="text-center text-muted mt-4 mb-0">{{ __('cms.auth.have_account') }} <a href="{{ route('login') }}" class="text-decoration-none">{{ __('cms.auth.sign_in') }}</a></p>
@@ -67,4 +82,65 @@
             </div>
         </div>
     </div>
+
+    <script>
+        document.getElementById('signupForm').addEventListener('submit', async function(e) {
+            e.preventDefault();
+
+            const firstname = document.getElementById('firstname').value;
+            const lastname = document.getElementById('lastname').value;
+            const email = document.getElementById('email').value;
+            const telephone = document.getElementById('telephone').value;
+            const password = document.getElementById('password').value;
+            const submitBtn = document.getElementById('submitBtn');
+            const errorAlert = document.getElementById('errorAlert');
+            const errorMessage = document.getElementById('errorMessage');
+
+            submitBtn.disabled = true;
+            submitBtn.textContent = '{{ __("cms.auth.creating_account") }}';
+            errorAlert.style.display = 'none';
+
+            try {
+                const response = await fetch('/api/register', {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json',
+                        'Accept': 'application/json',
+                    },
+                    body: JSON.stringify({
+                        firstname,
+                        lastname,
+                        email,
+                        telephone,
+                        password,
+                        company_id: 1,
+                        company_location_id: 1,
+                    })
+                });
+
+                const data = await response.json();
+
+                if (!response.ok) {
+                    const errors = data.errors || {};
+                    let errorMsg = data.message || '{{ __("cms.auth.error_registration") }}';
+                    if (Object.keys(errors).length > 0) {
+                        errorMsg = Object.values(errors).flat().join(', ');
+                    }
+                    throw new Error(errorMsg);
+                }
+
+                // Store token
+                localStorage.setItem('auth_token', data.token);
+                localStorage.setItem('user', JSON.stringify(data.user));
+
+                // Redirect to dashboard
+                window.location.href = '/main-dashboard';
+            } catch (error) {
+                errorMessage.textContent = error.message || '{{ __("cms.auth.error_occurred") }}';
+                errorAlert.style.display = 'block';
+                submitBtn.disabled = false;
+                submitBtn.textContent = '{{ __("cms.auth.create_account_button") }}';
+            }
+        });
+    </script>
 @endsection

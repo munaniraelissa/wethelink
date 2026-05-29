@@ -6,9 +6,9 @@
   <meta name="description" content="adminHMD professional admin dashboard template">
   <title>Add User | adminHMD</title>
 
-  <link rel="stylesheet" href="../assets/css/bootstrap.min.css">
-  <link rel="stylesheet" href="../assets/vendors/bootstrap-icons/bootstrap-icons.css">
-  <link rel="stylesheet" href="../assets/css/style.css">
+  <link rel="stylesheet" href="../dashboard/assets/css/bootstrap.min.css">
+  <link rel="stylesheet" href="../dashboard/assets/vendors/bootstrap-icons/bootstrap-icons.css">
+  <link rel="stylesheet" href="../dashboard/assets/css/style.css">
 </head>
 
 <body>
@@ -78,8 +78,8 @@
       </nav>
 
       <div class="sidebar-user">
-        <img class="avatar-img avatar-md sidebar-user-avatar" src="../assets/images/avatar/avatar.jpg" alt="Admin Hasan">
-        <strong>Admin Hasan</strong>
+        <img class="avatar-img avatar-md sidebar-user-avatar" src="../dashboard/assets/images/avatar/avatar.jpg" alt="Admin Admin">
+        <strong>Admin Admin</strong>
         <small>Active Workspace</small>
       </div>
 
@@ -130,8 +130,8 @@
 
             <div class="dropdown">
               <button class="profile-button dropdown-toggle" type="button" data-bs-toggle="dropdown" aria-expanded="false">
-                <img class="avatar-img avatar-sm" src="../assets/images/avatar/avatar.jpg" alt="Admin Hasan">
-                <span class="profile-name d-none d-sm-inline">Admin Hasan</span>
+                <img class="avatar-img avatar-sm" src="../dashboard/assets/images/avatar/avatar.jpg" alt="Admin Admin">
+                <span class="profile-name d-none d-sm-inline">Admin Admin</span>
               </button>
               <ul class="dropdown-menu dropdown-menu-end">
                 <li><a class="dropdown-item" href="profile.html">Profile</a></li>
@@ -198,7 +198,7 @@
     </div>
   </div>
 
-  <script src="../assets/js/bootstrap.bundle.min.js"></script>
-  <script src="../assets/js/main.js"></script>
+  <script src="../dashboard/assets/js/bootstrap.bundle.min.js"></script>
+  <script src="../dashboard/assets/js/main.js"></script>
 </body>
 </html>

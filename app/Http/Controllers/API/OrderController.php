@@ -16,6 +16,14 @@ class OrderController extends Controller
 {
     use ActionLogTrait;
 
+    public function __construct()
+    {
+        $this->middleware('auth:sanctum');
+        // Orders are primarily user-scoped; admin can have broader permissions
+        $this->middleware('permission:order-list|order-create|order-edit|order-delete', ['only' => ['index','show']]);
+        $this->middleware('permission:order-create', ['only' => ['store']]);
+    }
+
     public function index(Request $request)
     {
         $orders = Order::where('user_id', $request->user()->id)
@@ -40,7 +48,7 @@ class OrderController extends Controller
     public function store(Request $request)
     {
         $user = $request->user();
-        $cart = Cart::where('user_id', $user->id)->with('items.product')->first();
+        $cart = Cart::where('user_id', $user->id)->with('items.product', 'items.variant')->first();
 
         if (!$cart || $cart->items->isEmpty()) {
             return response()->json(['message' => 'Cart is empty'], 400);
@@ -88,12 +96,21 @@ class OrderController extends Controller
             OrderItem::create([
                 'order_id' => $order->id,
                 'product_id' => $cartItem->product_id,
+                'product_variant_id' => $cartItem->product_variant_id,
                 'product_name' => $cartItem->product->name ?? 'Unknown product',
-                'sku' => $cartItem->product->sku ?? 'unknown',
+                'sku' => $cartItem->variant?->sku ?? $cartItem->product->sku ?? 'unknown',
                 'quantity' => $cartItem->quantity,
                 'unit_price' => $cartItem->unit_price,
                 'total' => $cartItem->quantity * $cartItem->unit_price,
+                'size' => $cartItem->size,
+                'color' => $cartItem->color,
             ]);
+
+            if ($cartItem->variant) {
+                $cartItem->variant->decrement('quantity', $cartItem->quantity);
+            } else {
+                $cartItem->product->decrement('quantity', $cartItem->quantity);
+            }
         }
 
         $cart->items()->delete();

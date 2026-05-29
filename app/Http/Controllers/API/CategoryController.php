@@ -13,6 +13,15 @@ class CategoryController extends Controller
 {
     use ActionLogTrait;
 
+    public function __construct()
+    {
+        $this->middleware('auth:sanctum');
+        $this->middleware('permission:category-list|category-create|category-edit|category-delete', ['only' => ['index','show']]);
+        $this->middleware('permission:category-create', ['only' => ['store']]);
+        $this->middleware('permission:category-edit', ['only' => ['update']]);
+        $this->middleware('permission:category-delete', ['only' => ['destroy']]);
+    }
+
     public function index(Request $request)
     {
         $categories = Category::query()

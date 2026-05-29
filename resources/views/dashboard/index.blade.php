@@ -4,7 +4,7 @@
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <meta name="description" content="adminHMD professional admin dashboard template">
-  <title>Dashboard | adminHMD</title>
+  <title>Dashboard | wethelink</title>
 
   <link rel="stylesheet" href="../dashboard/assets/css/bootstrap.min.css">
   <link rel="stylesheet" href="../dashboard/assets/vendors/bootstrap-icons/bootstrap-icons.css">
@@ -18,9 +18,9 @@
     <aside class="admin-sidebar" id="adminSidebar" aria-label="Main navigation">
       <div class="sidebar-header">
         <a class="brand-mark" href="index.html" aria-label="adminHMD dashboard">
-          {{-- <span class="brand-icon"><i class="bi bi-grid-1x2-fill" aria-hidden="true"></i></span> --}}
+          <img class="brand-icon" src="/cms/logo/small_logo.png" alt="Logo" style="max-width: 100%; height: auto;">
           <span class="brand-copy">
-            <img class="logo-img" src="/cms/logo/logo.png" alt="Logo" style="max-width: 100%; height: auto;">
+            <img class="logo-img" src="/cms/logo/logo_word.png" alt="Logo" style="max-width: 100%; height: auto;">
           </span>
         </a>
       </div>
@@ -77,8 +77,8 @@
       </nav>
 
       <div class="sidebar-user">
-        <img class="avatar-img avatar-md sidebar-user-avatar" src="../dashboard/assets/images/avatar/avatar.jpg" alt="Admin Hasan">
-        <strong>Admin Hasan</strong>
+        <img class="avatar-img avatar-md sidebar-user-avatar" src="../dashboard/assets/images/avatar/avatar.jpg" alt="Admin Admin">
+        <strong>Admin Admin</strong>
         <small>Active Workspace</small>
       </div>
 
@@ -129,8 +129,8 @@
 
             <div class="dropdown">
               <button class="profile-button dropdown-toggle" type="button" data-bs-toggle="dropdown" aria-expanded="false">
-                <img class="avatar-img avatar-sm" src="../dashboard/assets/images/avatar/avatar.jpg" alt="Admin Hasan">
-                <span class="profile-name d-none d-sm-inline">Admin Hasan</span>
+                <img class="avatar-img avatar-sm" src="../dashboard/assets/images/avatar/avatar.jpg" alt="Admin Admin">
+                <span class="profile-name d-none d-sm-inline">Admin Admin</span>
               </button>
               <ul class="dropdown-menu dropdown-menu-end">
                 <li><a class="dropdown-item" href="profile.html">Profile</a></li>
@@ -356,8 +356,8 @@
 
       <footer class="admin-footer">
         <div class="container-fluid px-3 px-lg-4">
-          <span>Copyright 2026 adminHMD. <br> Developed by <a target="_blank" class="fw-bold text-success" href="https://github.com/HasanMahmudDev">Md. Hasan Mahmud</a> • Distributed by <a target="_blank" class="fw-bold text-success" href="https://themewagon.com">ThemeWagon</a> </span>
-          <span>Professional dashboard template.</span>
+          <span>Copyright 2026 wethelink. <br> Developed by <a target="_blank" class="fw-bold text-success" href="https://elissamunanira.netrify.app">Elissa MUNANIRA</a> • Distributed by <a target="_blank" class="fw-bold text-success" href="#">EMUNAH LTD</a> </span>
+          <span>Professional ecommerce dashboard.</span>
         </div>
       </footer>
     </div>

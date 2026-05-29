@@ -46,12 +46,23 @@
                         <div class="border-top flex-grow-1"></div>
                     </div>
 
-                    <form action="#" method="POST">
+                    <div id="errorAlert" class="alert alert-danger alert-dismissible fade hide" role="alert" style="display: none;">
+                        <strong>Error!</strong> <span id="errorMessage"></span>
+                        <button type="button" class="close" data-dismiss="alert" aria-label="Close">
+                            <span aria-hidden="true">&times;</span>
+                        </button>
+                    </div>
+
+                    <form id="loginForm">
                         <div class="form-group">
-                            <label for="email" class="font-weight-bold">{{ __('cms.search.placeholder') }}</label>
+                            <label for="email" class="font-weight-bold">{{ __('cms.auth.email') }}</label>
                             <input type="email" id="email" name="email" class="form-control form-control-lg" placeholder="{{ __('cms.auth.enter_email') }}" required>
                         </div>
-                        <button type="submit" class="btn btn-primary btn-block btn-lg py-3">{{ __('cms.auth.continue') }}</button>
+                        <div class="form-group">
+                            <label for="password" class="font-weight-bold">{{ __('cms.auth.password') }}</label>
+                            <input type="password" id="password" name="password" class="form-control form-control-lg" placeholder="{{ __('cms.auth.password') }}" required>
+                        </div>
+                        <button type="submit" class="btn btn-primary btn-block btn-lg py-3" id="submitBtn">{{ __('cms.auth.continue') }}</button>
                     </form>
 
                     <p class="text-center text-muted mt-4 mb-0">{{ __('cms.auth.by_continuing') }}</p>
@@ -61,4 +72,52 @@
             </div>
         </div>
     </div>
+
+    <script>
+        document.getElementById('loginForm').addEventListener('submit', async function(e) {
+            e.preventDefault();
+
+            const email = document.getElementById('email').value;
+            const password = document.getElementById('password').value;
+            const submitBtn = document.getElementById('submitBtn');
+            const errorAlert = document.getElementById('errorAlert');
+            const errorMessage = document.getElementById('errorMessage');
+
+            submitBtn.disabled = true;
+            submitBtn.textContent = '{{ __("cms.auth.signing_in") }}';
+            errorAlert.style.display = 'none';
+
+            try {
+                const response = await fetch('/api/login', {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json',
+                        'Accept': 'application/json',
+                    },
+                    body: JSON.stringify({
+                        email,
+                        password,
+                    })
+                });
+
+                const data = await response.json();
+
+                if (!response.ok) {
+                    throw new Error(data.message || '{{ __("cms.auth.error_login") }}');
+                }
+
+                // Store token and user data
+                localStorage.setItem('auth_token', data.token);
+                localStorage.setItem('user', JSON.stringify(data.user));
+
+                // Redirect to dashboard
+                window.location.href = '/main-dashboard';
+            } catch (error) {
+                errorMessage.textContent = error.message || '{{ __("cms.auth.error_occurred") }}';
+                errorAlert.style.display = 'block';
+                submitBtn.disabled = false;
+                submitBtn.textContent = '{{ __("cms.auth.continue") }}';
+            }
+        });
+    </script>
 @endsection

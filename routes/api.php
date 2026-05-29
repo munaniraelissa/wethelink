@@ -5,7 +5,10 @@ use App\Http\Controllers\API\CartController;
 use App\Http\Controllers\API\CompanyController;
 use App\Http\Controllers\API\CategoryController;
 use App\Http\Controllers\API\OrderController;
+use App\Http\Controllers\API\PermissionController;
 use App\Http\Controllers\API\ProductController;
+use App\Http\Controllers\API\RoleController;
+use App\Http\Controllers\API\UserController;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Route;
 
@@ -26,6 +29,10 @@ Route::middleware('auth:sanctum')->group(function () {
     Route::apiResource('categories', CategoryController::class);
     Route::apiResource('products', ProductController::class);
     Route::apiResource('orders', OrderController::class)->only(['index', 'show', 'store']);
+    Route::apiResource('roles', RoleController::class);
+    Route::apiResource('users', UserController::class);
+    Route::post('/users/{user}/status', [UserController::class, 'setStatus']);
+    Route::get('/permissions', [PermissionController::class, 'index']);
 
     // Cart routes
     Route::get('/cart', [CartController::class, 'index']);

@@ -6,6 +6,7 @@ use App\Http\Controllers\Controller;
 use App\Models\Cart;
 use App\Models\CartItem;
 use App\Models\Product;
+use App\Models\ProductVariant;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Log;
 
@@ -21,7 +22,7 @@ class CartController extends Controller
     public function index(Request $request)
     {
         $cart = $this->getCartForUser($request);
-        $cart->load(['items.product']);
+        $cart->load(['items.product', 'items.variant']);
 
         return response()->json($cart);
     }
@@ -30,25 +31,61 @@ class CartController extends Controller
     {
         $data = $request->validate([
             'product_id' => 'required|integer|exists:products,id',
+            'product_variant_id' => 'nullable|integer|exists:product_variants,id',
             'quantity' => 'required|integer|min:1',
         ]);
 
-        $product = Product::findOrFail($data['product_id']);
+        $product = Product::with('variants')->findOrFail($data['product_id']);
+        $variant = null;
+
+        if (!empty($data['product_variant_id'])) {
+            $variant = ProductVariant::findOrFail($data['product_variant_id']);
+            if ($variant->product_id !== $product->id) {
+                return response()->json(['message' => 'Variant does not belong to the selected product'], 400);
+            }
+        }
+
+        if ($product->variants()->exists() && !$variant) {
+            return response()->json(['message' => 'Please select a product variant with size and color.'], 400);
+        }
+
         $quantity = max($data['quantity'], $product->minimum_order_quantity ?? 1);
-        $unitPrice = $product->discount_price && $product->discount_price > 0
-            ? $product->discount_price
-            : $product->price;
+        $stock = $variant ? $variant->quantity : $product->quantity;
+
+        if ($quantity > $stock) {
+            return response()->json(['message' => 'Requested quantity exceeds available stock'], 400);
+        }
+
+        $unitPrice = $variant && $variant->discount_price > 0
+            ? $variant->discount_price
+            : ($variant && $variant->price > 0
+                ? $variant->price
+                : ($product->discount_price && $product->discount_price > 0
+                    ? $product->discount_price
+                    : $product->price));
 
         $cart = $this->getCartForUser($request);
 
-        $item = $cart->items()->firstOrNew(['product_id' => $product->id]);
+        $item = $cart->items()->firstOrNew([
+            'product_id' => $product->id,
+            'product_variant_id' => $variant ? $variant->id : null,
+        ]);
+
         $item->quantity = $item->exists
             ? $item->quantity + $quantity
             : $quantity;
+
+        if ($item->quantity > $stock) {
+            return response()->json(['message' => 'Requested quantity exceeds available stock'], 400);
+        }
+
         $item->unit_price = $unitPrice;
+        $item->size = $variant ? $variant->size : null;
+        $item->color = $variant ? $variant->color : null;
+        $item->product_variant_id = $variant ? $variant->id : null;
         $item->save();
 
-        $cart->load(['items.product']);
+        $cart->load(['items.product', 'items.variant']);
 
         Log::info('Cart item added', array_merge($this->actionLogContext($request), [
             'cart_id' => $cart->id,
@@ -87,8 +124,14 @@ class CartController extends Controller
             return response()->json(['message' => 'Item removed from cart']);
         }
 
+        $stock = $item->variant ? $item->variant->quantity : $item->product->quantity;
+
+        if ($data['quantity'] > $stock) {
+            return response()->json(['message' => 'Requested quantity exceeds available stock'], 400);
+        }
+
         $item->update(['quantity' => $data['quantity']]);
-        $cart->load(['items.product']);
+        $cart->load(['items.product', 'items.variant']);
 
         Log::info('Cart item updated', array_merge($this->actionLogContext($request), [
             'cart_id' => $cart->id,
