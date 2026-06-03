@@ -25,7 +25,7 @@
             <div class="col-lg-5 bg-white d-flex align-items-center">
                 <div class="w-100 p-4 p-md-5">
                     <div class="text-center mb-4">
-                        <img src="{{ asset('cms/logo/Logo.png') }}" alt="We thelink logo" class="mb-3" style="height: 55px; width: auto;" />
+                        {{-- <img src="{{ asset('cms/logo/Logo.png') }}" alt="We thelink logo" class="mb-3" style="height: 55px; width: auto;" /> --}}
                         <h3 class="font-weight-bold mb-1">{{ __('cms.auth.create_account') }}</h3>
                         <p class="text-muted mb-0">{{ __('cms.auth.by_continuing') }}</p>
                     </div>

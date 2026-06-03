@@ -11,7 +11,7 @@ class PermissionSeeder extends Seeder
     public function run(): void
     {
         $modules = [
-            'user', 'role', 'permission', 'company', 'category', 'product', 'order'
+            'user', 'role', 'permission', 'company', 'category', 'product', 'order', 'subscription'
         ];
 
         $actions = ['list', 'create', 'edit', 'delete'];
@@ -24,8 +24,9 @@ class PermissionSeeder extends Seeder
             }
         }
 
-        // extra product media permission
+        // extra permissions
         $all[] = 'product-manage-media';
+        $all[] = 'subscription-approve';
 
         foreach ($all as $name) {
             Permission::firstOrCreate(['name' => $name]);

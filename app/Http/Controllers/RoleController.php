@@ -9,157 +9,110 @@ use DB;
 
 class RoleController extends Controller
 {
-    /**
-     * Display a listing of the resource.
-     *
-     * @return \Illuminate\Http\Response
-     */
-    function __construct()
-    {
-         $this->middleware('permission:role-list|role-create|role-edit|role-delete', ['only' => ['index','store']]);
-         $this->middleware('permission:role-create', ['only' => ['create','store']]);
-         $this->middleware('permission:role-edit', ['only' => ['edit','update']]);
-         $this->middleware('permission:role-delete', ['only' => ['destroy']]);
-    }
-
-    /**
-     * Display a listing of the resource.
-     *
-     * @return \Illuminate\Http\Response
-     */
     public function index(Request $request)
     {
-        $roles = Role::orderBy('id','DESC')->paginate(5);
-        return view('roles.index',compact('roles'))
-            ->with('i', ($request->input('page', 1) - 1) * 5);
+        abort_if(!auth()->user()->can('role-list'), 403);
+        $roles = Role::with('permissions')
+            ->orderBy('id', 'DESC')
+            ->paginate(10);
+        return view('dashboard.roles.index', compact('roles'));
     }
 
-    /**
-     * Show the form for creating a new resource.
-     *
-     * @return \Illuminate\Http\Response
-     */
     public function create()
     {
-        $permission = Permission::get();
-        return view('roles.create',compact('permission'));
+        abort_if(!auth()->user()->can('role-create'), 403);
+        $permissions = Permission::all()->groupBy('module');
+        return view('dashboard.roles.create', compact('permissions'));
     }
 
-    /**
-     * Store a newly created resource in storage.
-     *
-     * @param  \Illuminate\Http\Request  $request
-     * @return \Illuminate\Http\Response
-     */
     public function store(Request $request)
     {
-        $this->validate($request, [
+        abort_if(!auth()->user()->can('role-create'), 403);
+        $request->validate([
             'name' => 'required|unique:roles,name',
-            'permission' => 'required',
+            'permissions' => 'required|array|min:1',
+            'permissions.*' => 'exists:permissions,id',
         ]);
 
         $role = Role::create(['name' => $request->input('name')]);
-        $role->syncPermissions($request->input('permission'));
+        
+        // Convert permission IDs to names
+        $permissionNames = Permission::whereIn('id', $request->input('permissions'))
+            ->pluck('name')
+            ->toArray();
+        
+        $role->syncPermissions($permissionNames);
 
         return redirect()->route('roles.index')
-                        ->with('success','Role created successfully');
+            ->with('success', __('dashboard.role.created_successfully'));
     }
-    /**
-     * Display the specified resource.
-     *
-     * @param  int  $id
-     * @return \Illuminate\Http\Response
-     */
     public function show($id)
     {
-        $role = Role::find($id);
-        $rolePermissions = Permission::join("role_has_permissions","role_has_permissions.permission_id","=","permissions.id")
-            ->where("role_has_permissions.role_id",$id)
-            ->get();
-
-        return view('roles.show',compact('role','rolePermissions'));
+        abort_if(!auth()->user()->can('role-list'), 403);
+        $role = Role::with('permissions')->findOrFail($id);
+        $permissions = Permission::all()->groupBy('module');
+        $rolePermissionIds = $role->permissions->pluck('id')->toArray();
+        return view('dashboard.roles.show', compact('role', 'permissions', 'rolePermissionIds'));
     }
 
-    /**
-     * Show the form for editing the specified resource.
-     *
-     * @param  int  $id
-     * @return \Illuminate\Http\Response
-     */
     public function edit($id)
     {
-        $role = Role::find($id);
-        $permission = Permission::get();
-        $rolePermissions = DB::table("role_has_permissions")->where("role_has_permissions.role_id",$id)
-            ->pluck('role_has_permissions.permission_id','role_has_permissions.permission_id')
-            ->all();
+        abort_if(!auth()->user()->can('role-edit'), 403);
+        $role = Role::with('permissions')->findOrFail($id);
+        
+        if ($role->is_protected) {
+            return redirect()->route('roles.index')
+                ->with('warning', __('dashboard.role.cannot_edit_protected'));
+        }
 
-        return view('roles.edit',compact('role','permission','rolePermissions'));
+        $permissions = Permission::all()->groupBy('module');
+        $rolePermissionIds = $role->permissions->pluck('id')->toArray();
+
+        return view('dashboard.roles.edit', compact('role', 'permissions', 'rolePermissionIds'));
     }
 
-    /**
-     * Update the specified resource in storage.
-     *
-     * @param  \Illuminate\Http\Request  $request
-     * @param  int  $id
-     * @return \Illuminate\Http\Response
-     */
     public function update(Request $request, $id)
     {
-        $this->validate($request, [
-            'name' => 'required',
-            'permission' => 'required|array',
-        ]);
-
+        abort_if(!auth()->user()->can('role-edit'), 403);
         $role = Role::findOrFail($id);
 
-        // 🔒 Prevent renaming of protected roles
-        if ($role->is_protected && $request->name !== $role->name) {
+        if ($role->is_protected) {
             return redirect()->route('roles.index')
-                ->with('error', 'You cannot rename a protected role.');
+                ->with('warning', __('dashboard.role.cannot_edit_protected'));
         }
 
-        // 🔒 Prevent adding restricted permissions back to Admin
-        if ($role->name === 'Admin') {
-            $excludedForAdmin = ['delete users', 'delete roles', 'manage settings'];
+        $request->validate([
+            'name' => 'required|unique:roles,name,' . $id,
+            'permissions' => 'required|array|min:1',
+            'permissions.*' => 'exists:permissions,id',
+        ]);
 
-            // Filter out restricted permissions
-            $filteredPermissions = array_diff($request->input('permission'), $excludedForAdmin);
-            $role->syncPermissions($filteredPermissions);
-
-            return redirect()->route('roles.index')
-                ->with('success', 'Admin role updated (restricted permissions ignored).');
-        }
-
-        // ✅ Allow permission updates for Normal Member (but not renaming)
-        if ($role->name === 'Normal Member' && $role->is_protected) {
-            $role->syncPermissions($request->input('permission'));
-            return redirect()->route('roles.index')
-                ->with('success', 'Permissions updated successfully for Normal Member.');
-        }
-
-        // ✅ Default behavior for editable roles
-        $role->name = $request->input('name');
-        $role->save();
-        $role->syncPermissions($request->input('permission'));
+        $role->update(['name' => $request->input('name')]);
+        
+        // Convert permission IDs to names
+        $permissionNames = Permission::whereIn('id', $request->input('permissions'))
+            ->pluck('name')
+            ->toArray();
+        
+        $role->syncPermissions($permissionNames);
 
         return redirect()->route('roles.index')
-            ->with('success', 'Role updated successfully.');
+            ->with('success', __('dashboard.role.updated_successfully'));
     }
 
     public function destroy($id)
     {
+        abort_if(!auth()->user()->can('role-delete'), 403);
         $role = Role::findOrFail($id);
 
-        // 🔒 Prevent deleting protected roles
-        if ($role->is_protected || in_array($role->name, ['Admin', 'Normal Member'])) {
+        if ($role->is_protected || in_array($role->name, ['Admin', 'Normal Member'], true)) {
             return redirect()->route('roles.index')
-                ->with('error', 'You cannot delete a protected role.');
+                ->with('error', __('dashboard.role.cannot_delete_protected'));
         }
 
         $role->delete();
 
         return redirect()->route('roles.index')
-            ->with('success', 'Role deleted successfully.');
+            ->with('success', __('dashboard.role.deleted_successfully'));
     }
 }

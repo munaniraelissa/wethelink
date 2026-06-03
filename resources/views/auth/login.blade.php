@@ -5,9 +5,7 @@
         <div class="row no-gutters align-items-stretch">
             <div class="col-lg-7 d-none d-lg-flex">
                 <div class="h-100 w-100 d-flex flex-column justify-content-center text-white px-5" style="background: linear-gradient(135deg, #ff8a00 0%, #ffc45f 100%);">
-                    {{-- <a href="{{ route('home') }}" class="d-inline-flex align-items-center mb-4">
-                        <img src="{{ asset('cms/logo/Logo.png') }}" alt="We thelink logo" style="height: 50px; width: auto;" />
-                    </a> --}}
+                    
                     <h1 class="display-4 font-weight-bold mb-3">{{ __('cms.auth.hero_heading_auth') }}</h1>
                     <p class="lead mb-4" style="max-width: 520px;">{{ __('cms.auth.hero_sub_auth') }}</p>
                     <div class="d-flex flex-wrap">
@@ -25,7 +23,6 @@
             <div class="col-lg-5 bg-white d-flex align-items-center">
                 <div class="w-100 p-4 p-md-5">
                     <div class="text-center mb-4">
-                        <img src="{{ asset('cms/logo/Logo.png') }}" alt="We thelink logo" class="mb-3" style="height: 55px; width: auto;" />
                         <h3 class="font-weight-bold mb-1">{{ __('cms.auth.signin_or_create') }}</h3>
                         <p class="text-muted mb-0">{{ __('cms.auth.by_continuing') }}</p>
                     </div>
@@ -53,14 +50,21 @@
                         </button>
                     </div>
 
-                    <form id="loginForm">
+                    <form action="{{ route('login.submit') }}" method="POST">
+                        @csrf
                         <div class="form-group">
                             <label for="email" class="font-weight-bold">{{ __('cms.auth.email') }}</label>
-                            <input type="email" id="email" name="email" class="form-control form-control-lg" placeholder="{{ __('cms.auth.enter_email') }}" required>
+                            <input type="email" id="email" name="email" class="form-control form-control-lg" placeholder="{{ __('cms.auth.enter_email') }}" required value="{{ old('email') }}">
+                            @error('email')
+                                <small class="form-text text-danger">{{ $message }}</small>
+                            @enderror
                         </div>
                         <div class="form-group">
                             <label for="password" class="font-weight-bold">{{ __('cms.auth.password') }}</label>
                             <input type="password" id="password" name="password" class="form-control form-control-lg" placeholder="{{ __('cms.auth.password') }}" required>
+                            @error('password')
+                                <small class="form-text text-danger">{{ $message }}</small>
+                            @enderror
                         </div>
                         <button type="submit" class="btn btn-primary btn-block btn-lg py-3" id="submitBtn">{{ __('cms.auth.continue') }}</button>
                     </form>
@@ -72,52 +76,4 @@
             </div>
         </div>
     </div>
-
-    <script>
-        document.getElementById('loginForm').addEventListener('submit', async function(e) {
-            e.preventDefault();
-
-            const email = document.getElementById('email').value;
-            const password = document.getElementById('password').value;
-            const submitBtn = document.getElementById('submitBtn');
-            const errorAlert = document.getElementById('errorAlert');
-            const errorMessage = document.getElementById('errorMessage');
-
-            submitBtn.disabled = true;
-            submitBtn.textContent = '{{ __("cms.auth.signing_in") }}';
-            errorAlert.style.display = 'none';
-
-            try {
-                const response = await fetch('/api/login', {
-                    method: 'POST',
-                    headers: {
-                        'Content-Type': 'application/json',
-                        'Accept': 'application/json',
-                    },
-                    body: JSON.stringify({
-                        email,
-                        password,
-                    })
-                });
-
-                const data = await response.json();
-
-                if (!response.ok) {
-                    throw new Error(data.message || '{{ __("cms.auth.error_login") }}');
-                }
-
-                // Store token and user data
-                localStorage.setItem('auth_token', data.token);
-                localStorage.setItem('user', JSON.stringify(data.user));
-
-                // Redirect to dashboard
-                window.location.href = '/main-dashboard';
-            } catch (error) {
-                errorMessage.textContent = error.message || '{{ __("cms.auth.error_occurred") }}';
-                errorAlert.style.display = 'block';
-                submitBtn.disabled = false;
-                submitBtn.textContent = '{{ __("cms.auth.continue") }}';
-            }
-        });
-    </script>
 @endsection

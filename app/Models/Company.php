@@ -35,4 +35,19 @@ class Company extends Model
     {
         return $this->hasMany(User::class);
     }
+
+    public function subscriptions()
+    {
+        return $this->hasMany(Subscription::class);
+    }
+
+    public function activeSubscription()
+    {
+        return $this->subscriptions()
+            ->where('approval_status', 'approved')
+            ->where('status', 'active')
+            ->where('ends_at', '>', now())
+            ->latest('started_at')
+            ->first();
+    }
 }
