@@ -8,12 +8,15 @@ class ProductImage extends Model
 {
     protected $fillable = [
         'product_id',
-        'image',
-        'is_primary',
+        'image_url',
+        'alt_text',
+        'sort_order',
+        'is_featured',
     ];
 
     protected $casts = [
-        'is_primary' => 'boolean',
+        'is_featured' => 'boolean',
+        'sort_order' => 'integer',
     ];
 
     public function product()

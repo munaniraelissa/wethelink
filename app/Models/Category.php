@@ -7,6 +7,7 @@ use Illuminate\Database\Eloquent\Model;
 class Category extends Model
 {
     protected $fillable = [
+        'company_id',
         'parent_id',
         'name',
         'slug',
@@ -18,6 +19,11 @@ class Category extends Model
     protected $casts = [
         'is_active' => 'boolean',
     ];
+
+    public function company()
+    {
+        return $this->belongsTo(Company::class);
+    }
 
     public function parent()
     {

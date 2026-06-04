@@ -7,6 +7,13 @@ use App\Http\Controllers\UserController;
 use App\Http\Controllers\SubscriptionPackageController;
 use App\Http\Controllers\SubscriptionController;
 use App\Http\Controllers\CompanyRegistrationController;
+use App\Http\Controllers\ProductController;
+use App\Http\Controllers\CategoryController;
+use App\Http\Controllers\BrandController;
+use App\Http\Controllers\SizeController;
+use App\Http\Controllers\ColorController;
+use App\Http\Controllers\CompanyController;
+use App\Http\Controllers\CompanyLocationController;
 use Illuminate\Support\Facades\Route;
 
 
@@ -39,6 +46,7 @@ Route::get('/checkout', [CmsController::class, 'checkout'])->name('checkout');
 Route::view('/login', 'auth.login')->name('login');
 Route::post('/login', [AuthController::class, 'login'])->name('login.submit');
 Route::view('/register', 'auth.signup')->name('register');
+Route::view('/register-company', 'auth.register-company')->name('company.registration');
 Route::get('/register/company', [CompanyRegistrationController::class, 'showRegistrationForm'])->name('company.registration.form');
 Route::post('/register/company', [CompanyRegistrationController::class, 'registerCompany'])->name('company.registration.store');
 
@@ -79,4 +87,24 @@ Route::middleware('auth')->group(function () {
     Route::post('subscriptions/{subscription}/perform-approve', [SubscriptionController::class, 'performApprove'])->name('subscriptions.perform-approve');
     Route::post('subscriptions/{subscription}/reject', [SubscriptionController::class, 'reject'])->name('subscriptions.reject');
     Route::post('subscriptions/{subscription}/perform-reject', [SubscriptionController::class, 'performReject'])->name('subscriptions.perform-reject');
+
+    // Category Management
+    Route::resource('categories', CategoryController::class);
+
+    // Brand Management
+    Route::resource('brands', BrandController::class);
+
+    // Size Management
+    Route::resource('sizes', SizeController::class);
+
+    // Color Management
+    Route::resource('colors', ColorController::class);
+
+    // Product Management
+    Route::resource('products', ProductController::class);
+    Route::post('products/{product}/images/{image}/delete', [ProductController::class, 'deleteImage'])->name('products.images.delete');
+    Route::post('products/{product}/videos/{video}/delete', [ProductController::class, 'deleteVideo'])->name('products.videos.delete');
+
+    Route::resource('companies', CompanyController::class);
+    Route::resource('companies.locations', CompanyLocationController::class);
 });

@@ -18,6 +18,7 @@ Route::middleware('auth:sanctum')->group(function () {
 });
 
 Route::post('/register', [AuthController::class, 'register']);
+Route::post('/register-company', [AuthController::class, 'registerCompany']);
 Route::post('/login', [AuthController::class, 'login']);
 
 Route::middleware('auth:sanctum')->group(function () {
@@ -48,5 +49,10 @@ Route::middleware('auth:sanctum')->group(function () {
         // Product video routes
         Route::post('/products/{product}/videos', [ProductController::class, 'uploadVideo']);
         Route::delete('/products/{product}/videos/{video}', [ProductController::class, 'deleteVideo']);
+
+        // Product inventory routes
+        Route::post('/products/{product}/locations', [ProductController::class, 'setLocations']);
+        Route::post('/products/{product}/sizes', [ProductController::class, 'setSizes']);
+        Route::post('/products/{product}/colors', [ProductController::class, 'setColors']);
     });
 });

@@ -4,13 +4,134 @@ namespace App\Http\Controllers\API;
 
 use App\Http\Controllers\Controller;
 use App\Models\User;
+use App\Models\Company;
+use App\Models\CompanyLocation;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Hash;
 use Illuminate\Support\Facades\Log;
+use Illuminate\Support\Str;
+use Illuminate\Support\Facades\DB;
 
 class AuthController extends Controller
 {
     use ActionLogTrait;
+
+    public function registerCompany(Request $request)
+    {
+        $validated = $request->validate([
+            // Company Details
+            'company_name' => 'required|string|max:255',
+            'company_email' => 'nullable|email|max:255',
+            'company_telephone' => 'nullable|string|max:100',
+            'company_website' => 'nullable|url|max:255',
+            'company_tax_number' => 'nullable|string|max:255',
+            'company_registration_number' => 'nullable|string|max:255',
+            'company_industry' => 'nullable|string|max:255',
+            'company_credit_limit' => 'nullable|numeric|min:0',
+            'company_payment_terms_days' => 'nullable|integer|min:0',
+
+            // Company Location (Head Office) Details
+            'location_name' => 'required|string|max:255',
+            'location_email' => 'nullable|email|max:255',
+            'location_telephone' => 'nullable|string|max:100',
+            'location_manager_name' => 'nullable|string|max:255',
+            'location_country' => 'nullable|string|max:100',
+            'location_province' => 'nullable|string|max:100',
+            'location_district' => 'nullable|string|max:100',
+            'location_city' => 'nullable|string|max:100',
+            'location_address' => 'required|string|max:500',
+            'location_latitude' => 'nullable|numeric|between:-90,90',
+            'location_longitude' => 'nullable|numeric|between:-180,180',
+
+            // Admin User Details
+            'firstname' => 'required|string|max:255',
+            'lastname' => 'required|string|max:255',
+            'email' => 'required|email|unique:users|max:255',
+            'telephone' => 'required|unique:users|string|max:100',
+            'password' => 'required|string|min:6|max:255',
+        ]);
+
+        try {
+            return DB::transaction(function () use ($validated, $request) {
+                // Create the company
+                $company = Company::create([
+                    'name' => $validated['company_name'],
+                    'slug' => Str::slug($validated['company_name']),
+                    'email' => $validated['company_email'] ?? null,
+                    'telephone' => $validated['company_telephone'] ?? null,
+                    'website' => $validated['company_website'] ?? null,
+                    'tax_number' => $validated['company_tax_number'] ?? null,
+                    'registration_number' => $validated['company_registration_number'] ?? null,
+                    'industry' => $validated['company_industry'] ?? null,
+                    'credit_limit' => $validated['company_credit_limit'] ?? 0,
+                    'payment_terms_days' => $validated['company_payment_terms_days'] ?? 0,
+                    'status' => 'pending',
+                ]);
+
+                // Create the company location (head office)
+                $location = CompanyLocation::create([
+                    'company_id' => $company->id,
+                    'name' => $validated['location_name'],
+                    'email' => $validated['location_email'] ?? null,
+                    'telephone' => $validated['location_telephone'] ?? null,
+                    'manager_name' => $validated['location_manager_name'] ?? null,
+                    'country' => $validated['location_country'] ?? null,
+                    'province' => $validated['location_province'] ?? null,
+                    'district' => $validated['location_district'] ?? null,
+                    'city' => $validated['location_city'] ?? null,
+                    'address' => $validated['location_address'],
+                    'latitude' => $validated['location_latitude'] ?? null,
+                    'longitude' => $validated['location_longitude'] ?? null,
+                    'is_head_office' => true,
+                    'status' => 'active',
+                ]);
+
+                // Create the admin user
+                $user = User::create([
+                    'company_id' => $company->id,
+                    'company_location_id' => $location->id,
+                    'firstname' => $validated['firstname'],
+                    'lastname' => $validated['lastname'],
+                    'email' => $validated['email'],
+                    'telephone' => $validated['telephone'],
+                    'password' => Hash::make($validated['password']),
+                    'status' => 'active',
+                ]);
+
+                // Assign admin role
+                $user->assignRole('admin');
+
+                // Create API token
+                $token = $user->createToken('api-token')->plainTextToken;
+
+                Log::info('Company registered successfully', array_merge($this->actionLogContext($request), [
+                    'company_id' => $company->id,
+                    'company_name' => $company->name,
+                    'user_id' => $user->id,
+                    'user_email' => $user->email,
+                    'location_id' => $location->id,
+                ]));
+
+                return response()->json([
+                    'message' => 'Company registered successfully',
+                    'company' => $company->load('locations'),
+                    'location' => $location,
+                    'user' => $user->load(['company', 'location', 'roles']),
+                    'token' => $token,
+                ], 201);
+            });
+        } catch (\Exception $e) {
+            Log::error('Company registration failed', array_merge($this->actionLogContext($request), [
+                'error' => $e->getMessage(),
+                'trace' => $e->getTraceAsString(),
+            ]));
+
+            return response()->json([
+                'message' => 'Company registration failed',
+                'error' => $e->getMessage(),
+            ], 500);
+        }
+    }
 
     public function register(Request $request)
     {

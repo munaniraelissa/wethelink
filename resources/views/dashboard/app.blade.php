@@ -34,6 +34,26 @@
           <span class="nav-icon"><i class="bi bi-people" aria-hidden="true"></i></span>
           <span class="nav-text">{{ __('dashboard.sidebar.users') }}</span>
         </a>
+        <a class="nav-link" href="{{ route('products.index') }}">
+          <span class="nav-icon"><i class="bi bi-box-seam" aria-hidden="true"></i></span>
+          <span class="nav-text">Products</span>
+        </a>
+        <a class="nav-link" href="{{ route('categories.index') }}">
+          <span class="nav-icon"><i class="bi bi-tags" aria-hidden="true"></i></span>
+          <span class="nav-text">Categories</span>
+        </a>
+        <a class="nav-link" href="{{ route('brands.index') }}">
+          <span class="nav-icon"><i class="bi bi-building" aria-hidden="true"></i></span>
+          <span class="nav-text">{{ __('messages.brands') }}</span>
+        </a>
+        <a class="nav-link" href="{{ route('sizes.index') }}">
+          <span class="nav-icon"><i class="bi bi-aspect-ratio" aria-hidden="true"></i></span>
+          <span class="nav-text">{{ __('messages.sizes') }}</span>
+        </a>
+        <a class="nav-link" href="{{ route('colors.index') }}">
+          <span class="nav-icon"><i class="bi bi-palette" aria-hidden="true"></i></span>
+          <span class="nav-text">{{ __('messages.colors') }}</span>
+        </a>
         <a class="nav-link" href="{{ route('roles.index') }}">
           <span class="nav-icon"><i class="bi bi-shield-lock" aria-hidden="true"></i></span>
           <span class="nav-text">{{ __('dashboard.sidebar.roles') }}</span>
