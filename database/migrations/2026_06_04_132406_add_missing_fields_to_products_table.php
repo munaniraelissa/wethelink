@@ -24,14 +24,6 @@ return new class extends Migration
                 $table->text('short_description')->nullable()->after('barcode');
             }
             
-            if (!Schema::hasColumn('products', 'featured_image')) {
-                $table->string('featured_image')->nullable()->after('description');
-            }
-            
-            if (!Schema::hasColumn('products', 'is_featured')) {
-                $table->boolean('is_featured')->default(false)->after('status');
-            }
-            
             if (!Schema::hasColumn('products', 'view_count')) {
                 $table->integer('view_count')->default(0)->after('is_featured');
             }
@@ -62,14 +54,6 @@ return new class extends Migration
             
             if (Schema::hasColumn('products', 'short_description')) {
                 $table->dropColumn('short_description');
-            }
-            
-            if (Schema::hasColumn('products', 'featured_image')) {
-                $table->dropColumn('featured_image');
-            }
-            
-            if (Schema::hasColumn('products', 'is_featured')) {
-                $table->dropColumn('is_featured');
             }
             
             if (Schema::hasColumn('products', 'view_count')) {

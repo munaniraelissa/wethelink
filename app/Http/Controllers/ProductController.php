@@ -2,28 +2,28 @@
 
 namespace App\Http\Controllers;
 
-use App\Models\Product;
-use App\Models\Category;
 use App\Models\Brand;
-use App\Models\Size;
+use App\Models\Category;
 use App\Models\Color;
 use App\Models\CompanyLocation;
+use App\Models\Product;
 use App\Models\ProductImage;
-use App\Models\ProductVideo;
 use App\Models\ProductVariant;
+use App\Models\ProductVideo;
+use App\Models\Size;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Storage;
 use Illuminate\Support\Str;
 use Illuminate\Validation\Rule;
-use Illuminate\Support\Facades\Storage;
 
 class ProductController extends Controller
 {
     public function index(Request $request)
     {
         $company_id = auth()->user()->company_id;
-        
+
         $query = Product::where('company_id', $company_id)
-            ->with('category', 'brand')
+            ->with(['category', 'brand', 'images'])
             ->orderBy('id', 'desc');
 
         if ($request->filled('search')) {
@@ -87,10 +87,12 @@ class ProductController extends Controller
             'unit' => 'nullable|string|max:50',
             'weight' => 'nullable|numeric|min:0',
             'status' => ['required', Rule::in(['draft', 'published', 'out_of_stock', 'inactive'])],
-            'featured' => 'nullable|boolean',
+            'is_featured' => 'nullable|boolean',
             'variants' => 'nullable|array',
-            'product_images' => 'nullable|array',
+            'new_product_images' => 'nullable|array',
+            'new_product_images.*' => 'image|mimes:jpeg,png,jpg,gif,webp|max:5120',
             'product_videos' => 'nullable|array',
+            'product_videos.*' => 'file|mimes:mp4,mov,ogg,qt|max:102400',
             'locations' => 'nullable|array',
         ]);
 
@@ -99,7 +101,7 @@ class ProductController extends Controller
             $companyPrefix = strtoupper(substr(auth()->user()->company->name, 0, 3));
             $lastProduct = Product::where('company_id', $company_id)->latest('id')->first();
             $nextNumber = $lastProduct ? str_pad($lastProduct->id + 1, 5, '0', STR_PAD_LEFT) : '00001';
-            $validated['sku'] = $companyPrefix . '-' . $nextNumber;
+            $validated['sku'] = $companyPrefix.'-'.$nextNumber;
         }
 
         $validated['company_id'] = $company_id;
@@ -107,7 +109,7 @@ class ProductController extends Controller
         $validated['quantity'] = $validated['quantity'] ?? 0;
         $validated['minimum_order_quantity'] = $validated['minimum_order_quantity'] ?? 1;
         $validated['unit'] = $validated['unit'] ?? 'pcs';
-        $validated['featured'] = $request->has('featured');
+        $validated['is_featured'] = $request->has('is_featured');
 
         $product = Product::create($validated);
 
@@ -134,12 +136,12 @@ class ProductController extends Controller
         if ($request->hasFile('new_product_images')) {
             foreach ($request->file('new_product_images') as $index => $imageFile) {
                 $imagePath = $imageFile->store('products', 'public');
-                ProductImage::create([
-                    'product_id' => $product->id,
-                    'image_url' => $imagePath,
-                    'is_featured' => $index === 0, // First image is featured
-                    'sort_order' => $index,
-                ]);
+                $productImage = new ProductImage();
+                $productImage->product_id = $product->id;
+                $productImage->image = $imagePath;
+                $productImage->is_featured = $index === 0;
+                $productImage->sort_order = $index;
+                $productImage->save();
             }
         }
 
@@ -162,7 +164,7 @@ class ProductController extends Controller
                         'quantity' => $data['quantity'] ?? 0,
                         'is_visible' => true,
                         'created_at' => now(),
-                        'updated_at' => now()
+                        'updated_at' => now(),
                     ]);
                 }
             }
@@ -218,14 +220,18 @@ class ProductController extends Controller
             'unit' => 'nullable|string|max:50',
             'weight' => 'nullable|numeric|min:0',
             'status' => ['sometimes', 'required', Rule::in(['draft', 'published', 'out_of_stock', 'inactive'])],
-            'featured' => 'nullable|boolean',
+            'is_featured' => 'nullable|boolean',
             'variants' => 'nullable|array',
             'existing_images' => 'nullable|array',
             'featured_image_id' => 'nullable|integer',
+            'new_product_images' => 'nullable|array',
+            'new_product_images.*' => 'image|mimes:jpeg,png,jpg,gif,webp|max:5120',
+            'product_videos' => 'nullable|array',
+            'product_videos.*' => 'file|mimes:mp4,mov,ogg,qt|max:102400',
             'locations' => 'nullable|array',
         ]);
 
-        $validated['featured'] = $request->has('featured');
+        $validated['is_featured'] = $request->has('is_featured');
 
         if (isset($validated['name']) && !isset($validated['slug'])) {
             $validated['slug'] = Str::slug($validated['name']);
@@ -270,12 +276,12 @@ class ProductController extends Controller
             $currentMaxSortOrder = $product->images()->max('sort_order') ?? 0;
             foreach ($request->file('new_product_images') as $index => $imageFile) {
                 $imagePath = $imageFile->store('products', 'public');
-                ProductImage::create([
-                    'product_id' => $product->id,
-                    'image_url' => $imagePath,
-                    'is_featured' => false,
-                    'sort_order' => $currentMaxSortOrder + $index + 1,
-                ]);
+                $productImage = new ProductImage();
+                $productImage->product_id = $product->id;
+                $productImage->image = $imagePath;
+                $productImage->is_featured = false;
+                $productImage->sort_order = $currentMaxSortOrder + $index + 1;
+                $productImage->save();
             }
         }
 
@@ -299,7 +305,7 @@ class ProductController extends Controller
                         'quantity' => $data['quantity'] ?? 0,
                         'is_visible' => true,
                         'created_at' => now(),
-                        'updated_at' => now()
+                        'updated_at' => now(),
                     ]);
                 }
             }
@@ -315,7 +321,7 @@ class ProductController extends Controller
 
         // Delete images
         foreach ($product->images as $image) {
-            Storage::disk('public')->delete($image->image_url);
+            Storage::disk('public')->delete($image->image);
         }
         $product->images()->delete();
 
@@ -338,12 +344,12 @@ class ProductController extends Controller
     {
         $image = ProductImage::findOrFail($imageId);
         $product = $image->product;
-        
+
         $this->authorizeProduct($product);
-        
-        Storage::disk('public')->delete($image->image_url);
+
+        Storage::disk('public')->delete($image->image);
         $image->delete();
-        
+
         return back()->with('success', 'Image deleted successfully');
     }
 
@@ -351,15 +357,15 @@ class ProductController extends Controller
     {
         $video = ProductVideo::findOrFail($videoId);
         $product = $video->product;
-        
+
         $this->authorizeProduct($product);
-        
+
         Storage::disk('public')->delete($video->video);
         if ($video->thumbnail) {
             Storage::disk('public')->delete($video->thumbnail);
         }
         $video->delete();
-        
+
         return back()->with('success', 'Video deleted successfully');
     }
 

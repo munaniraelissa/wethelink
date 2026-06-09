@@ -1,143 +1,141 @@
-{{-- resources/views/companies/index.blade.php --}}
 @extends('dashboard.app')
-
-@section('title', 'Companies')
-
+ 
 @section('content')
-<div class="space-y-5">
-
-    {{-- Header --}}
-    <div class="flex items-center justify-between">
+<main class="dashboard-content">
+  <div class="container-fluid px-3 px-lg-4 py-4">
+    @forelse ($companies as $company)
+ 
+    {{-- Page Heading --}}
+    <div class="page-heading">
+      <div class="page-heading-copy">
+        <span class="page-icon"><i class="bi bi-geo-alt" aria-hidden="true"></i></span>
         <div>
-            <h1 class="text-2xl font-bold text-gray-900">Companies</h1>
-            <p class="mt-1 text-sm text-gray-500">Manage all registered companies.</p>
+          <p class="eyebrow mb-1">{{ $company->name }}</p>
+          <h1 class="h3 mb-1">{{ __('companies.locations') }}</h1>
+          <p class="text-muted mb-0">{{ __('companies.manage_locations') }}</p>
         </div>
-        <a href="{{ route('companies.create') }}"
-           class="inline-flex items-center gap-2 rounded-lg bg-indigo-600 px-4 py-2 text-sm font-medium text-white shadow-sm hover:bg-indigo-700 focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:ring-offset-2">
-            <i class="fa fa-plus text-xs"></i>
-            New Company
+      </div>
+      <div class="heading-actions">
+        <a class="btn btn-secondary btn-sm" href="{{ route('companies.show', $company) }}">
+          <i class="bi bi-arrow-left" aria-hidden="true"></i> {{ __('companies.back') }}
         </a>
+        <a class="btn btn-primary btn-sm" href="{{ route('companies.locations.create', $company) }}">
+          <i class="bi bi-plus-circle" aria-hidden="true"></i> {{ __('companies.add_location') }}
+        </a>
+      </div>
     </div>
-
-    {{-- Filters --}}
-    <form method="GET" action="{{ route('companies.index') }}"
-          class="flex flex-wrap items-center gap-3 rounded-xl border border-gray-200 bg-white p-4 shadow-sm">
-        <div class="flex-1 min-w-[200px]">
-            <input type="text" name="search" value="{{ request('search') }}"
-                   placeholder="Search by name, email, industry…"
-                   class="w-full rounded-lg border border-gray-300 bg-gray-50 px-3 py-2 text-sm focus:border-indigo-400 focus:outline-none focus:ring-1 focus:ring-indigo-400">
-        </div>
-        <div>
-            <select name="status"
-                    class="rounded-lg border border-gray-300 bg-gray-50 px-3 py-2 text-sm focus:border-indigo-400 focus:outline-none focus:ring-1 focus:ring-indigo-400">
-                <option value="">All Statuses</option>
-                @foreach(['pending','active','inactive','blocked'] as $s)
-                    <option value="{{ $s }}" @selected(request('status') === $s)>
-                        {{ ucfirst($s) }}
-                    </option>
-                @endforeach
-            </select>
-        </div>
-        <button type="submit"
-                class="inline-flex items-center gap-2 rounded-lg bg-indigo-600 px-4 py-2 text-sm font-medium text-white hover:bg-indigo-700">
-            <i class="fa fa-magnifying-glass text-xs"></i> Search
-        </button>
-        @if(request()->hasAny(['search','status']))
-            <a href="{{ route('companies.index') }}"
-               class="inline-flex items-center gap-1 text-sm text-gray-500 hover:text-gray-700">
-                <i class="fa fa-xmark"></i> Clear
-            </a>
-        @endif
-    </form>
-
-    {{-- Table --}}
-    <div class="overflow-hidden rounded-xl border border-gray-200 bg-white shadow-sm">
-        <table class="w-full text-sm">
-            <thead class="border-b border-gray-200 bg-gray-50 text-xs uppercase tracking-wide text-gray-500">
-                <tr>
-                    <th class="px-5 py-3 text-left">Company</th>
-                    <th class="px-5 py-3 text-left">Industry</th>
-                    <th class="px-5 py-3 text-left">Contact</th>
-                    <th class="px-5 py-3 text-left">Locations</th>
-                    <th class="px-5 py-3 text-left">Status</th>
-                    <th class="px-5 py-3 text-right">Actions</th>
-                </tr>
-            </thead>
-            <tbody class="divide-y divide-gray-100">
-                @forelse ($companies as $company)
-                <tr class="hover:bg-gray-50 transition-colors">
-                    <td class="px-5 py-3">
-                        <div class="flex items-center gap-3">
-                            @if($company->logo)
-                                <img src="{{ Storage::url($company->logo) }}" alt="{{ $company->name }}"
-                                     class="h-9 w-9 rounded-lg object-cover ring-1 ring-gray-200">
-                            @else
-                                <div class="flex h-9 w-9 items-center justify-center rounded-lg bg-indigo-100 text-indigo-600 font-bold text-sm">
-                                    {{ strtoupper(substr($company->name, 0, 2)) }}
-                                </div>
-                            @endif
-                            <div>
-                                <p class="font-medium text-gray-900">{{ $company->name }}</p>
-                                <p class="text-xs text-gray-400">{{ $company->slug }}</p>
-                            </div>
-                        </div>
-                    </td>
-                    <td class="px-5 py-3 text-gray-600">{{ $company->industry ?? '—' }}</td>
-                    <td class="px-5 py-3">
-                        <p class="text-gray-600">{{ $company->email ?? '—' }}</p>
-                        <p class="text-xs text-gray-400">{{ $company->telephone ?? '' }}</p>
-                    </td>
-                    <td class="px-5 py-3">
-                        <a href="{{ route('companies.locations.index', $company) }}"
-                           class="inline-flex items-center gap-1 rounded-full bg-blue-50 px-2.5 py-0.5 text-xs font-medium text-blue-700 hover:bg-blue-100">
-                            <i class="fa fa-location-dot text-[10px]"></i>
-                            {{ $company->locations_count }}
-                        </a>
-                    </td>
-                    <td class="px-5 py-3">
-                        @include('companies.partials.status-badge', ['status' => $company->status])
-                    </td>
-                    <td class="px-5 py-3 text-right">
-                        <div class="inline-flex items-center gap-1">
-                            <a href="{{ route('companies.show', $company) }}"
-                               class="rounded p-1.5 text-gray-400 hover:bg-gray-100 hover:text-gray-700"
-                               title="View">
-                                <i class="fa fa-eye text-xs"></i>
-                            </a>
-                            <a href="{{ route('companies.edit', $company) }}"
-                               class="rounded p-1.5 text-gray-400 hover:bg-indigo-50 hover:text-indigo-600"
-                               title="Edit">
-                                <i class="fa fa-pen text-xs"></i>
-                            </a>
-                            <form action="{{ route('companies.destroy', $company) }}" method="POST"
-                                  onsubmit="return confirm('Delete {{ addslashes($company->name) }}? This cannot be undone.')">
-                                @csrf @method('DELETE')
-                                <button type="submit"
-                                        class="rounded p-1.5 text-gray-400 hover:bg-red-50 hover:text-red-600"
-                                        title="Delete">
-                                    <i class="fa fa-trash text-xs"></i>
-                                </button>
-                            </form>
-                        </div>
-                    </td>
-                </tr>
-                @empty
-                <tr>
-                    <td colspan="6" class="px-5 py-12 text-center text-gray-400">
-                        <i class="fa fa-building text-3xl mb-3 block opacity-30"></i>
-                        No companies found.
-                        <a href="{{ route('companies.create') }}" class="ml-1 text-indigo-600 hover:underline">Add one</a>.
-                    </td>
-                </tr>
-                @endforelse
-            </tbody>
-        </table>
-    </div>
-
-    {{-- Pagination --}}
-    @if($companies->hasPages())
-        <div>{{ $companies->links() }}</div>
+ 
+    @if ($message = Session::get('success'))
+      <div class="alert alert-success alert-dismissible fade show" role="alert">
+        <strong>{{ __('companies.success') }}!</strong> {{ $message }}
+        <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+      </div>
     @endif
-
-</div>
+ 
+    <section class="panel mt-3">
+      <div class="panel-header">
+        <div>
+          <h2 class="h5 mb-1 section-title">
+            <i class="bi bi-table" aria-hidden="true"></i>
+            <span>{{ __('companies.location_list') }}</span>
+          </h2>
+          <p class="text-muted mb-0">{{ __('companies.manage_locations') }}</p>
+        </div>
+      </div>
+ 
+      <div class="table-responsive">
+        <table class="table align-middle mb-0">
+          <thead>
+            <tr>
+              <th scope="col">{{ __('companies.name') }}</th>
+              <th scope="col">{{ __('companies.address_information') }}</th>
+              <th scope="col">{{ __('companies.contact_information') }}</th>
+              <th scope="col">{{ __('companies.manager_name') }}</th>
+              <th scope="col">{{ __('companies.head_office') }}</th>
+              <th scope="col">{{ __('companies.status') }}</th>
+              <th scope="col" class="text-end">{{ __('companies.actions') }}</th>
+            </tr>
+          </thead>
+          <tbody>
+            @forelse($locations as $location)
+              <tr>
+                <td>
+                  <p class="fw-semibold mb-0">{{ $location->name }}</p>
+                </td>
+                <td>
+                  <p class="mb-0">
+                    {{ collect([$location->city, $location->district, $location->province])->filter()->implode(', ') ?: '—' }}
+                  </p>
+                  <small class="text-muted">{{ $location->country ?? '' }}</small>
+                </td>
+                <td>
+                  <p class="mb-0">{{ $location->email ?? '—' }}</p>
+                  <small class="text-muted">{{ $location->telephone ?? '' }}</small>
+                </td>
+                <td>{{ $location->manager_name ?? '—' }}</td>
+                <td>
+                  @if($location->is_head_office)
+                    <span class="badge bg-primary">
+                      <i class="bi bi-star-fill"></i> {{ __('companies.head_office') }}
+                    </span>
+                  @else
+                    <span class="text-muted small">{{ __('companies.branch') }}</span>
+                  @endif
+                </td>
+                <td>
+                  <span class="badge {{ $location->status === 'active' ? 'bg-success' : 'bg-secondary' }}">
+                    {{ __('companies.status_' . $location->status) }}
+                  </span>
+                </td>
+                <td class="text-end">
+                  <a class="btn btn-light btn-sm"
+                     href="{{ route('companies.locations.show', [$company, $location]) }}">
+                    {{ __('companies.view') }}
+                  </a>
+                  <a class="btn btn-light btn-sm"
+                     href="{{ route('companies.locations.edit', [$company, $location]) }}">
+                    {{ __('companies.edit') }}
+                  </a>
+                  <form action="{{ route('companies.locations.destroy', [$company, $location]) }}"
+                        method="POST" style="display:inline;">
+                    @csrf @method('DELETE')
+                    <button type="submit" class="btn btn-danger btn-sm"
+                            onclick="return confirm('{{ __('companies.delete_location_confirm') }}')">
+                      {{ __('companies.delete') }}
+                    </button>
+                  </form>
+                </td>
+              </tr>
+            @empty
+              <tr>
+                <td colspan="7" class="text-center py-4">
+                  <p class="text-muted">{{ __('companies.no_locations_found') }}</p>
+                </td>
+              </tr>
+            @endforelse
+          </tbody>
+        </table>
+      </div>
+ 
+      @if($locations->hasPages())
+        <div class="d-flex flex-column flex-sm-row align-items-sm-center justify-content-between gap-3 mt-3 px-3 pb-3">
+          <p class="text-muted small mb-0">
+            {{ __('companies.showing') }} {{ $locations->firstItem() }}
+            {{ __('companies.to') }} {{ $locations->lastItem() }}
+            {{ __('companies.of') }} {{ $locations->total() }}
+            {{ __('companies.results') }}
+          </p>
+          {{ $locations->links() }}
+        </div>
+      @endif
+    </section>
+ 
+    @empty
+      <p>{{ __('companies.no_companies') }}</p>
+    @endforelse
+  </div>
+</main>
+@endsection
+  </div>
+</main>
 @endsection

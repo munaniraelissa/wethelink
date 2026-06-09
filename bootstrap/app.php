@@ -17,6 +17,12 @@ return Application::configure(basePath: dirname(__DIR__))
             'role' => \Spatie\Permission\Middleware\RoleMiddleware::class,
         ]);
     })
+    ->withMiddleware(function ($middleware) {
+    $middleware->web(append: [
+        \App\Http\Middleware\SetLocale::class,
+    ]);
+})
     ->withExceptions(function (Exceptions $exceptions): void {
         //
     })->create();
+

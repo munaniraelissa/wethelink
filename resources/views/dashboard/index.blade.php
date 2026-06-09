@@ -117,13 +117,17 @@
           <div>
             <h2 class="h5 mb-1 section-title"><i class="bi bi-people" aria-hidden="true"></i><span>{{ __('dashboard.index.recent_users') }}</span></h2>
             <p class="text-muted mb-0">{{ __('dashboard.index.latest_activity') }}</p>
+            <h2 class="h5 mb-1 section-title"><i class="bi bi-box-seam" aria-hidden="true"></i><span>{{ __('dashboard.index.recent_products') ?? 'Recent Products' }}</span></h2>
+            <p class="text-muted mb-0">{{ __('dashboard.index.latest_products_added') ?? 'Latest products added to your store' }}</p>
           </div>
           <a class="btn btn-outline-secondary btn-sm" href="users.html">{{ __('dashboard.index.manage_users') }}</a>
+          <a class="btn btn-outline-secondary btn-sm" href="{{ route('products.index') }}">{{ __('dashboard.index.manage_products') ?? 'Manage Products' }}</a>
         </div>
         <div class="table-responsive">
           <table class="table align-middle mb-0">
             <thead><tr><th scope="col">{{ __('dashboard.index.table_user') }}</th><th scope="col">{{ __('dashboard.index.table_role') }}</th><th scope="col">{{ __('dashboard.index.table_team') }}</th><th scope="col">{{ __('dashboard.index.table_status') }}</th><th scope="col">{{ __('dashboard.index.table_joined') }}</th><th scope="col" class="text-end">{{ __('dashboard.common.action') }}</th></tr></thead>
             <tbody>
+            <thead>
               <tr>
                 <td>
                   <div class="d-flex align-items-center gap-2">
@@ -139,6 +143,12 @@
                 <td><span class="badge text-bg-success">{{ __('dashboard.statuses.active') }}</span></td>
                 <td>Jan 12, 2026</td>
                 <td class="text-end"><a class="btn btn-light btn-sm" href="/user-details.blade.php">{{ __('dashboard.common.view') }}</a></td>
+                <th scope="col">{{ __('messages.product') ?? 'Product' }}</th>
+                <th scope="col">{{ __('messages.sku') ?? 'SKU' }}</th>
+                <th scope="col">{{ __('messages.category') ?? 'Category' }}</th>
+                <th scope="col">{{ __('messages.price') ?? 'Price' }}</th>
+                <th scope="col">{{ __('messages.status') ?? 'Status' }}</th>
+                <th scope="col" class="text-end">{{ __('dashboard.common.action') }}</th>
               </tr>
               <tr>
                 <td>
@@ -147,6 +157,24 @@
                     <div>
                       <p class="fw-semibold mb-0">Rafi Khan</p>
                       <p class="text-muted small mb-0">rafi@example.com</p>
+            </thead>
+            <tbody>
+              @foreach($products as $product)
+                <tr>
+                  <td>
+                    <div class="d-flex align-items-center gap-2">
+                      @php $featured = $product->images->where('is_featured', true)->first() ?? $product->images->first(); @endphp
+                      @if($featured)
+                        <img class="avatar-img avatar-sm" src="{{ asset('storage/' . $featured->image) }}" alt="{{ $product->name }}">
+                      @else
+                        <div class="avatar-sm bg-light d-flex align-items-center justify-content-center border rounded">
+                          <i class="bi bi-box text-muted"></i>
+                        </div>
+                      @endif
+                      <div>
+                        <p class="fw-semibold mb-0">{{ $product->name }}</p>
+                        <p class="text-muted small mb-0">{{ $product->brand->name ?? '' }}</p>
+                      </div>
                     </div>
                   </div>
                 </td>
@@ -204,6 +232,34 @@
                 <td>Apr 22, 2026</td>
                 <td class="text-end"><a class="btn btn-light btn-sm" href="/user-details.blade.php">{{ __('dashboard.common.view') }}</a></td>
               </tr>
+                  </td>
+                  <td>{{ $product->sku }}</td>
+                  <td>{{ $product->category->name ?? 'N/A' }}</td>
+                  <td>{{ number_format($product->price, 2) }}</td>
+                  <td>
+                    @php
+                      $statusClass = match($product->status) {
+                        'published' => 'text-bg-success',
+                        'draft' => 'text-bg-warning',
+                        'out_of_stock' => 'text-bg-danger',
+                        'inactive' => 'text-bg-secondary',
+                        default => 'text-bg-info'
+                      };
+                    @endphp
+                    <span class="badge {{ $statusClass }}">{{ ucfirst(str_replace('_', ' ', $product->status)) }}</span>
+                  </td>
+                  <td class="text-end">
+                    <a class="btn btn-light btn-sm" href="{{ route('products.show', $product) }}">{{ __('dashboard.common.view') }}</a>
+                  </td>
+                </tr>
+              @endforeach
+              @if($products->isEmpty())
+                <tr>
+                  <td colspan="6" class="text-center py-4 text-muted">
+                    {{ __('messages.no_items') ?? 'No products found.' }}
+                  </td>
+                </tr>
+              @endif
             </tbody>
           </table>
         </div>

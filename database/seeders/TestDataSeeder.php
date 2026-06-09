@@ -8,6 +8,7 @@ use App\Models\User;
 use Illuminate\Database\Seeder;
 use Illuminate\Support\Facades\Hash;
 use Spatie\Permission\Models\Role;
+use Spatie\Permission\Models\Permission;
 
 class TestDataSeeder extends Seeder
 {
@@ -17,9 +18,9 @@ class TestDataSeeder extends Seeder
     public function run(): void
     {
         // Create roles
-        Role::firstOrCreate(['name' => 'buyer', 'guard_name' => 'web']);
-        Role::firstOrCreate(['name' => 'seller', 'guard_name' => 'web']);
-        Role::firstOrCreate(['name' => 'admin', 'guard_name' => 'web']);
+        // Role::firstOrCreate(['name' => 'buyer', 'guard_name' => 'web']);
+        // Role::firstOrCreate(['name' => 'seller', 'guard_name' => 'web']);
+        // Role::firstOrCreate(['name' => 'admin', 'guard_name' => 'web']);
 
         // Create test company
         $company = Company::create([
@@ -53,10 +54,10 @@ class TestDataSeeder extends Seeder
 
         // Create test user
         $user = User::create([
-            'firstname' => 'Test',
+            'firstname' => 'Admin',
             'lastname' => 'User',
-            'email' => 'test@example.com',
-            'telephone' => '9876543210',
+            'email' => 'admin@wethelink.com',
+            'telephone' => '+250786543210',
             'password' => Hash::make('password123'),
             'company_id' => $company->id,
             'company_location_id' => $location->id,
@@ -64,10 +65,19 @@ class TestDataSeeder extends Seeder
         ]);
 
         // Assign default role
-        $user->assignRole('buyer');
+         $adminRole = Role::firstOrCreate(['name' => 'Admin']);
+
+        // Get all permissions
+        $allPermissions = Permission::pluck('name')->toArray();
+
+        // Assign all permissions to Admin
+        $adminRole->syncPermissions($allPermissions);
+
+        // Assign Admin role to the user
+        $user->assignRole($adminRole->name);
 
         $this->command->info('Test data created successfully!');
-        $this->command->info('Email: test@example.com');
+        $this->command->info('Email: admin@wethelink.com');
         $this->command->info('Password: password123');
     }
 }

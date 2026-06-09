@@ -106,6 +106,19 @@
             </div>
           </div>
         @endif
+        @if($product->videos->count() > 0)
+          <hr>
+          <div class="row">
+            <div class="col-md-12">
+              <h5>Videos</h5>
+              <div class="d-flex gap-3 flex-wrap">
+                @foreach($product->videos as $video)
+                  <video src="{{ asset('storage/' . $video->video) }}" controls class="rounded border" style="max-width: 320px; max-height: 240px; background: #000;"></video>
+                @endforeach
+              </div>
+            </div>
+          </div>
+        @endif
       </div>
     </section>
   </div>

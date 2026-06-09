@@ -2,8 +2,8 @@
 
 use App\Http\Controllers\API\AuthController;
 use App\Http\Controllers\API\CartController;
-use App\Http\Controllers\API\CompanyController;
 use App\Http\Controllers\API\CategoryController;
+use App\Http\Controllers\API\CompanyController;
 use App\Http\Controllers\API\OrderController;
 use App\Http\Controllers\API\PermissionController;
 use App\Http\Controllers\API\ProductController;

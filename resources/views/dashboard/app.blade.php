@@ -30,13 +30,13 @@
           <span class="nav-icon"><i class="bi bi-speedometer2" aria-hidden="true"></i></span>
           <span class="nav-text">{{ __('dashboard.sidebar.dashboard') }}</span>
         </a>
-        <a class="nav-link" href="users.html">
+        <a class="nav-link" href="{{ route('users.index') }}">
           <span class="nav-icon"><i class="bi bi-people" aria-hidden="true"></i></span>
           <span class="nav-text">{{ __('dashboard.sidebar.users') }}</span>
         </a>
         <a class="nav-link" href="{{ route('products.index') }}">
           <span class="nav-icon"><i class="bi bi-box-seam" aria-hidden="true"></i></span>
-          <span class="nav-text">Products</span>
+          <span class="nav-text">{{ __('products.products') }}</span>
         </a>
         <a class="nav-link" href="{{ route('categories.index') }}">
           <span class="nav-icon"><i class="bi bi-tags" aria-hidden="true"></i></span>

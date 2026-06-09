@@ -61,7 +61,7 @@ return new class extends Migration
                 'inactive'
             ])->default('draft');
 
-            $table->boolean('featured')->default(false);
+            $table->boolean('is_featured')->default(false);
 
             $table->integer('views')->default(0);
 

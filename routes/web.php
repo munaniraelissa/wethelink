@@ -14,6 +14,7 @@ use App\Http\Controllers\SizeController;
 use App\Http\Controllers\ColorController;
 use App\Http\Controllers\CompanyController;
 use App\Http\Controllers\CompanyLocationController;
+use App\Http\Controllers\DashboardController;
 use Illuminate\Support\Facades\Route;
 
 
@@ -60,9 +61,7 @@ Route::get('trans/{locale}', function ($locale) {
 
 Route::middleware('auth')->group(function () {
     Route::post('/logout', [AuthController::class, 'logout'])->name('logout');
-    Route::get('/main-dashboard', function () {
-        return view('dashboard.index');
-    })->name('dashboard.index');
+    Route::get('/main-dashboard', [DashboardController::class, 'index'])->name('dashboard.index');
 
     // Profile routes
     Route::get('/profile', function () {

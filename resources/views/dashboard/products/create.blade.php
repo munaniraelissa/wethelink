@@ -18,6 +18,18 @@
             </div>
         </div>
 
+        @if ($errors->any())
+            <div class="alert alert-danger alert-dismissible fade show" role="alert">
+                <strong>{{ __('messages.error') ?? 'Whoops!' }}</strong> {{ __('messages.validation_errors') ?? 'There were some problems with your input.' }}
+                <ul class="mb-0 mt-2">
+                    @foreach ($errors->all() as $error)
+                        <li>{{ $error }}</li>
+                    @endforeach
+                </ul>
+                <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+            </div>
+        @endif
+
         @if ($message = Session::get('success'))
             <div class="alert alert-success alert-dismissible fade show" role="alert">
                 <strong>{{ __('messages.success') }}!</strong> {{ $message }}
@@ -180,17 +192,6 @@
                         </div>
                     </div>
 
-                    <!-- Featured Image -->
-                    <div class="mb-4">
-                        <h5 class="mb-2">{{ __('messages.featured_image') }}</h5>
-                        <div class="mb-3">
-                            <input type="file" name="featured_image" id="featuredImageInput" class="form-control" accept="image/*">
-                        </div>
-                        <div id="featuredImagePreview" class="mb-3" style="display: none;">
-                            <img id="featuredPreviewImg" src="" alt="{{ __('messages.preview') }}" class="img-thumbnail" style="max-width: 300px;">
-                        </div>
-                    </div>
-
                     <!-- Product Variants (Size-Color combinations) -->
                     <div class="mb-4">
                         <div class="d-flex align-items-end mb-2">
@@ -233,6 +234,9 @@
                         <div class="mb-3">
                             <input type="file" name="new_product_images[]" id="productImagesInput" class="form-control" accept="image/*" multiple>
                         </div>
+                        @error('new_product_images')
+                            <div class="text-danger small mb-2">{{ $message }}</div>
+                        @enderror
                         <div id="productImagesPreview" class="d-flex flex-wrap gap-2 mb-3">
                             <!-- Preview will be shown here -->
                         </div>
@@ -244,6 +248,9 @@
                         <div class="mb-3">
                             <input type="file" name="product_videos[]" id="productVideosInput" class="form-control" accept="video/*" multiple>
                         </div>
+                        @error('product_videos')
+                            <div class="text-danger small mb-2">{{ $message }}</div>
+                        @enderror
                         <div id="productVideosPreview" class="d-flex flex-wrap gap-2 mb-3">
                             <!-- Preview will be shown here -->
                         </div>
@@ -285,8 +292,8 @@
 
                     <div class="mb-3">
                         <div class="form-check">
-                            <input type="checkbox" name="featured" id="featured" class="form-check-input" {{ old('featured') ? 'checked' : '' }}>
-                            <label class="form-check-label" for="featured">{{ __('messages.featured') }} {{ __('messages.product') }}</label>
+                            <input type="checkbox" name="is_featured" id="is_featured" value="1" class="form-check-input" {{ old('is_featured') ? 'checked' : '' }}>
+                            <label class="form-check-label" for="is_featured">{{ __('messages.featured') }} {{ __('messages.product') }}</label>
                         </div>
                     </div>
                     <div class="d-flex gap-2">
@@ -314,6 +321,12 @@
                             <label class="form-label">{{ __('messages.name') }} *</label>
                             <input type="text" name="name" class="form-control" required>
                         </div>
+                        <div class="mb-3">
+                            <div class="form-check">
+                                <input type="checkbox" name="status" value="active" class="form-check-input" id="catStatus" checked>
+                                <label class="form-check-label" for="catStatus">{{ __('messages.active') ?? 'Active' }}</label>
+                            </div>
+                        </div>
                     </div>
                     <div class="modal-footer">
                         <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">{{ __('messages.close') ?? 'Close' }}</button>
@@ -337,6 +350,12 @@
                         <div class="mb-3">
                             <label class="form-label">{{ __('messages.name') }} *</label>
                             <input type="text" name="name" class="form-control" required>
+                        </div>
+                        <div class="mb-3">
+                            <div class="form-check">
+                                <input type="checkbox" name="status" value="active" class="form-check-input" id="brandStatus" checked>
+                                <label class="form-check-label" for="brandStatus">{{ __('messages.active') ?? 'Active' }}</label>
+                            </div>
                         </div>
                     </div>
                     <div class="modal-footer">
@@ -401,24 +420,6 @@
             const sizes = @json($sizes);
             const colors = @json($colors);
             let variantIndex = 0;
-
-            // Featured Image Preview
-            const featuredImageInput = document.getElementById('featuredImageInput');
-            const featuredPreview = document.getElementById('featuredImagePreview');
-            const featuredPreviewImg = document.getElementById('featuredPreviewImg');
-            
-            featuredImageInput.addEventListener('change', function(e) {
-                if (e.target.files && e.target.files[0]) {
-                    const reader = new FileReader();
-                    reader.onload = function(event) {
-                        featuredPreviewImg.src = event.target.result;
-                        featuredPreview.style.display = 'block';
-                    };
-                    reader.readAsDataURL(e.target.files[0]);
-                } else {
-                    featuredPreview.style.display = 'none';
-                }
-            });
 
             // Product Images Preview
             const productImagesInput = document.getElementById('productImagesInput');
