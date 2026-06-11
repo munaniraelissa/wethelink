@@ -5,6 +5,7 @@ namespace App\Http\Controllers;
 use App\Models\Category;
 use Illuminate\Http\Request;
 use Illuminate\Support\Str;
+use Illuminate\Support\Facades\Storage;
 use Illuminate\Validation\Rule;
 
 class CategoryController extends Controller
@@ -61,10 +62,9 @@ class CategoryController extends Controller
         $validated['is_active'] = $request->has('is_active');
 
         if ($request->hasFile('image')) {
-            $imagePath = $request->file('image')->store('categories', 'public');
+            $imagePath = $request->file('image')->store('category', 'public');
             $validated['image'] = $imagePath;
         }
-
         $category = Category::create($validated);
 
         if ($request->ajax()) {
@@ -113,9 +113,9 @@ class CategoryController extends Controller
         if ($request->hasFile('image')) {
             // Delete old image
             if ($category->image) {
-                \Storage::disk('public')->delete($category->image);
+                Storage::disk('public')->delete($category->image);
             }
-            $imagePath = $request->file('image')->store('categories', 'public');
+            $imagePath = $request->file('image')->store('category', 'public');
             $validated['image'] = $imagePath;
         }
 
@@ -131,7 +131,7 @@ class CategoryController extends Controller
 
         // Delete image
         if ($category->image) {
-            \Storage::disk('public')->delete($category->image);
+            Storage::disk('public')->delete($category->image);
         }
 
         $category->delete();

@@ -6,9 +6,10 @@
   <meta name="description" content="adminHMD professional admin dashboard template">
   <title>Dashboard | wethelink</title>
 
-  <link rel="stylesheet" href="../dashboard/assets/css/bootstrap.min.css">
-  <link rel="stylesheet" href="../dashboard/assets/vendors/bootstrap-icons/bootstrap-icons.css">
-  <link rel="stylesheet" href="../dashboard/assets/css/style.css">
+  <link rel="stylesheet" href="{{ asset('dashboard/assets/css/bootstrap.min.css') }}">
+  <link rel="stylesheet" href="{{ asset('dashboard/assets/vendors/bootstrap-icons/bootstrap-icons.css') }}">
+  <link rel="stylesheet" href="{{ asset('dashboard/assets/css/style.css') }}">
+  <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet">
 </head>
 
 <body>
@@ -17,10 +18,10 @@
 
     <aside class="admin-sidebar" id="adminSidebar" aria-label="Main navigation">
       <div class="sidebar-header">
-        <a class="brand-mark" href="index.html" aria-label="adminHMD dashboard">
-          <img class="brand-icon" src="/cms/logo/small_logo.png" alt="Logo" style="max-width: 100%; height: auto;">
+        <a class="brand-mark" href="{{ url('/main-dashboard') }}" aria-label="adminHMD dashboard">
+          <img class="brand-icon" src="{{ asset('cms/logo/small_logo.png') }}" alt="Logo" style="max-width: 100%; height: auto;">
           <span class="brand-copy">
-            <img class="logo-img" src="/cms/logo/logo_word.png" alt="Logo" style="max-width: 100%; height: auto;">
+            <img class="logo-img" src="{{ asset('cms/logo/logo_word.png') }}" alt="Logo" style="max-width: 100%; height: auto;">
           </span>
         </a>
       </div>
@@ -101,7 +102,7 @@
       </nav>
 
       <div class="sidebar-user">
-        <img class="avatar-img avatar-md sidebar-user-avatar" src="../dashboard/assets/images/avatar/avatar.jpg" alt="Admin Admin">
+        <img class="avatar-img avatar-md sidebar-user-avatar" src="{{ asset('dashboard/assets/images/avatar/avatar.jpg') }}" alt="Admin Admin">
         <strong>Admin Admin</strong>
         <small>{{ __('dashboard.sidebar.active_workspace') }}</small>
       </div>
@@ -163,7 +164,7 @@
 
             <div class="dropdown">
               <button class="profile-button dropdown-toggle" type="button" data-bs-toggle="dropdown" aria-expanded="false">
-                <img class="avatar-img avatar-sm" src="../dashboard/assets/images/avatar/avatar.jpg" alt="Admin Admin">
+                <img class="avatar-img avatar-sm" src="{{ asset('dashboard/assets/images/avatar/avatar.jpg') }}" alt="Admin Admin">
                 <span class="profile-name d-none d-sm-inline">Admin Admin</span>
               </button>
               <ul class="dropdown-menu dropdown-menu-end">
@@ -188,7 +189,7 @@
     </div>
   </div>
 
-  <script src="../dashboard/assets/js/bootstrap.bundle.min.js"></script>
-  <script src="../dashboard/assets/js/main.js"></script>
+  <script src="{{ asset('dashboard/assets/js/bootstrap.bundle.min.js') }}"></script>
+  <script src="{{ asset('dashboard/assets/js/main.js') }}"></script>
 </body>
 </html>

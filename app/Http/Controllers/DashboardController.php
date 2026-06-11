@@ -4,24 +4,41 @@ namespace App\Http\Controllers;
 
 use App\Models\Brand;
 use App\Models\Category;
-use App\Models\Color;
-use App\Models\CompanyLocation;
 use App\Models\Product;
-use App\Models\ProductImage;
-use App\Models\ProductVariant;
-use App\Models\ProductVideo;
-use App\Models\Size;
+use App\Models\User;
+use App\Models\Company;
+use App\Models\CompanyLocation;
 use Illuminate\Http\Request;
-use Illuminate\Support\Facades\Storage;
-use Illuminate\Support\Str;
-use Illuminate\Validation\Rule;
-
 
 class DashboardController extends Controller
 {
     public function index(Request $request)
     {
-       $company_id = auth()->user()->company_id;
+        $query = User::with(['company', 'roles'])->orderBy('id', 'desc');
+
+        if ($request->filled('search')) {
+            $search = $request->search;
+            $query->where(function ($q) use ($search) {
+                $q->where('firstname', 'like', "%{$search}%")
+                    ->orWhere('lastname', 'like', "%{$search}%")
+                    ->orWhere('email', 'like', "%{$search}%")
+                    ->orWhere('telephone', 'like', "%{$search}%");
+            });
+        }
+
+        if ($request->filled('status')) {
+            $query->where('status', $request->status);
+        }
+
+        if ($request->filled('company_id')) {
+            $query->where('company_id', $request->company_id);
+        }
+
+        $users = $query->paginate(15);
+        $companies = Company::all();
+        $statuses = ['pending', 'active', 'inactive', 'suspended'];
+         // Fetch the 5 most recent users
+        $company_id = auth()->user()->company_id;
 
         $query = Product::where('company_id', $company_id)
             ->with(['category', 'brand', 'images'])
@@ -51,6 +68,6 @@ class DashboardController extends Controller
         $brands = Brand::where('company_id', $company_id)->orderBy('name')->get();
         $statuses = ['draft', 'published', 'out_of_stock', 'inactive'];
 
-        return view('dashboard.index', compact('products', 'categories', 'brands', 'statuses'));
+        return view('dashboard.index', compact('users', 'companies', 'statuses', 'products', 'categories', 'brands', 'statuses'));
     }
 }

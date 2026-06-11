@@ -23,6 +23,15 @@
         <form action="{{ route('categories.update', $category->id) }}" method="POST" enctype="multipart/form-data">
           @csrf
           @method('PUT')
+          @if ($errors->any())
+            <div class="alert alert-danger">
+                <ul class="mb-0">
+                    @foreach ($errors->all() as $error)
+                        <li>{{ $error }}</li>
+                    @endforeach
+                </ul>
+            </div>
+        @endif
           <div class="row">
             <div class="col-md-6 mb-3">
               <label class="form-label">Name *</label>
@@ -75,10 +84,21 @@
           </div>
           <div class="mb-3">
             <div class="form-check">
-              <input type="checkbox" name="is_active" id="is_active" class="form-check-input" {{ old('is_active', $category->is_active) ? 'checked' : '' }}>
-              <label class="form-check-label" for="is_active">Active</label>
+                <input type="checkbox"
+                      name="is_active"
+                      id="is_active"
+                      value="1"
+                      class="form-check-input"
+                      {{ old('is_active', $category->is_active) ? 'checked' : '' }}>
+                <label class="form-check-label" for="is_active">
+                    Active
+                </label>
             </div>
-          </div>
+
+            @error('is_active')
+                <div class="text-danger small">{{ $message }}</div>
+            @enderror
+        </div>
           <div class="d-flex gap-2">
             <button type="submit" class="btn btn-primary">
               <i class="bi bi-save" aria-hidden="true"></i> Update

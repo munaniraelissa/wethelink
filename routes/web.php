@@ -27,7 +27,7 @@ Route::view('/tables', 'dashboard.tables')->name('tables');
 Route::view('/forms', 'dashboard.forms')->name('forms');
 Route::view('/components', 'dashboard.components')->name('components');
 Route::view('/alerts', 'dashboard.alerts')->name('alerts');
-Route::view('/modals', 'dashboard.modals')->name('modals');
+Route::view('/edit-form', 'dashboard.categories.edit')->name('edit.form');
 Route::view('/settings', 'dashboard.settings')->name('settings');
 Route::view('/blank', 'dashboard.blank')->name('blank');
 Route::view('/404', 'dashboard.404')->name('404');
