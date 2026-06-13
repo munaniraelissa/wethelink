@@ -3,8 +3,7 @@
 @section('content')
 <main class="dashboard-content">
   <div class="container-fluid px-3 px-lg-4 py-4">
-    @forelse ($companies as $company)
- 
+    @if(isset($company))
     {{-- Page Heading --}}
     <div class="page-heading">
       <div class="page-heading-copy">
@@ -117,7 +116,7 @@
         </table>
       </div>
  
-      @if($locations->hasPages())
+      @if(isset($locations) && $locations->hasPages())
         <div class="d-flex flex-column flex-sm-row align-items-sm-center justify-content-between gap-3 mt-3 px-3 pb-3">
           <p class="text-muted small mb-0">
             {{ __('companies.showing') }} {{ $locations->firstItem() }}
@@ -129,13 +128,9 @@
         </div>
       @endif
     </section>
- 
-    @empty
-      <p>{{ __('companies.no_companies') }}</p>
-    @endforelse
-  </div>
-</main>
-@endsection
+    @else
+      <div class="alert alert-info">{{ __('companies.no_companies') ?? 'No company selected.' }}</div>
+    @endif
   </div>
 </main>
 @endsection

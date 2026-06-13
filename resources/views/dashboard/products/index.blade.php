@@ -65,6 +65,8 @@
               <th scope="col">{{ __('products.name') }}</th>
               <th scope="col">{{ __('products.category') }}</th>
               <th scope="col">{{ __('products.brand') }}</th>
+              <th scope="col">{{ __('products.company') ?? 'Company' }}</th>
+              <th scope="col">{{ __('products.moq') ?? 'MOQ' }}</th>
               <th scope="col">{{ __('products.price') }}</th>
               <th scope="col">{{ __('products.stock') }}</th>
               <th scope="col">{{ __('products.status') }}</th>
@@ -93,6 +95,8 @@
                 </td>
                 <td>{{ $product->category ? $product->category->name : '-' }}</td>
                 <td>{{ $product->brand ? $product->brand->name : '-' }}</td>
+                <td>{{ $product->company ? $product->company->name : '-' }}</td>
+                <td>{{ $product->minimum_order_quantity }}</td>
                 <td>
                   @if($product->discount_price)
                     <span class="text-decoration-line-through text-muted">${{ number_format($product->price, 2) }}</span>
@@ -128,7 +132,7 @@
             @empty
               <tr>
                 <td colspan="8" class="text-center py-4">
-                  <p class="text-muted">{{ __('products.no_products_found') }}</p>
+                  <p class="text-muted">{{ __('messages.no_items') ?? 'No products found.' }}</p>
                 </td>
               </tr>
             @endforelse

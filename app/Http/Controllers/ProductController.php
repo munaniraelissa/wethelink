@@ -23,7 +23,7 @@ class ProductController extends Controller
         $company_id = auth()->user()->company_id;
 
         $query = Product::where('company_id', $company_id)
-            ->with(['category', 'brand', 'images'])
+            ->with(['category', 'brand', 'images', 'company']) // Eager load the 'company' relationship
             ->orderBy('id', 'desc');
 
         if ($request->filled('search')) {

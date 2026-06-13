@@ -92,26 +92,34 @@
                 <div class="col-lg-3 col-md-6 col-sm-12 pb-1">
                     <div class="card product-item border-0 mb-4">
                         <div class="card-header product-img position-relative overflow-hidden bg-transparent border p-0" style="height: 300px;">
-                            <img class="img-fluid w-100 h-100" src="{{ $product->image ? asset('storage/' . $product->image) : asset('cms/img/product-1.jpg') }}" alt="{{ $product->name }}" style="object-fit: cover;">
+                            @php $featured = $product->images->where('is_featured', true)->first() ?? $product->images->first(); @endphp
+                            @if($featured)
+                                <img class="avatar-img avatar-sm" src="{{ asset('storage/' . $featured->image) }}" alt="{{ $product->name }}">
+                            @else
+                                <div class="avatar-sm bg-light d-flex align-items-center justify-content-center border rounded">
+                                <i class="bi bi-box text-muted"></i>
+                                </div>
+                            @endif
                         </div>
                         <div class="card-body border-left border-right text-center p-0 pt-4 pb-3">
                             <h6 class="text-truncate mb-3">{{ $product->name }}</h6>
                             <div class="d-flex justify-content-center">
-                                <h6>${{ number_format($product->price, 2) }}</h6>
+                                <h6>{{ number_format($product->price, 2) }}RWF</h6>
                                 @if($product->old_price)
-                                    <h6 class="text-muted ml-2"><del>${{ number_format($product->old_price, 2) }}</del></h6>
+                                    <h6 class="text-muted ml-2"><del>{{ number_format($product->old_price, 2) }}RWF </del></h6>
                                 @endif
                             </div>
                         </div>
                         <div class="card-footer d-flex justify-content-between bg-light border">
                             <a href="{{ url('product/'.$product->slug) }}" class="btn btn-sm text-dark p-0"><i class="fas fa-eye text-primary mr-1"></i>View Detail</a>
-                            <a href="" class="btn btn-sm text-dark p-0"><i class="fas fa-shopping-cart text-primary mr-1"></i>Add To Cart</a>
+                            <a href="https://wa.me/{{ preg_replace('/[^0-9]/', '', $product->company->telephone ?? '') }}?text={{ urlencode($product->short_description ?? 'Hello, I am interested in ' . $product->name) }}" class="btn btn-sm text-dark p-0" target="_blank"><i class="fab fa-whatsapp text-success mr-1"></i>Chat Now</a>
+                            {{-- <a href="" class="btn btn-sm text-dark p-0"><i class="fas fa-shopping-cart text-primary mr-1"></i>Add To Cart</a> --}}
                         </div>
                     </div>
                 </div>
             @endforeach
             <div class="col-12 pb-1">
-                {{ $trendyProducts->links() }}
+                {{-- {{ $trendyProducts->links() }} --}}
             </div>
         </div>
     </div>
@@ -150,20 +158,43 @@
                 <div class="col-lg-3 col-md-6 col-sm-12 pb-1">
                     <div class="card product-item border-0 mb-4">
                         <div class="card-header product-img position-relative overflow-hidden bg-transparent border p-0" style="height: 300px;">
-                            <img class="img-fluid w-100 h-100" src="{{ $product->image ? asset('storage/' . $product->image) : asset('cms/img/product-1.jpg') }}" alt="{{ $product->name }}" style="object-fit: cover;">
+                            @php $featured = $product->images->where('is_featured', true)->first() ?? $product->images->first(); @endphp
+                            @if($featured)
+                                <img class="avatar-img avatar-sm" src="{{ asset('storage/' . $featured->image) }}" alt="{{ $product->name }}">
+                            @else
+                                <div class="avatar-sm bg-light d-flex align-items-center justify-content-center border rounded">
+                                <i class="bi bi-box text-muted"></i>
+                                </div>
+                            @endif
                         </div>
                         <div class="card-body border-left border-right text-center p-0 pt-4 pb-3">
                             <h6 class="text-truncate mb-3">{{ $product->name }}</h6>
                             <div class="d-flex justify-content-center">
-                                <h6>${{ number_format($product->price, 2) }}</h6>
-                                @if($product->old_price)
-                                    <h6 class="text-muted ml-2"><del>${{ number_format($product->old_price, 2) }}</del></h6>
-                                @endif
+                                <h6>
+                                    @if($product->discount_price)
+                                        <span class="text-decoration-line-through text-muted">{{ number_format($product->price, 2) }}RWF</span>
+                                        <span class="text-success fw-bold">{{ number_format($product->discount_price, 2) }}RWF</span>
+                                    @else
+                                        {{ number_format($product->price, 2) }}RWF
+                                    @endif
+                                </h6>
                             </div>
+                            <p>
+                                {{ $product->company ? $product->company->name : '-' }}
+                                @if($product->company)
+                                    @if($product->company->status === 'active')
+                                        <i class="fas fa-check-circle text-primary" title="Active"></i>
+                                    @elseif($product->company->status === 'inactive')
+                                        <i class="fas fa-times-circle text-danger" title="Inactive"></i>
+                                    @endif
+                                @endif
+                                _{{ $product->minimum_order_quantity }}{{ $product->unit }} (MOQ)
+                            </p>
                         </div>
                         <div class="card-footer d-flex justify-content-between bg-light border">
                             <a href="{{ url('product/'.$product->slug) }}" class="btn btn-sm text-dark p-0"><i class="fas fa-eye text-primary mr-1"></i>View Detail</a>
-                            <a href="" class="btn btn-sm text-dark p-0"><i class="fas fa-shopping-cart text-primary mr-1"></i>Add To Cart</a>
+                            <a href="https://wa.me/{{ preg_replace('/[^0-9]/', '', $product->company->telephone ?? '') }}?text={{ urlencode($product->short_description ?? 'Hello, I am interested in ' . $product->name) }}" class="btn btn-sm text-dark p-0" target="_blank"><i class="fab fa-whatsapp text-success mr-1"></i>Chat Now</a>
+                            {{-- <a href="" class="btn btn-sm text-dark p-0"><i class="fas fa-shopping-cart text-primary mr-1"></i>Add To Cart</a> --}}
                         </div>
                     </div>
                 </div>

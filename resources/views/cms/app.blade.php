@@ -24,6 +24,7 @@
 
     <!-- Customized Bootstrap Stylesheet -->
     <link href="{{ asset('cms/css/style.css') }}" rel="stylesheet">
+    
 </head>
 
 <body>
@@ -102,27 +103,12 @@
                     <h6 class="m-0">{{ __('cms.categories') }}</h6>
                     <i class="fa fa-angle-down text-dark"></i>
                 </a>
-                <nav class="collapse show navbar navbar-vertical navbar-light align-items-start p-0 border border-top-0 border-bottom-0"
-                    id="navbar-vertical">
+                <nav class="collapse {{ Route::is('home') ? 'show' : '' }} navbar navbar-vertical navbar-light align-items-start p-0 border border-top-0 border-bottom-0 bg-light"
+                    id="navbar-vertical" style="{{ Route::is('home') ? '' : 'position: absolute; z-index: 1050; width: calc(100% - 30px);' }}">
                     <div class="navbar-nav w-100 overflow-hidden" style="height: 410px">
-                        <div class="nav-item dropdown">
-                            <a href="#" class="nav-link" data-toggle="dropdown">Dresses <i
-                                    class="fa fa-angle-down float-right mt-1"></i></a>
-                            <div class="dropdown-menu position-absolute bg-secondary border-0 rounded-0 w-100 m-0">
-                                <a href="#" class="dropdown-item">{{ __('cms.category.men') }}</a>
-                                <a href="#" class="dropdown-item">{{ __('cms.category.women') }}</a>
-                                <a href="#" class="dropdown-item">{{ __('cms.category.baby') }}</a>
-                            </div>
-                        </div>
-                        <a href="#" class="nav-item nav-link">Shirts</a>
-                        <a href="#" class="nav-item nav-link">Jeans</a>
-                        <a href="#" class="nav-item nav-link">Swimwear</a>
-                        <a href="#" class="nav-item nav-link">Sleepwear</a>
-                        <a href="#" class="nav-item nav-link">Sportswear</a>
-                        <a href="#" class="nav-item nav-link">Jumpsuits</a>
-                        <a href="#" class="nav-item nav-link">Blazers</a>
-                        <a href="#" class="nav-item nav-link">Jackets</a>
-                        <a href="#" class="nav-item nav-link">Shoes</a>
+                        @foreach($categories as $category)
+                            <a href="{{ route('shop', ['category' => $category->id]) }}" class="nav-item nav-link">{{ $category->name }}</a>
+                        @endforeach
                     </div>
                 </nav>
             </div>
@@ -171,6 +157,7 @@
                         </div>
                     </div>
                 </nav>
+                @if(Route::is('home'))
                 <div id="header-carousel" class="carousel slide" data-ride="carousel">
                     <div class="carousel-inner">
                         <div class="carousel-item active" style="height: 410px;">
@@ -211,6 +198,7 @@
                         </div>
                     </a>
                 </div>
+                @endif
             </div>
         </div>
     </div>
