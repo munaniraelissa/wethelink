@@ -19,14 +19,10 @@ class CmsController extends Controller
         $categories = Category::withCount('products')->get();
 
         // Fetch Trendy Products and eager load relationships for the view
-        $trendyProducts = Product::with(['images', 'company'])->latest()
-            ->take(8)
-            ->get();
+        $trendyProducts = Product::with(['images', 'company'])->latest()->paginate(8);
 
         // Fetch the 8 most recent products for the "Just Arrived" section
-        $newArrivals = Product::with(['images', 'company'])->latest()
-            ->take(8)
-            ->get();
+        $newArrivals = Product::with(['images', 'company'])->latest()->paginate(8);
 
         return view('cms.index', compact('categories', 'trendyProducts', 'newArrivals'));
     }
@@ -34,7 +30,6 @@ class CmsController extends Controller
     /**
      * Display the shop page.
      *
-     * @param  \Illuminate\Http\Request  $request
      * @return \Illuminate\View\View
      */
     public function shop(Request $request)
@@ -50,7 +45,7 @@ class CmsController extends Controller
 
         // Filter by search keyword if provided
         if ($request->filled('search')) {
-            $query->where('name', 'like', '%' . $request->search . '%');
+            $query->where('name', 'like', '%'.$request->search.'%');
         }
 
         $products = $query->latest()->paginate(9);
@@ -63,10 +58,19 @@ class CmsController extends Controller
      *
      * @return \Illuminate\View\View
      */
-    public function detail()
+    public function detail(Product $product, Request $request)
     {
         $categories = Category::all();
-        return view('cms.detail', compact('categories'));
+        $query = Product::with(['images', 'company']);
+
+        // Filter by category if provided in the URL
+        if ($request->filled('category')) {
+            $query->where('category_id', $request->category);
+        }
+
+        $relatedProducts = $query->latest()->paginate(9);
+
+        return view('cms.detail', compact('categories', 'product', 'relatedProducts'));
     }
 
     /**
@@ -77,6 +81,7 @@ class CmsController extends Controller
     public function contact()
     {
         $categories = Category::all();
+
         return view('cms.contact', compact('categories'));
     }
 
@@ -88,6 +93,7 @@ class CmsController extends Controller
     public function cart()
     {
         $categories = Category::all();
+
         return view('cms.cart', compact('categories'));
     }
 
@@ -99,6 +105,7 @@ class CmsController extends Controller
     public function checkout()
     {
         $categories = Category::all();
+
         return view('cms.checkout', compact('categories'));
     }
 }

@@ -15,6 +15,7 @@ use App\Http\Controllers\ColorController;
 use App\Http\Controllers\CompanyController;
 use App\Http\Controllers\CompanyLocationController;
 use App\Http\Controllers\DashboardController;
+use App\Http\Controllers\ReviewController;
 use Illuminate\Support\Facades\Route;
 
 
@@ -39,7 +40,8 @@ Route::view('/confirm-password', 'auth.confirm-password')->name('password.confir
 
 Route::get('/', [CmsController::class, 'index'])->name('home');
 Route::get('/shop', [CmsController::class, 'shop'])->name('shop');
-Route::get('/detail', [CmsController::class, 'detail'])->name('detail');
+Route::get('/product/{slug}', [CmsController::class, 'detail'])->name('product.detail');
+Route::post('product/{id}/review', [ReviewController::class, 'store'])->name('reviews.store');
 Route::get('/contact', [CmsController::class, 'contact'])->name('contact');
 Route::get('/cart', [CmsController::class, 'cart'])->name('cart');
 Route::get('/checkout', [CmsController::class, 'checkout'])->name('checkout');

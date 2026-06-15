@@ -127,7 +127,7 @@
                             <a href="{{ route('home') }}"
                                 class="nav-item nav-link active">{{ __('cms.nav.home') }}</a>
                             <a href="{{ route('shop') }}" class="nav-item nav-link">{{ __('cms.nav.shop') }}</a>
-                            <a href="{{ route('detail') }}" class="nav-item nav-link">{{ __('cms.nav.detail') }}</a>
+                            {{-- <a href="{{ route('detail') }}" class="nav-item nav-link">{{ __('cms.nav.detail') }}</a> --}}
                             <div class="nav-item dropdown">
                                 <a href="#" class="nav-link dropdown-toggle"
                                     data-toggle="dropdown">{{ __('cms.nav.pages') }}</a>
@@ -230,8 +230,8 @@
                                     class="fa fa-angle-right mr-2"></i>{{ __('cms.nav.home') }}</a>
                             <a class="text-dark mb-2" href="{{ route('shop') }}"><i
                                     class="fa fa-angle-right mr-2"></i>{{ __('cms.page.shop') }}</a>
-                            <a class="text-dark mb-2" href="{{ route('detail') }}"><i
-                                    class="fa fa-angle-right mr-2"></i>{{ __('cms.page.detail') }}</a>
+                            {{-- <a class="text-dark mb-2" href="{{ route('detail') }}"><i
+                                    class="fa fa-angle-right mr-2"></i>{{ __('cms.page.detail') }}</a> --}}
                             <a class="text-dark mb-2" href="{{ route('cart') }}"><i
                                     class="fa fa-angle-right mr-2"></i>{{ __('cms.nav.cart') }}</a>
                             <a class="text-dark mb-2" href="{{ route('checkout') }}"><i
@@ -247,8 +247,8 @@
                                     class="fa fa-angle-right mr-2"></i>{{ __('cms.nav.home') }}</a>
                             <a class="text-dark mb-2" href="{{ route('shop') }}"><i
                                     class="fa fa-angle-right mr-2"></i>{{ __('cms.page.shop') }}</a>
-                            <a class="text-dark mb-2" href="{{ route('detail') }}"><i
-                                    class="fa fa-angle-right mr-2"></i>{{ __('cms.page.detail') }}</a>
+                            {{-- <a class="text-dark mb-2" href="{{ route('detail') }}"><i
+                                    class="fa fa-angle-right mr-2"></i>{{ __('cms.page.detail') }}</a> --}}
                             <a class="text-dark mb-2" href="{{ route('cart') }}"><i
                                     class="fa fa-angle-right mr-2"></i>{{ __('cms.nav.cart') }}</a>
                             <a class="text-dark mb-2" href="{{ route('checkout') }}"><i
