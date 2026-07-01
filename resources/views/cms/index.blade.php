@@ -92,10 +92,10 @@
                 <div class="col-lg-3 col-md-6 col-sm-12 pb-1">
                     <div class="card product-item border-0 mb-4">
                         <a href="{{ route('product.detail', $product->slug) }}">
-                            <div class="card-header product-img position-relative overflow-hidden bg-transparent border p-0" style="height: 300px;">
+                            <div class="card-header product-img position-relative overflow-hidden bg-white border p-0" style="height: 300px;">
                                 @php $featured = $product->images->where('is_featured', true)->first() ?? $product->images->first(); @endphp
                                 @if($featured)
-                                    <img class="img-fluid w-100" src="{{ asset('storage/' . $featured->image) }}" alt="{{ $product->name }}">
+                                    <img class="img-fluid w-100 h-100" src="{{ asset('storage/' . $featured->image) }}" alt="{{ $product->name }}">
                                 @else
                                     <div class="bg-light d-flex align-items-center justify-content-center h-100">
                                         <i class="fas fa-image fa-3x text-muted"></i>
@@ -106,18 +106,13 @@
                         <div class="card-body border-left border-right text-center p-0 pt-4 pb-3">
                             <h6 class="text-truncate mb-3">{{ $product->name }}</h6>
                             <div class="d-flex justify-content-center">
-                                <h6>
-                                    @if($product->discount_price)
-                                        <span class="text-decoration-line-through text-muted"><del>{{ number_format($product->price, 2) }}RWF</del></span>
-                                        <span class="text-success fw-bold">{{ number_format($product->discount_price, 2) }}RWF</span>
-                                    @else
-                                        {{ number_format($product->price, 2) }}RWF
-                                    @endif
-                                </h6>
+                                <h6>{{ number_format($product->price) }}RWF</h6>
+                                <!-- @if($product->discount_price)
+                                    <h6 class="text-muted ml-2"><del>{{ number_format($product->price) }}RWF</del></h6>
+                                @endif -->
                             </div>
                             <p>
-                                
-                               MOQ: ({{ $product->minimum_order_quantity }}{{ $product->unit }})<br>
+                                {{ $product->minimum_order_quantity }} {{ $product->unit }} (MOQ) <BR>
                                 {{ $product->company ? $product->company->name : '-' }}
                                 @if($product->company)
                                     @if($product->company->status === 'active')
@@ -126,6 +121,14 @@
                                         <i class="fas fa-times-circle text-danger" title="Inactive"></i>
                                     @endif
                                 @endif
+                                <div class="text-primary mr-2">
+                                    <small class="fas fa-star"></small>
+                                    <small class="fas fa-star"></small>
+                                    <small class="fas fa-star"></small>
+                                    <small class="fas fa-star-half-alt"></small>
+                                    <small class="far fa-star"></small>
+                                    <small class="pt-1">({{ count($product->reviews ?? []) }} Reviews)</small>
+                                </div>
                             </p>
                         </div>
                         <div class="card-footer d-flex justify-content-between bg-light border">
@@ -173,17 +176,17 @@
     <!-- Products Start -->
     <div class="container-fluid pt-5">
         <div class="text-center mb-4">
-            <h2 class="section-title px-5"><span class="px-2">Just Arrived</span></h2>
+            <h2 class="section-title px-5"><span class="px-2">New Arrivals</span></h2>
         </div>
         <div class="row px-xl-5 pb-3">
             @forelse($newArrivals as $product)
                 <div class="col-lg-3 col-md-6 col-sm-12 pb-1">
                     <div class="card product-item border-0 mb-4">
                         <a href="{{ route('product.detail', $product->slug) }}">
-                            <div class="card-header product-img position-relative overflow-hidden bg-transparent border p-0" style="height: 300px;">
+                            <div class="card-header product-img position-relative overflow-hidden bg-white border p-0" style="height: 300px;">
                                 @php $featured = $product->images->where('is_featured', true)->first() ?? $product->images->first(); @endphp
                                 @if($featured)
-                                    <img class="img-fluid w-100" src="{{ asset('storage/' . $featured->image) }}" alt="{{ $product->name }}">
+                                    <img class="img-fluid w-100 h-100" src="{{ asset('storage/' . $featured->image) }}" alt="{{ $product->name }}">
                                 @else
                                     <div class="bg-light d-flex align-items-center justify-content-center h-100">
                                         <i class="fas fa-image fa-3x text-muted"></i>
@@ -194,18 +197,13 @@
                         <div class="card-body border-left border-right text-center p-0 pt-4 pb-3">
                             <h6 class="text-truncate mb-3">{{ $product->name }}</h6>
                             <div class="d-flex justify-content-center">
-                                <h6>
-                                    @if($product->discount_price)
-                                        <span class="text-decoration-line-through text-muted"><del>{{ number_format($product->price, 2) }}RWF</del></span>
-                                        <span class="text-success fw-bold">{{ number_format($product->discount_price, 2) }}RWF</span>
-                                    @else
-                                        {{ number_format($product->price, 2) }}RWF
-                                    @endif
-                                </h6>
+                                <h6>{{ number_format($product->price) }}RWF</h6>
+                                <!-- @if($product->discount_price)
+                                    <h6 class="text-muted ml-2"><del>{{ number_format($product->price) }}RWF</del></h6>
+                                @endif -->
                             </div>
                             <p>
-                                
-                               MOQ: ({{ $product->minimum_order_quantity }}{{ $product->unit }})<br>
+                                {{ $product->minimum_order_quantity }} {{ $product->unit }} (MOQ) <BR>
                                 {{ $product->company ? $product->company->name : '-' }}
                                 @if($product->company)
                                     @if($product->company->status === 'active')
@@ -214,6 +212,14 @@
                                         <i class="fas fa-times-circle text-danger" title="Inactive"></i>
                                     @endif
                                 @endif
+                                <div class="text-primary mr-2">
+                                    <small class="fas fa-star"></small>
+                                    <small class="fas fa-star"></small>
+                                    <small class="fas fa-star"></small>
+                                    <small class="fas fa-star-half-alt"></small>
+                                    <small class="far fa-star"></small>
+                                    <small class="pt-1">({{ count($product->reviews ?? []) }} Reviews)</small>
+                                </div>
                             </p>
                         </div>
                         <div class="card-footer d-flex justify-content-between bg-light border">
@@ -241,30 +247,21 @@
         <div class="row px-xl-5">
             <div class="col">
                 <div class="owl-carousel vendor-carousel">
-                    <div class="vendor-item border p-4">
-                        <img src="{{ asset('cms/img/vendor-1.jpg') }}" alt="">
-                    </div>
-                    <div class="vendor-item border p-4">
-                        <img src="{{ asset('cms/img/vendor-2.jpg') }}" alt="">
-                    </div>
-                    <div class="vendor-item border p-4">
-                        <img src="{{ asset('cms/img/vendor-3.jpg') }}" alt="">
-                    </div>
-                    <div class="vendor-item border p-4">
-                        <img src="{{ asset('cms/img/vendor-4.jpg') }}" alt="">
-                    </div>
-                    <div class="vendor-item border p-4">
-                        <img src="{{ asset('cms/img/vendor-5.jpg') }}" alt="">
-                    </div>
-                    <div class="vendor-item border p-4">
-                        <img src="{{ asset('cms/img/vendor-6.jpg') }}" alt="">
-                    </div>
-                    <div class="vendor-item border p-4">
-                        <img src="{{ asset('cms/img/vendor-7.jpg') }}" alt="">
-                    </div>
-                    <div class="vendor-item border p-4">
-                        <img src="{{ asset('cms/img/vendor-8.jpg') }}" alt="">
-                    </div>
+                    @foreach($companies as $company)
+                        <div class="vendor-item border p-4 text-center">
+                            <div class="d-flex align-items-center justify-content-center" style="height: 120px;">
+                                @if($company->logo)
+                                    <img src="{{ asset('storage/' . $company->logo) }}" alt="{{ $company->name }}" style="max-height: 100px; max-width: 100%; object-fit: contain;">
+                                @else
+                                    <div class="text-center text-muted">
+                                        <i class="fas fa-building fa-3x mb-2"></i>
+                                        <div class="small">{{ $company->name }}</div>
+                                    </div>
+                                @endif
+                            </div>
+                            <div class="mt-3 font-weight-bold text-dark">{{ $company->name }}</div>
+                        </div>
+                    @endforeach
                 </div>
             </div>
         </div>

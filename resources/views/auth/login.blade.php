@@ -27,7 +27,7 @@
                         <p class="text-muted mb-0">{{ __('cms.auth.by_continuing') }}</p>
                     </div>
 
-                    <a href="#" class="btn btn-outline-secondary btn-block btn-lg mb-3 text-left btn-social">
+                    {{-- <a href="#" class="btn btn-outline-secondary btn-block btn-lg mb-3 text-left btn-social">
                         <i class="fab fa-google mr-2"></i>{{ __('cms.auth.continue_with', ['provider' => 'Google']) }}
                     </a>
                     <a href="#" class="btn btn-outline-secondary btn-block btn-lg mb-3 text-left btn-social">
@@ -41,7 +41,7 @@
                         <div class="border-top flex-grow-1"></div>
                         <span class="px-3 text-muted">{{ __('cms.auth.or') }}</span>
                         <div class="border-top flex-grow-1"></div>
-                    </div>
+                    </div> --}}
 
                     <div id="errorAlert" class="alert alert-danger alert-dismissible fade hide" role="alert" style="display: none;">
                         <strong>Error!</strong> <span id="errorMessage"></span>

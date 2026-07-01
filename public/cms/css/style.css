@@ -9545,14 +9545,40 @@ a.text-dark:hover, a.text-dark:focus {
   right: 0;
 }
 
+.cat-item .cat-img {
+  display: block;
+  height: 280px;
+  background: #fff;
+  overflow: hidden;
+}
+
 .cat-item .cat-img img,
 .product-item .product-img img {
   transition: .5s;
 }
 
+.cat-item .cat-img img {
+  width: 100%;
+  height: 100%;
+  object-fit: contain;
+}
+
+.product-item .product-img {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  background: #fff !important;
+}
+
+.product-item .product-img img {
+  width: 100%;
+  height: 100%;
+  object-fit: contain;
+}
+
 .cat-item:hover .cat-img img,
 .product-item:hover .product-img img {
-  transform: scale(1.2);
+  transform: scale(1.05);
 }
 
 .product-item .btn:hover {
@@ -9586,7 +9612,5 @@ a.text-dark:hover, a.text-dark:focus {
 
 
 .category-img {
-    height: 400px;          /* fixed frame height */
-    object-fit: cover;      /* crop image nicely */
-    border-radius: 8px;     /* optional: smooth corners */
+  border-radius: 8px;
 }

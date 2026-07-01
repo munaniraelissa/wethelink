@@ -123,7 +123,7 @@ class Product extends Model
     // Helper methods
     public function primaryImage()
     {
-        return $this->images()->where('is_featured', true)->first() 
+        return $this->images()->where('is_featured', true)->first()
             ?? $this->images()->first();
     }
 
@@ -148,9 +148,9 @@ class Product extends Model
         $fromSizes = $this->getTotalStockFromSizes();
         $fromColors = $this->getTotalStockFromColors();
 
-        return ($fromLocations === $this->total_stock) &&
-               ($fromSizes === $this->total_stock) &&
-               ($fromColors === $this->total_stock);
+        return ($fromLocations === $this->total_stock)
+               && ($fromSizes === $this->total_stock)
+               && ($fromColors === $this->total_stock);
     }
 
     public function findVariant(?int $variantId = null, ?string $size = null, ?string $color = null)
@@ -160,5 +160,15 @@ class Product extends Model
             ->when($size, fn ($query) => $query->where('size', $size))
             ->when($color, fn ($query) => $query->where('color', $color))
             ->first();
+    }
+
+    public function getRouteKeyName()
+    {
+        return 'slug';
+    }
+
+    public function reviews()
+    {
+        return $this->hasMany(Review::class);
     }
 }

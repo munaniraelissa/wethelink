@@ -176,8 +176,8 @@ class ProductController extends Controller
 
     public function show(Product $product)
     {
-        $this->authorizeProduct($product);
-        $product->load('category', 'brand', 'images', 'videos', 'variants', 'sizes', 'colors', 'companyLocations');
+    $this->authorizeProduct($product);
+    $product->load('category', 'brand', 'images', 'videos', 'variants', 'sizes', 'colors', 'companyLocations');
 
         return view('dashboard.products.show', compact('product'));
     }

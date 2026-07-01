@@ -24,7 +24,34 @@
 
     <!-- Customized Bootstrap Stylesheet -->
     <link href="{{ asset('cms/css/style.css') }}" rel="stylesheet">
-    
+
+    <style>
+        .navbar-vertical .dropdown-wrapper {
+            position: relative;
+        }
+
+        .navbar-vertical .dropdown-wrapper .submenu {
+            display: none;
+            position: absolute;
+            left: 100%;
+            top: 0;
+            min-width: 220px;
+            background: #ffffff;
+            border: 1px solid #dee2e6;
+            box-shadow: 0 0.5rem 1rem rgba(0, 0, 0, 0.15);
+            z-index: 1060;
+        }
+
+        .navbar-vertical .dropdown-wrapper:hover>.submenu,
+        .navbar-vertical .dropdown-wrapper:focus-within>.submenu {
+            display: block;
+        }
+
+        .navbar-vertical .submenu .nav-link {
+            padding-left: 1.25rem;
+        }
+    </style>
+
 </head>
 
 <body>
@@ -63,7 +90,8 @@
         <div class="row align-items-center py-3 px-xl-5">
             <div class="col-lg-3 d-none d-lg-block">
                 <a href="{{ route('home') }}" class="text-decoration-none d-inline-block">
-                    <img src="{{ asset('cms/logo/Logo.png') }}" alt="We thelink logo" class="img-fluid" style="max-height: 65px;" />
+                    <img src="{{ asset('cms/logo/Logo.png') }}" alt="We thelink logo" class="img-fluid"
+                        style="max-height: 65px;" />
                 </a>
             </div>
             <div class="col-lg-6 col-6 text-left">
@@ -78,7 +106,7 @@
                     </div>
                 </form>
             </div>
-            <div class="col-lg-3 col-6 text-right">
+            {{-- <div class="col-lg-3 col-6 text-right">
                 <a href="#" class="btn border">
                     <i class="fas fa-heart text-primary"></i>
                     <span class="badge">0</span>
@@ -87,7 +115,7 @@
                     <i class="fas fa-shopping-cart text-primary"></i>
                     <span class="badge">0</span>
                 </a>
-            </div>
+            </div> --}}
         </div>
     </div>
     <!-- Topbar End -->
@@ -104,10 +132,36 @@
                     <i class="fa fa-angle-down text-dark"></i>
                 </a>
                 <nav class="collapse {{ Route::is('home') ? 'show' : '' }} navbar navbar-vertical navbar-light align-items-start p-0 border border-top-0 border-bottom-0 bg-light"
-                    id="navbar-vertical" style="{{ Route::is('home') ? '' : 'position: absolute; z-index: 1050; width: calc(100% - 30px);' }}">
-                    <div class="navbar-nav w-100 overflow-hidden" style="height: 410px">
-                        @foreach($categories as $category)
-                            <a href="{{ route('shop', ['category' => $category->id]) }}" class="nav-item nav-link">{{ $category->name }}</a>
+                    id="navbar-vertical"
+                    style="{{ Route::is('home') ? '' : 'position: absolute; z-index: 1050; width: calc(100% - 30px);' }}">
+                    <div class="navbar-nav w-100" style="max-height: 410px;">
+                        @php
+                            $topLevelCategories = $categories->whereNull('parent_id')->values();
+                        @endphp
+
+                        @foreach ($topLevelCategories as $category)
+                            @php
+                                $children = $category->children()->where('is_active', true)->orderBy('name')->get();
+                            @endphp
+
+                            <div class="dropdown-wrapper">
+                                <a href="{{ route('shop', ['category' => $category->id]) }}"
+                                    class="nav-item nav-link d-flex justify-content-between align-items-center">
+                                    <span>{{ $category->name }}</span>
+                                    @if ($children->isNotEmpty())
+                                        <i class="fa fa-angle-right text-muted"></i>
+                                    @endif
+                                </a>
+
+                                @if ($children->isNotEmpty())
+                                    <div class="submenu">
+                                        @foreach ($children as $child)
+                                            <a href="{{ route('shop', ['category' => $child->id]) }}"
+                                                class="nav-item nav-link">{{ $child->name }}</a>
+                                        @endforeach
+                                    </div>
+                                @endif
+                            </div>
                         @endforeach
                     </div>
                 </nav>
@@ -118,17 +172,18 @@
                         <h1 class="m-0 display-5 font-weight-semi-bold"><span
                                 class="text-primary font-weight-bold border px-3 mr-1">E</span>Shopper</h1>
                     </a>
-                    <button type="button" class="navbar-toggler" data-toggle="collapse"
-                        data-target="#navbarCollapse">
+                    <button type="button" class="navbar-toggler" data-toggle="collapse" data-target="#navbarCollapse">
                         <span class="navbar-toggler-icon"></span>
                     </button>
                     <div class="collapse navbar-collapse justify-content-between" id="navbarCollapse">
                         <div class="navbar-nav mr-auto py-0">
                             <a href="{{ route('home') }}"
                                 class="nav-item nav-link active">{{ __('cms.nav.home') }}</a>
-                            <a href="{{ route('shop') }}" class="nav-item nav-link">{{ __('cms.nav.shop') }}</a>
+                            <a href="{{ route('shop') }}" class="nav-item nav-link">{{ __('cms.nav.products') }}</a>
+                            <a href="{{ route('manufacturers') }}"
+                                class="nav-item nav-link">{{ __('cms.nav.manufacturers') }}</a>
                             {{-- <a href="{{ route('detail') }}" class="nav-item nav-link">{{ __('cms.nav.detail') }}</a> --}}
-                            <div class="nav-item dropdown">
+                            {{-- <div class="nav-item dropdown">
                                 <a href="#" class="nav-link dropdown-toggle"
                                     data-toggle="dropdown">{{ __('cms.nav.pages') }}</a>
                                 <div class="dropdown-menu rounded-0 m-0">
@@ -136,7 +191,7 @@
                                     <a href="{{ route('checkout') }}"
                                         class="dropdown-item">{{ __('cms.nav.checkout') }}</a>
                                 </div>
-                            </div>
+                            </div> --}}
                             <a href="{{ route('contact') }}"
                                 class="nav-item nav-link">{{ __('cms.nav.contact') }}</a>
                         </div>
@@ -152,52 +207,67 @@
                                         class="dropdown-item">{{ __('cms.locale.rw') }}</a>
                                 </div>
                             </div>
-                            <a href="{{ route('login') }}" class="nav-item nav-link">{{ __('cms.nav.login') }}</a>
-                            <a href="{{ route('register') }}" class="nav-item nav-link">{{ __('cms.nav.register') }}</a>
+                            @guest
+                                <a href="{{ route('login') }}" class="nav-item nav-link">{{ __('cms.nav.login') }}</a>
+                                <a href="{{ route('register') }}"
+                                    class="nav-item nav-link">{{ __('cms.nav.register') }}</a>
+                            @endguest
+                            @auth
+                                <div class="nav-item dropdown">
+                                    <a href="#" class="nav-link dropdown-toggle"
+                                        data-toggle="dropdown">{{ Auth::user()->firstname }}</a>
+                                    <div class="dropdown-menu rounded-0 m-0">
+                                        <a href="{{ route('dashboard.index') }}"
+                                            class="dropdown-item">{{ __('dashboard.sidebar.dashboard') }}</a>
+                                        <a href="{{ route('logout') }}"
+                                            class="dropdown-item">{{ __('cms.auth.logout') }}</a>
+                                    </div>
+                                </div>
+                            @endauth
                         </div>
                     </div>
                 </nav>
-                @if(Route::is('home'))
-                <div id="header-carousel" class="carousel slide" data-ride="carousel">
-                    <div class="carousel-inner">
-                        <div class="carousel-item active" style="height: 410px;">
-                            <img class="img-fluid" src="{{ asset('cms/img/carousel-1.jpg') }}" alt="Image">
-                            <div class="carousel-caption d-flex flex-column align-items-center justify-content-center">
-                                <div class="p-3" style="max-width: 700px;">
-                                    <h4 class="text-light text-uppercase font-weight-medium mb-3">
-                                        {{ __('cms.hero.offer') }}</h4>
-                                    <h3 class="display-4 text-white font-weight-semi-bold mb-4">
-                                        {{ __('cms.hero.title_1') }}</h3>
-                                    <a href="#"
-                                        class="btn btn-light py-2 px-3">{{ __('cms.hero.shop_now') }}</a>
+                @if (Route::is('home'))
+                    <div id="header-carousel" class="carousel slide" data-ride="carousel">
+                        <div class="carousel-inner">
+                            <div class="carousel-item active" style="height: 410px;">
+                                <img class="img-fluid" src="{{ asset('cms/img/carousel-1.jpg') }}" alt="Image">
+                                <div
+                                    class="carousel-caption d-flex flex-column align-items-center justify-content-center">
+                                    <div class="p-3" style="max-width: 700px;">
+                                        <h4 class="text-light text-uppercase font-weight-medium mb-3">
+                                            {{ __('cms.hero.offer') }}</h4>
+                                        <h3 class="display-4 text-white font-weight-semi-bold mb-4">
+                                            {{ __('cms.hero.title_1') }}</h3>
+                                        <a href="/login" class="btn btn-light py-2 px-3">Join Now</a>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="carousel-item" style="height: 410px;">
+                                <img class="img-fluid" src="{{ asset('cms/img/carousel-2.jpg') }}" alt="Image">
+                                <div
+                                    class="carousel-caption d-flex flex-column align-items-center justify-content-center">
+                                    <div class="p-3" style="max-width: 700px;">
+                                        <h4 class="text-light text-uppercase font-weight-medium mb-3">
+                                            {{ __('cms.hero.offer') }}</h4>
+                                        <h3 class="display-4 text-white font-weight-semi-bold mb-4">
+                                            {{ __('cms.hero.title_2') }}</h3>
+                                        <a href="#" class="btn btn-light py-2 px-3">Join Now</a>
+                                    </div>
                                 </div>
                             </div>
                         </div>
-                        <div class="carousel-item" style="height: 410px;">
-                            <img class="img-fluid" src="{{ asset('cms/img/carousel-2.jpg') }}" alt="Image">
-                            <div class="carousel-caption d-flex flex-column align-items-center justify-content-center">
-                                <div class="p-3" style="max-width: 700px;">
-                                    <h4 class="text-light text-uppercase font-weight-medium mb-3">
-                                        {{ __('cms.hero.offer') }}</h4>
-                                    <h3 class="display-4 text-white font-weight-semi-bold mb-4">
-                                        {{ __('cms.hero.title_2') }}</h3>
-                                    <a href="#"
-                                        class="btn btn-light py-2 px-3">{{ __('cms.hero.shop_now') }}</a>
-                                </div>
+                        <a class="carousel-control-prev" href="#header-carousel" data-slide="prev">
+                            <div class="btn btn-dark" style="width: 45px; height: 45px;">
+                                <span class="carousel-control-prev-icon mb-n2"></span>
                             </div>
-                        </div>
+                        </a>
+                        <a class="carousel-control-next" href="#header-carousel" data-slide="next">
+                            <div class="btn btn-dark" style="width: 45px; height: 45px;">
+                                <span class="carousel-control-next-icon mb-n2"></span>
+                            </div>
+                        </a>
                     </div>
-                    <a class="carousel-control-prev" href="#header-carousel" data-slide="prev">
-                        <div class="btn btn-dark" style="width: 45px; height: 45px;">
-                            <span class="carousel-control-prev-icon mb-n2"></span>
-                        </div>
-                    </a>
-                    <a class="carousel-control-next" href="#header-carousel" data-slide="next">
-                        <div class="btn btn-dark" style="width: 45px; height: 45px;">
-                            <span class="carousel-control-next-icon mb-n2"></span>
-                        </div>
-                    </a>
-                </div>
                 @endif
             </div>
         </div>
@@ -213,7 +283,8 @@
         <div class="row px-xl-5 pt-5">
             <div class="col-lg-4 col-md-12 mb-5 pr-3 pr-xl-5">
                 <a href="{{ route('home') }}" class="text-decoration-none d-inline-block">
-                    <img src="{{ asset('cms/logo/Logo.png') }}" alt="We thelink logo" class="img-fluid mb-4" style="max-height: 65px;" />
+                    <img src="{{ asset('cms/logo/Logo.png') }}" alt="We thelink logo" class="img-fluid mb-4"
+                        style="max-height: 65px;" />
                 </a>
                 <p>{{ __('cms.footer.about') }}</p>
                 <p class="mb-2"><i
@@ -283,9 +354,9 @@
                     &copy; <a class="text-dark font-weight-semi-bold"
                         href="#">{{ __('cms.footer.your_site_name') }}</a>. {{ __('cms.footer.all_rights') }}.
                     {{ __('cms.footer.designed_by') }}
-                    <a class="text-dark font-weight-semi-bold" href="https://htmlcodex.com">HTML Codex</a><br>
-                    {{ __('cms.footer.distributed_by') }} <a href="https://themewagon.com"
-                        target="_blank">ThemeWagon</a>
+                    <a class="text-dark font-weight-semi-bold" href="https://htmlcodex.com">EMUNAH LTD</a><br>
+                    {{ __('cms.footer.distributed_by') }} <a href="https://themewagon.com" target="_blank">EMUNAH
+                        LTD</a>
                 </p>
             </div>
             <div class="col-md-6 px-xl-0 text-center text-md-right">
@@ -312,6 +383,7 @@
 
     <!-- Template Javascript -->
     <script src="{{ asset('cms/js/main.js') }}"></script>
+    @stack('scripts')
 </body>
 
 </html>

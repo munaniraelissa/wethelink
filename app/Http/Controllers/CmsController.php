@@ -3,6 +3,7 @@
 namespace App\Http\Controllers;
 
 use App\Models\Category;
+use App\Models\Company;
 use App\Models\Product;
 use Illuminate\Http\Request;
 
@@ -24,7 +25,9 @@ class CmsController extends Controller
         // Fetch the 8 most recent products for the "Just Arrived" section
         $newArrivals = Product::with(['images', 'company'])->latest()->paginate(8);
 
-        return view('cms.index', compact('categories', 'trendyProducts', 'newArrivals'));
+        $companies = Company::where('status', 'active')->orderBy('name')->get();
+
+        return view('cms.index', compact('categories', 'trendyProducts', 'newArrivals', 'companies'));
     }
 
     /**
@@ -34,7 +37,7 @@ class CmsController extends Controller
      */
     public function shop(Request $request)
     {
-        $categories = Category::withCount('products')->get();
+        $categories = Category::withCount('products')->with('children')->get();
 
         $query = Product::with(['images', 'company']);
 
@@ -48,9 +51,34 @@ class CmsController extends Controller
             $query->where('name', 'like', '%'.$request->search.'%');
         }
 
-        $products = $query->latest()->paginate(9);
+        if ($request->filled('manufacturer')) {
+            $query->where('company_id', $request->manufacturer);
+        }
 
-        return view('cms.shop', compact('categories', 'products'));
+        $products = $query->latest()->paginate(9);
+        $manufacturers = Company::where('status', 'active')
+            ->withCount(['products', 'users'])
+            ->with(['products' => function ($query) {
+                $query->with('images')->latest()->take(3);
+            }, 'locations'])
+            ->orderBy('name')
+            ->get();
+
+        return view('cms.shop', compact('categories', 'products', 'manufacturers'));
+    }
+
+    public function manufacturers()
+    {
+        $categories = Category::withCount('products')->get();
+        $manufacturers = Company::where('status', 'active')
+            ->withCount(['products', 'users'])
+            ->with(['products' => function ($query) {
+                $query->with('images')->latest()->take(3);
+            }, 'locations'])
+            ->orderBy('name')
+            ->get();
+
+        return view('cms.manufacturers', compact('categories', 'manufacturers'));
     }
 
     /**
@@ -58,21 +86,33 @@ class CmsController extends Controller
      *
      * @return \Illuminate\View\View
      */
-    public function detail(Product $product, Request $request)
+    public function detail($slug, Request $request)
     {
-        $categories = Category::all();
-        $query = Product::with(['images', 'company']);
+        $product = Product::with([
+            'images',
+            'videos',
+            'company',
+            'reviews.user'
+        ])->where('slug', $slug)
+        ->firstOrFail();
 
-        // Filter by category if provided in the URL
+        $categories = Category::all();
+
+        $query = Product::with(['images', 'company'])
+            ->where('id', '!=', $product->id);
+
         if ($request->filled('category')) {
             $query->where('category_id', $request->category);
         }
 
         $relatedProducts = $query->latest()->paginate(9);
 
-        return view('cms.detail', compact('categories', 'product', 'relatedProducts'));
+        return view('cms.detail', compact(
+            'categories',
+            'product',
+            'relatedProducts'
+        ));
     }
-
     /**
      * Display the contact page.
      *

@@ -43,6 +43,18 @@
           <span class="nav-icon"><i class="bi bi-tags" aria-hidden="true"></i></span>
           <span class="nav-text">Categories</span>
         </a>
+        <a class="nav-link" href="{{ route('companies.index') }}">
+          <span class="nav-icon"><i class="bi bi-building" aria-hidden="true"></i></span>
+          <span class="nav-text">Companies</span>
+        </a>
+        <a class="nav-link" href="{{ route('subscription-packages.index') }}">
+          <span class="nav-icon"><i class="bi bi-box2-heart" aria-hidden="true"></i></span>
+          <span class="nav-text">Subscription Packages</span>
+        </a>
+        <a class="nav-link" href="{{ route('subscription-packages.index') }}">
+          <span class="nav-icon"><i class="bi bi-box-seam" aria-hidden="true"></i></span>
+          <span class="nav-text">Packages</span>
+        </a>
         <a class="nav-link" href="{{ route('brands.index') }}">
           <span class="nav-icon"><i class="bi bi-building" aria-hidden="true"></i></span>
           <span class="nav-text">{{ __('messages.brands') }}</span>

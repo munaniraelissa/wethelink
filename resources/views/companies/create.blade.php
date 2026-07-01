@@ -4,24 +4,44 @@
 @section('title', 'New Company')
 
 @section('content')
-<div class="max-w-4xl space-y-5">
+<main class="dashboard-content">
+  <div class="container-fluid px-3 px-lg-4 py-4">
+    @if ($errors->any())
+      <div class="alert alert-danger alert-dismissible fade show" role="alert">
+        <strong>Error!</strong>
+        <ul class="mb-0">
+          @foreach ($errors->all() as $error)
+            <li>{{ $error }}</li>
+          @endforeach
+        </ul>
+        <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+      </div>
+    @endif
 
-    {{-- Breadcrumb --}}
-    <nav class="flex items-center gap-2 text-sm text-gray-500">
-        <a href="{{ route('companies.index') }}" class="hover:text-indigo-600">Companies</a>
-        <i class="fa fa-chevron-right text-[10px]"></i>
-        <span class="text-gray-800 font-medium">New Company</span>
-    </nav>
-
-    <div>
-        <h1 class="text-2xl font-bold text-gray-900">New Company</h1>
-        <p class="mt-1 text-sm text-gray-500">Fill in the details below to register a new company.</p>
+    <div class="page-heading">
+      <div class="page-heading-copy">
+        <span class="page-icon"><i class="bi bi-building" aria-hidden="true"></i></span>
+        <div>
+          <p class="eyebrow mb-1">Companies</p>
+          <h1 class="h3 mb-1">New Company</h1>
+          <p class="text-muted mb-0">Fill in the details below to register a new company.</p>
+        </div>
+      </div>
+      <div class="heading-actions">
+        <a href="{{ route('companies.index') }}" class="btn btn-secondary btn-sm">
+          <i class="bi bi-arrow-left" aria-hidden="true"></i> Back
+        </a>
+      </div>
     </div>
 
-    @include('companies.partials.form', [
-        'action' => route('companies.store'),
-        'method' => null,
-    ])
-
-</div>
+    <section class="panel mt-3">
+      <div class="panel-body">
+        @include('companies.partials.form', [
+          'action' => route('companies.store'),
+          'method' => null,
+        ])
+      </div>
+    </section>
+  </div>
+</main>
 @endsection
