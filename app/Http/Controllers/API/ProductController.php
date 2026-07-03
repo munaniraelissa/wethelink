@@ -91,7 +91,6 @@ class ProductController extends Controller
             'images' => 'sometimes|required|array|min:1|max:20',
             'images.*' => 'required_with:images|image|mimes:jpeg,png,jpg,gif|max:5120',
             'primary_image_index' => 'nullable|integer|min:0',
-            'video' => 'nullable|file|mimes:mp4,avi,mov,mkv|max:102400',
             'thumbnail' => 'nullable|image|mimes:jpeg,png,jpg|max:2048',
             'variants' => 'sometimes|array',
             'variants.*.size' => 'nullable|string|max:255',
@@ -104,24 +103,27 @@ class ProductController extends Controller
             'variants.*.cost_price' => 'nullable|numeric|min:0',
         ]);
 
-        $data['slug'] = $data['slug'] ?? Str::slug($data['name']);
-        $data['status'] = $data['status'] ?? 'draft';
-        $data['quantity'] = $data['quantity'] ?? 0;
-        $data['minimum_order_quantity'] = $data['minimum_order_quantity'] ?? 1;
-        $data['unit'] = $data['unit'] ?? 'pcs';
-        $data['featured'] = $data['featured'] ?? false;
+        try {
+            return DB::transaction(function () use ($request, $validated) {
+                $data = $validated;
+                $data['slug'] = $data['slug'] ?? Str::slug($data['name']);
+                $data['status'] = $data['status'] ?? 'draft';
+                $data['quantity'] = $data['quantity'] ?? 0;
+                $data['minimum_order_quantity'] = $data['minimum_order_quantity'] ?? 1;
+                $data['unit'] = $data['unit'] ?? 'pcs';
+                $data['featured'] = $data['featured'] ?? false;
 
-        $product = Product::create($data);
+                $product = Product::create($data);
 
-        if ($request->hasFile('images')) {
-            $this->processProductImages($product, $request);
-        }
+                if ($request->hasFile('images')) {
+                    $this->processProductImages($product, $request);
+                }
 
-        if ($request->hasFile('video')) {
-            $this->processProductVideo($product, $request);
-        }
+                if ($request->hasFile('video')) {
+                    $this->processProductVideo($product, $request);
+                }
 
-        $this->processProductVariants($product, $request);
+                $this->processProductVariants($product, $request);
 
                 Log::info('Product created', array_merge($this->actionLogContext($request), [
                     'product_id' => $product->id,

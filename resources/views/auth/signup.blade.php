@@ -46,6 +46,10 @@
                         <div class="border-top flex-grow-1"></div>
                     </div> --}}
 
+                    <div id="successAlert" class="alert alert-info alert-dismissible fade hide" role="alert" style="display: none;">
+                        <strong>Info!</strong> <span id="successMessage"></span>
+                    </div>
+
                     <div id="errorAlert" class="alert alert-danger alert-dismissible fade hide" role="alert" style="display: none;">
                         <strong>Error!</strong> <span id="errorMessage"></span>
                         <button type="button" class="close" data-dismiss="alert" aria-label="Close">
@@ -101,10 +105,13 @@
             const submitBtn = document.getElementById('submitBtn');
             const errorAlert = document.getElementById('errorAlert');
             const errorMessage = document.getElementById('errorMessage');
+            const successAlert = document.getElementById('successAlert');
+            const successMessage = document.getElementById('successMessage');
 
             submitBtn.disabled = true;
             submitBtn.textContent = '{{ __("cms.auth.creating_account") }}';
             errorAlert.style.display = 'none';
+            successAlert.style.display = 'none';
 
             try {
                 const response = await fetch('/api/register', {
@@ -119,8 +126,6 @@
                         email,
                         telephone,
                         password,
-                        company_id: 1,
-                        company_location_id: 1,
                     })
                 });
 
@@ -133,6 +138,15 @@
                         errorMsg = Object.values(errors).flat().join(', ');
                     }
                     throw new Error(errorMsg);
+                }
+
+                if (data.requires_approval) {
+                    successMessage.textContent = `${data.message} Please contact the admin on ${data.admin_phone || 'the provided contact number'} for assistance.`;
+                    successAlert.style.display = 'block';
+                    submitBtn.disabled = false;
+                    submitBtn.textContent = '{{ __("cms.auth.create_account_button") }}';
+                    e.currentTarget.reset();
+                    return;
                 }
 
                 // Store token

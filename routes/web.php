@@ -15,6 +15,7 @@ use App\Http\Controllers\ColorController;
 use App\Http\Controllers\CompanyController;
 use App\Http\Controllers\CompanyLocationController;
 use App\Http\Controllers\DashboardController;
+use App\Http\Controllers\Dashboard\HomepageFeatureController;
 use App\Http\Controllers\ReviewController;
 use Illuminate\Support\Facades\Route;
 
@@ -109,4 +110,9 @@ Route::middleware('auth')->group(function () {
 
     Route::resource('companies', CompanyController::class);
     Route::resource('companies.locations', CompanyLocationController::class);
+
+    Route::prefix('dashboard')->name('dashboard.')->group(function () {
+        Route::get('/homepage-features', [HomepageFeatureController::class, 'index'])->name('homepage-features.index');
+        Route::post('/homepage-features', [HomepageFeatureController::class, 'update'])->name('homepage-features.update');
+    });
 });

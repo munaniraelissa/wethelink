@@ -29,7 +29,7 @@ class CreateAdminUserSeeder extends Seeder
         );
 
         // 2️⃣ Create or find Admin role
-        $adminRole = Role::firstOrCreate(['name' => 'Admin']);
+        $adminRole = Role::firstOrCreate(['name' => 'Super Admin']);
 
         // 3️⃣ Get all permissions
         $allPermissions = Permission::pluck('name')->toArray();

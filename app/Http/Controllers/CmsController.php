@@ -4,6 +4,8 @@ namespace App\Http\Controllers;
 
 use App\Models\Category;
 use App\Models\Company;
+use App\Models\HomepageFeature;
+use App\Models\HomepageHeroSlide;
 use App\Models\Product;
 use Illuminate\Http\Request;
 
@@ -27,7 +29,46 @@ class CmsController extends Controller
 
         $companies = Company::where('status', 'active')->orderBy('name')->get();
 
-        return view('cms.index', compact('categories', 'trendyProducts', 'newArrivals', 'companies'));
+        $featuredItems = HomepageFeature::query()
+            ->where('is_active', true)
+            ->orderBy('sort_order')
+            ->orderBy('id')
+            ->get();
+
+        $heroSlides = HomepageHeroSlide::query()
+            ->where('is_active', true)
+            ->orderBy('sort_order')
+            ->orderBy('id')
+            ->get();
+
+        if ($featuredItems->isEmpty()) {
+            $featuredItems = collect([
+                [
+                    'title' => 'Quality Product',
+                    'icon_class' => 'fa fa-check',
+                    'description' => 'Premium products with reliable quality standards.',
+                ],
+                [
+                    'title' => 'Free Shipping',
+                    'icon_class' => 'fa fa-shipping-fast',
+                    'description' => 'Fast delivery across the country for every order.',
+                ],
+                [
+                    'title' => '14-Day Return',
+                    'icon_class' => 'fas fa-exchange-alt',
+                    'description' => 'Easy returns within two weeks if plans change.',
+                ],
+                [
+                    'title' => '24/7 Support',
+                    'icon_class' => 'fa fa-phone-volume',
+                    'description' => 'Reach our team anytime for order help and guidance.',
+                ],
+            ])->map(function ($item) {
+                return (object) $item;
+            });
+        }
+
+        return view('cms.index', compact('categories', 'trendyProducts', 'newArrivals', 'companies', 'featuredItems', 'heroSlides'));
     }
 
     /**

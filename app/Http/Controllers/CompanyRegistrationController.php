@@ -7,7 +7,7 @@ use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Storage;
 use Illuminate\Support\Str;
 
-class CompanyController extends Controller
+class CompanyRegistrationController extends Controller
 {
     public function index(Request $request)
     {

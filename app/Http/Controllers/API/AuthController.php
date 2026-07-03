@@ -3,14 +3,18 @@
 namespace App\Http\Controllers\API;
 
 use App\Http\Controllers\Controller;
+use App\Mail\SuperAdminNewUserRegistrationMail;
+use App\Mail\UserPendingApprovalMail;
 use App\Models\User;
 use App\Models\Company;
 use App\Models\CompanyLocation;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Hash;
 use Illuminate\Support\Facades\Log;
+use Illuminate\Support\Facades\Mail;
 use Illuminate\Support\Str;
 use Illuminate\Support\Facades\DB;
+use Spatie\Permission\Models\Role;
 
 class AuthController extends Controller
 {
@@ -142,8 +146,8 @@ class AuthController extends Controller
             'telephone' => 'required|unique:users',
             'password' => 'required|min:6',
 
-            'company_id' => 'required|exists:companies,id',
-            'company_location_id' => 'required|exists:company_locations,id',
+            'company_id' => 'nullable|exists:companies,id',
+            'company_location_id' => 'nullable|exists:company_locations,id',
         ]);
 
         $user = User::create([
@@ -153,14 +157,25 @@ class AuthController extends Controller
             'telephone' => $request->telephone,
             'password' => Hash::make($request->password),
 
-            'company_id' => $request->company_id,
-            'company_location_id' => $request->company_location_id,
+            'company_id' => $request->company_id ?? null,
+            'company_location_id' => $request->company_location_id ?? null,
 
-            'status' => 'active',
+            'status' => 'pending',
         ]);
 
         // Assign default role (buyer)
-        $user->assignRole('buyer');
+        $buyerRole = Role::firstOrCreate(['name' => 'supplier', 'guard_name' => 'web']);
+        $user->assignRole($buyerRole);
+
+        $superAdminEmail = env('SUPER_ADMIN_EMAIL', config('app.super_admin_email'));
+        $superAdminPhone = config('app.super_admin_phone', '+250788565520');
+        $signupPendingMessage = config('app.signup_pending_message', 'Registration successful. Your account is pending approval.');
+
+        if (!empty($superAdminEmail)) {
+            Mail::to($superAdminEmail)->send(new SuperAdminNewUserRegistrationMail($user, $signupPendingMessage));
+        }
+
+        Mail::to($user->email)->send(new UserPendingApprovalMail($user, $signupPendingMessage));
 
         $token = $user->createToken('api-token')->plainTextToken;
 
@@ -172,9 +187,12 @@ class AuthController extends Controller
         ]));
 
         return response()->json([
-            'message' => 'User registered successfully',
+            'message' => $signupPendingMessage,
+            'requires_approval' => true,
             'user' => $user,
             'token' => $token,
+            'admin_phone' => $superAdminPhone,
+            'signup_message' => $signupPendingMessage,
         ]);
     }
 

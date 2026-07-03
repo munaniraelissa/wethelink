@@ -98,7 +98,8 @@ class UserController extends Controller
         ]);
 
         if (!empty($validated['roles'])) {
-            $user->syncRoles($validated['roles']);
+            $roleNames = Role::whereIn('id', $validated['roles'])->pluck('name')->all();
+            $user->syncRoles($roleNames);
         }
 
         return redirect()->route('users.show', $user)
@@ -176,7 +177,8 @@ class UserController extends Controller
         $user->update($updateData);
 
         if (isset($validated['roles'])) {
-            $user->syncRoles($validated['roles']);
+            $roleNames = Role::whereIn('id', $validated['roles'])->pluck('name')->all();
+            $user->syncRoles($roleNames);
         }
 
         return redirect()->route('users.show', $user)

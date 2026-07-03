@@ -123,4 +123,6 @@ return [
         'store' => env('APP_MAINTENANCE_STORE', 'database'),
     ],
 
+    'super_admin_email' => env('SUPER_ADMIN_EMAIL'),
+    'super_admin_phone' => env('SUPER_ADMIN_PHONE', '+250788565520'),    'signup_pending_message' => env('SIGNUP_PENDING_MESSAGE', 'Registration successful. Your account is pending approval.'),
 ];

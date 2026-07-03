@@ -5,7 +5,7 @@
     <!-- Page Header Start -->
     <div class="container-fluid bg-secondary mb-5">
         <div class="d-flex flex-column align-items-center justify-content-center" style="min-height: 300px">
-            <h1 class="font-weight-semi-bold text-uppercase mb-3">{{ __('cms.shop.all_products') }}</h1>
+            <h1 class="font-weight-semi-bold text-uppercase mb-3">All Products</h1>
             <div class="d-inline-flex">
                 <p class="m-0"><a href="{{ route('home') }}">Home</a></p>
                 <p class="m-0 px-2">-</p>
@@ -167,7 +167,7 @@
                                     </div>
                                 </div>
                             </form>
-                            <div class="dropdown ml-4">
+                            {{-- <div class="dropdown ml-4">
                                 <button class="btn border dropdown-toggle" type="button" id="triggerId" data-toggle="dropdown" aria-haspopup="true"
                                         aria-expanded="false">
                                             {{ __('cms.shop.sort_by') }}
@@ -177,7 +177,7 @@
                                     <a class="dropdown-item" href="#">{{ __('cms.shop.popularity') }}</a>
                                     <a class="dropdown-item" href="#">{{ __('cms.shop.best_rating') }}</a>
                                 </div>
-                            </div>
+                            </div> --}}
                         </div>
                     </div>
                     @forelse($products as $product)

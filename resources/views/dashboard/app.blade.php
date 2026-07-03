@@ -10,6 +10,12 @@
   <link rel="stylesheet" href="{{ asset('dashboard/assets/vendors/bootstrap-icons/bootstrap-icons.css') }}">
   <link rel="stylesheet" href="{{ asset('dashboard/assets/css/style.css') }}">
   <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet">
+  <link rel="icon" type="image/png" href="{{ asset('favicon/favicon-96x96.png') }}" sizes="96x96" />
+  <link rel="icon" type="image/svg+xml" href="{{ asset('favicon/favicon.svg') }}" />
+  <link rel="shortcut icon" href="{{ asset('favicon/favicon.ico') }}" />
+  <link rel="apple-touch-icon" sizes="180x180" href="{{ asset('favicon/apple-touch-icon.png') }}" />
+  <meta name="apple-mobile-web-app-title" content="wethelink" />
+  <link rel="manifest" href="{{ asset('favicon/site.webmanifest') }}" />
 </head>
 
 <body>
@@ -18,7 +24,7 @@
 
     <aside class="admin-sidebar" id="adminSidebar" aria-label="Main navigation">
       <div class="sidebar-header">
-        <a class="brand-mark" href="{{ url('/main-dashboard') }}" aria-label="adminHMD dashboard">
+        <a class="brand-mark" href="{{ route('dashboard.index') }}" aria-label="adminHMD dashboard">
           <img class="brand-icon" src="{{ asset('cms/logo/small_logo.png') }}" alt="Logo" style="max-width: 100%; height: auto;">
           <span class="brand-copy">
             <img class="logo-img" src="{{ asset('cms/logo/logo_word.png') }}" alt="Logo" style="max-width: 100%; height: auto;">
@@ -27,7 +33,7 @@
       </div>
 
       <nav class="sidebar-nav">
-        <a class="nav-link active" href="index.html" aria-current="page">
+        <a class="nav-link active" href="{{ route('dashboard.index') }}" aria-current="page">
           <span class="nav-icon"><i class="bi bi-speedometer2" aria-hidden="true"></i></span>
           <span class="nav-text">{{ __('dashboard.sidebar.dashboard') }}</span>
         </a>
@@ -47,13 +53,13 @@
           <span class="nav-icon"><i class="bi bi-building" aria-hidden="true"></i></span>
           <span class="nav-text">Companies</span>
         </a>
-        <a class="nav-link" href="{{ route('subscription-packages.index') }}">
+        {{-- <a class="nav-link" href="{{ route('subscription-packages.index') }}">
           <span class="nav-icon"><i class="bi bi-box2-heart" aria-hidden="true"></i></span>
           <span class="nav-text">Subscription Packages</span>
         </a>
         <a class="nav-link" href="{{ route('subscription-packages.index') }}">
           <span class="nav-icon"><i class="bi bi-box-seam" aria-hidden="true"></i></span>
-          <span class="nav-text">Packages</span>
+          <span class="nav-text">Packages</span> --}}
         </a>
         <a class="nav-link" href="{{ route('brands.index') }}">
           <span class="nav-icon"><i class="bi bi-building" aria-hidden="true"></i></span>
@@ -71,7 +77,11 @@
           <span class="nav-icon"><i class="bi bi-shield-lock" aria-hidden="true"></i></span>
           <span class="nav-text">{{ __('dashboard.sidebar.roles') }}</span>
         </a>
-        <a class="nav-link" href="add-user.html">
+        <a class="nav-link" href="{{ route('dashboard.homepage-features.index') }}">
+          <span class="nav-icon"><i class="bi bi-stars" aria-hidden="true"></i></span>
+          <span class="nav-text">Homepage Features</span>
+        </a>
+        {{-- <a class="nav-link" href="add-user.html">
           <span class="nav-icon"><i class="bi bi-person-plus" aria-hidden="true"></i></span>
           <span class="nav-text">{{ __('dashboard.sidebar.add_user') }}</span>
         </a>
@@ -117,7 +127,7 @@
         <img class="avatar-img avatar-md sidebar-user-avatar" src="{{ asset('dashboard/assets/images/avatar/avatar.jpg') }}" alt="Admin Admin">
         <strong>Admin Admin</strong>
         <small>{{ __('dashboard.sidebar.active_workspace') }}</small>
-      </div>
+      </div> --}}
 
       <div class="sidebar-footer">
         <span class="status-dot"></span>
@@ -152,7 +162,7 @@
             <button class="icon-button theme-toggle" type="button" data-theme-toggle aria-label="Switch color theme" title="Switch color theme">
               <i class="bi bi-moon-stars" data-theme-icon aria-hidden="true"></i>
             </button>
-            <div class="dropdown">
+            {{-- <div class="dropdown">
               <button class="icon-button" type="button" data-bs-toggle="dropdown" aria-expanded="false" aria-label="{{ __('dashboard.navbar.notifications') }}">
                 <span class="notification-dot"></span>
                 <i class="bi bi-bell" aria-hidden="true"></i>
@@ -172,12 +182,12 @@
                   <span class="notification-time">1 hour ago</span>
                 </a>
               </div>
-            </div>
+            </div> --}}
 
             <div class="dropdown">
               <button class="profile-button dropdown-toggle" type="button" data-bs-toggle="dropdown" aria-expanded="false">
-                <img class="avatar-img avatar-sm" src="{{ asset('dashboard/assets/images/avatar/avatar.jpg') }}" alt="Admin Admin">
-                <span class="profile-name d-none d-sm-inline">Admin Admin</span>
+                {{-- <img class="avatar-img avatar-sm" src="{{ asset('dashboard/assets/images/avatar/avatar.jpg') }}" alt="Admin Admin"> --}}
+                <span class="profile-name d-none d-sm-inline">{{ Auth::user()->firstname }}</span>
               </button>
               <ul class="dropdown-menu dropdown-menu-end">
                 <li><a class="dropdown-item" href="profile.html">{{ __('dashboard.navbar.profile') }}</a></li>

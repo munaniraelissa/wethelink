@@ -70,8 +70,8 @@ class UserController extends Controller
         ]);
 
         if ($request->filled('roles')) {
-            $roles = Role::whereIn('id', $request->input('roles'))->get();
-            $user->syncRoles($roles);
+            $roleNames = Role::whereIn('id', $request->input('roles'))->pluck('name')->all();
+            $user->syncRoles($roleNames);
         }
 
         $user->load(['company', 'location', 'roles']);
@@ -115,8 +115,8 @@ class UserController extends Controller
         $user->update($data);
 
         if ($request->filled('roles')) {
-            $roles = Role::whereIn('id', $request->input('roles'))->get();
-            $user->syncRoles($roles);
+            $roleNames = Role::whereIn('id', $request->input('roles'))->pluck('name')->all();
+            $user->syncRoles($roleNames);
         }
 
         $user->load(['company', 'location', 'roles']);
