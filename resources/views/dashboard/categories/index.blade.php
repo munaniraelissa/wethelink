@@ -12,9 +12,11 @@
         </div>
       </div>
       <div class="heading-actions">
+        @can('category-create')
         <a class="btn btn-primary btn-sm" href="{{ route('categories.create') }}">
           <i class="bi bi-plus-circle" aria-hidden="true"></i> Add Category
         </a>
+        @endcan
       </div>
     </div>
 
@@ -82,9 +84,12 @@
                   @endif
                 </td>
                 <td class="text-end">
+                  @can('category-edit')
                   <a class="btn btn-light btn-sm" href="{{ route('categories.edit', $category->id) }}">
                     Edit
                   </a>
+                  @endcan
+                  @can('category-delete')
                   <form action="{{ route('categories.destroy', $category->id) }}" method="POST" style="display:inline;">
                     @csrf
                     @method('DELETE')
@@ -92,6 +97,7 @@
                       Delete
                     </button>
                   </form>
+                  @endcan
                 </td>
               </tr>
             @empty

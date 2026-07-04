@@ -12,9 +12,11 @@
         </div>
       </div>
       <div class="heading-actions">
+        @can('color-create')
         <a class="btn btn-primary btn-sm" href="{{ route('colors.create') }}">
           <i class="bi bi-plus-circle" aria-hidden="true"></i> {{ __('messages.add_color') }}
         </a>
+        @endcan
       </div>
     </div>
 
@@ -71,9 +73,12 @@
                   @endif
                 </td>
                 <td class="text-end">
+                  @can('color-edit')
                   <a class="btn btn-light btn-sm" href="{{ route('colors.edit', $color->id) }}">
                     {{ __('messages.edit') }}
                   </a>
+                  @endcan
+                  @can('color-delete')
                   <form action="{{ route('colors.destroy', $color->id) }}" method="POST" style="display:inline;">
                     @csrf
                     @method('DELETE')
@@ -81,6 +86,7 @@
                       {{ __('messages.delete') }}
                     </button>
                   </form>
+                  @endcan
                 </td>
               </tr>
             @empty

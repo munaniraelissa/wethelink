@@ -12,9 +12,11 @@
         </div>
       </div>
       <div class="heading-actions">
+        @can('size-create')
         <a class="btn btn-primary btn-sm" href="{{ route('sizes.create') }}">
           <i class="bi bi-plus-circle" aria-hidden="true"></i> {{ __('messages.add_size') }}
         </a>
+        @endcan
       </div>
     </div>
 
@@ -71,9 +73,12 @@
                   @endif
                 </td>
                 <td class="text-end">
+                  @can('size-edit')
                   <a class="btn btn-light btn-sm" href="{{ route('sizes.edit', $size->id) }}">
                     {{ __('messages.edit') }}
                   </a>
+                  @endcan
+                  @can('size-delete')
                   <form action="{{ route('sizes.destroy', $size->id) }}" method="POST" style="display:inline;">
                     @csrf
                     @method('DELETE')
@@ -81,6 +86,7 @@
                       {{ __('messages.delete') }}
                     </button>
                   </form>
+                  @endcan
                 </td>
               </tr>
             @empty

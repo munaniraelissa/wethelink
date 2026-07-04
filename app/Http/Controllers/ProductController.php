@@ -5,6 +5,7 @@ namespace App\Http\Controllers;
 use App\Models\Brand;
 use App\Models\Category;
 use App\Models\Color;
+use App\Models\Company;
 use App\Models\CompanyLocation;
 use App\Models\Product;
 use App\Models\ProductImage;
@@ -15,11 +16,15 @@ use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Storage;
 use Illuminate\Support\Str;
 use Illuminate\Validation\Rule;
+use Spatie\Permission\Exceptions\PermissionDoesNotExist;
+use Spatie\Permission\Models\Permission;
 
 class ProductController extends Controller
 {
     public function index(Request $request)
     {
+        abort_if(!auth()->user()?->can('product-list'), 403);
+
         $company_id = auth()->user()->company_id;
 
         $query = Product::where('company_id', $company_id)
@@ -46,8 +51,8 @@ class ProductController extends Controller
         }
 
         $products = $query->paginate(15);
-        $categories = Category::where('company_id', $company_id)->orderBy('name')->get();
-        $brands = Brand::where('company_id', $company_id)->orderBy('name')->get();
+        $categories = Category::query()->orderBy('name')->get();
+        $brands = Brand::query()->orderBy('name')->get();
         $statuses = ['draft', 'published', 'out_of_stock', 'inactive'];
 
         return view('dashboard.products.index', compact('products', 'categories', 'brands', 'statuses'));
@@ -55,24 +60,32 @@ class ProductController extends Controller
 
     public function create()
     {
-        $company_id = auth()->user()->company_id;
-        $categories = Category::where('company_id', $company_id)->orderBy('name')->get();
-        $brands = Brand::where('company_id', $company_id)->orderBy('name')->get();
-        $sizes = Size::where('company_id', $company_id)->orderBy('name')->get();
-        $colors = Color::where('company_id', $company_id)->orderBy('name')->get();
+        abort_if(!auth()->user()?->can('product-create'), 403);
+
+        $user = auth()->user();
+        $company_id = $user->company_id;
+        $categories = Category::query()->orderBy('name')->get();
+        $brands = Brand::query()->orderBy('name')->get();
+        $sizes = Size::query()->orderBy('name')->get();
+        $colors = Color::query()->orderBy('name')->get();
         $locations = CompanyLocation::where('company_id', $company_id)->orderBy('name')->get();
         $statuses = ['draft', 'published', 'out_of_stock', 'inactive'];
+        $canSelectCompany = $this->canSelectProductCompany($user);
+        $companies = $canSelectCompany ? Company::query()->orderBy('name')->get() : collect();
 
-        return view('dashboard.products.create', compact('categories', 'brands', 'sizes', 'colors', 'locations', 'statuses'));
+        return view('dashboard.products.create', compact('categories', 'brands', 'sizes', 'colors', 'locations', 'statuses', 'canSelectCompany', 'companies'));
     }
 
     public function store(Request $request)
     {
-        $company_id = auth()->user()->company_id;
+        abort_if(!auth()->user()?->can('product-create'), 403);
+
+        $user = auth()->user();
+        $company_id = $user->company_id;
 
         $validated = $request->validate([
-            'category_id' => ['required', 'integer', Rule::exists('categories', 'id')->where('company_id', $company_id)],
-            'brand_id' => ['nullable', 'integer', Rule::exists('brands', 'id')->where('company_id', $company_id)],
+            'category_id' => ['required', 'integer', Rule::exists('categories', 'id')],
+            'brand_id' => ['nullable', 'integer', Rule::exists('brands', 'id')],
             'name' => 'required|string|max:255',
             'slug' => 'nullable|string|max:255|unique:products,slug',
             'sku' => 'nullable|string|max:255|unique:products,sku',
@@ -94,11 +107,18 @@ class ProductController extends Controller
             'product_videos' => 'nullable|array',
             'product_videos.*' => 'file|mimes:mp4,mov,ogg,qt|max:102400',
             'locations' => 'nullable|array',
+            'company_id' => ['nullable', 'integer', Rule::exists('companies', 'id')],
         ]);
+
+        if ($this->userHasPermission($user, 'select_product_company') && $request->filled('company_id')) {
+            $company_id = (int) $request->input('company_id');
+        }
 
         // Auto-generate SKU if not provided
         if (empty($validated['sku'])) {
-            $companyPrefix = strtoupper(substr(auth()->user()->company->name, 0, 3));
+            $company = Company::find($company_id);
+            $companyName = $company ? $company->name : auth()->user()->company?->name;
+            $companyPrefix = strtoupper(substr($companyName ?? 'GEN', 0, 3));
             $lastProduct = Product::where('company_id', $company_id)->latest('id')->first();
             $nextNumber = $lastProduct ? str_pad($lastProduct->id + 1, 5, '0', STR_PAD_LEFT) : '00001';
             $validated['sku'] = $companyPrefix.'-'.$nextNumber;
@@ -156,19 +176,7 @@ class ProductController extends Controller
             }
         }
 
-        // Save locations
-        if ($request->has('locations')) {
-            foreach ($request->locations as $location_id => $data) {
-                if (isset($data['selected']) && $data['selected'] == 1) {
-                    $product->companyLocations()->attach($location_id, [
-                        'quantity' => $data['quantity'] ?? 0,
-                        'is_visible' => true,
-                        'created_at' => now(),
-                        'updated_at' => now(),
-                    ]);
-                }
-            }
-        }
+        // Location handling is intentionally ignored for now; products are scoped by company.
 
         return redirect()->route('products.show', $product)
             ->with('success', __('products.product_created_successfully'));
@@ -176,20 +184,22 @@ class ProductController extends Controller
 
     public function show(Product $product)
     {
-    $this->authorizeProduct($product);
-    $product->load('category', 'brand', 'images', 'videos', 'variants', 'sizes', 'colors', 'companyLocations');
+        abort_if(!auth()->user()?->can('product-show'), 403);
+        $this->authorizeProduct($product);
+        $product->load('category', 'brand', 'images', 'videos', 'variants', 'sizes', 'colors', 'companyLocations');
 
         return view('dashboard.products.show', compact('product'));
     }
 
     public function edit(Product $product)
     {
+        abort_if(!auth()->user()?->can('product-edit'), 403);
         $this->authorizeProduct($product);
         $company_id = auth()->user()->company_id;
-        $categories = Category::where('company_id', $company_id)->orderBy('name')->get();
-        $brands = Brand::where('company_id', $company_id)->orderBy('name')->get();
-        $sizes = Size::where('company_id', $company_id)->orderBy('name')->get();
-        $colors = Color::where('company_id', $company_id)->orderBy('name')->get();
+        $categories = Category::query()->orderBy('name')->get();
+        $brands = Brand::query()->orderBy('name')->get();
+        $sizes = Size::query()->orderBy('name')->get();
+        $colors = Color::query()->orderBy('name')->get();
         $locations = CompanyLocation::where('company_id', $company_id)->orderBy('name')->get();
         $statuses = ['draft', 'published', 'out_of_stock', 'inactive'];
 
@@ -200,12 +210,13 @@ class ProductController extends Controller
 
     public function update(Request $request, Product $product)
     {
+        abort_if(!auth()->user()?->can('product-edit'), 403);
         $this->authorizeProduct($product);
         $company_id = auth()->user()->company_id;
 
         $validated = $request->validate([
-            'category_id' => ['sometimes', 'required', 'integer', Rule::exists('categories', 'id')->where('company_id', $company_id)],
-            'brand_id' => ['nullable', 'integer', Rule::exists('brands', 'id')->where('company_id', $company_id)],
+            'category_id' => ['sometimes', 'required', 'integer', Rule::exists('categories', 'id')],
+            'brand_id' => ['nullable', 'integer', Rule::exists('brands', 'id')],
             'name' => 'sometimes|required|string|max:255',
             'slug' => ['sometimes', 'required', 'string', 'max:255', Rule::unique('products', 'slug')->ignore($product->id)],
             'sku' => ['sometimes', 'required', 'string', 'max:255', Rule::unique('products', 'sku')->ignore($product->id)],
@@ -271,6 +282,17 @@ class ProductController extends Controller
             }
         }
 
+        // Handle selected image deletions
+        if ($request->has('delete_images')) {
+            foreach ($request->delete_images as $imageId) {
+                $productImage = $product->images()->find($imageId);
+                if ($productImage) {
+                    Storage::disk('public')->delete($productImage->image);
+                    $productImage->delete();
+                }
+            }
+        }
+
         // Handle New Product Images
         if ($request->hasFile('new_product_images')) {
             $currentMaxSortOrder = $product->images()->max('sort_order') ?? 0;
@@ -296,20 +318,21 @@ class ProductController extends Controller
             }
         }
 
-        // Update locations
-        $product->companyLocations()->detach();
-        if ($request->has('locations')) {
-            foreach ($request->locations as $location_id => $data) {
-                if (isset($data['selected']) && $data['selected'] == 1) {
-                    $product->companyLocations()->attach($location_id, [
-                        'quantity' => $data['quantity'] ?? 0,
-                        'is_visible' => true,
-                        'created_at' => now(),
-                        'updated_at' => now(),
-                    ]);
+        // Handle selected video deletions
+        if ($request->has('delete_videos')) {
+            foreach ($request->delete_videos as $videoId) {
+                $video = $product->videos()->find($videoId);
+                if ($video) {
+                    Storage::disk('public')->delete($video->video);
+                    if ($video->thumbnail) {
+                        Storage::disk('public')->delete($video->thumbnail);
+                    }
+                    $video->delete();
                 }
             }
         }
+
+        // Location handling is intentionally ignored for now; products are scoped by company.
 
         return redirect()->route('products.show', $product)
             ->with('success', __('products.product_updated_successfully'));
@@ -317,6 +340,7 @@ class ProductController extends Controller
 
     public function destroy(Product $product)
     {
+        abort_if(!auth()->user()?->can('product-delete'), 403);
         $this->authorizeProduct($product);
 
         // Delete images
@@ -342,6 +366,8 @@ class ProductController extends Controller
 
     public function deleteImage(Request $request, $imageId)
     {
+        abort_if(!auth()->user()?->can('product-edit'), 403);
+
         $image = ProductImage::findOrFail($imageId);
         $product = $image->product;
 
@@ -355,6 +381,8 @@ class ProductController extends Controller
 
     public function deleteVideo(Request $request, $videoId)
     {
+        abort_if(!auth()->user()?->can('product-edit'), 403);
+
         $video = ProductVideo::findOrFail($videoId);
         $product = $video->product;
 
@@ -372,5 +400,27 @@ class ProductController extends Controller
     private function authorizeProduct(Product $product)
     {
         abort_if($product->company_id !== auth()->user()->company_id, 403);
+    }
+
+    private function canSelectProductCompany($user): bool
+    {
+        return $this->userHasPermission($user, 'select_product_company');
+    }
+
+    private function userHasPermission($user, string $permissionName): bool
+    {
+        if (!$user) {
+            return false;
+        }
+
+        try {
+            $permission = Permission::findByName($permissionName, 'web');
+
+            return $user->hasPermissionTo($permission);
+        } catch (PermissionDoesNotExist $e) {
+            Permission::findOrCreate($permissionName, 'web');
+
+            return false;
+        }
     }
 }

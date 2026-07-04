@@ -65,7 +65,7 @@ class TestDataSeeder extends Seeder
         ]);
 
         // Assign default role
-         $adminRole = Role::firstOrCreate(['name' => 'Admin']);
+        $adminRole = Role::firstOrCreate(['name' => 'Super Admin']);
 
         // Get all permissions
         $allPermissions = Permission::pluck('name')->toArray();

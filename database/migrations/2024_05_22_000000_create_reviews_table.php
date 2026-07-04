@@ -10,8 +10,8 @@ return new class extends Migration
     {
         Schema::create('reviews', function (Blueprint $table) {
             $table->id();
-            $table->foreignId('product_id')->constrained()->onDelete('cascade');
-            $table->foreignId('user_id')->nullable()->constrained()->onDelete('set null');
+            $table->unsignedBigInteger('product_id');
+            $table->unsignedBigInteger('user_id')->nullable();
             $table->string('name')->nullable(); // For guest reviews
             $table->string('email')->nullable(); // For guest reviews
             $table->integer('rating');

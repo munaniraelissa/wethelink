@@ -12,9 +12,9 @@ class CategoryController extends Controller
 {
     public function index(Request $request)
     {
-        $company_id = auth()->user()->company_id;
-        
-        $query = Category::where('company_id', $company_id)
+        abort_if(!auth()->user()?->can('category-list'), 403);
+
+        $query = Category::query()
             ->orderBy('id', 'desc');
 
         if ($request->filled('search')) {
@@ -35,8 +35,9 @@ class CategoryController extends Controller
 
     public function create()
     {
-        $company_id = auth()->user()->company_id;
-        $parentCategories = Category::where('company_id', $company_id)
+        abort_if(!auth()->user()?->can('category-create'), 403);
+
+        $parentCategories = Category::query()
             ->whereNull('parent_id')
             ->orderBy('name')
             ->get();
@@ -46,12 +47,14 @@ class CategoryController extends Controller
 
     public function store(Request $request)
     {
+        abort_if(!auth()->user()?->can('category-create'), 403);
+
         $company_id = auth()->user()->company_id;
 
         $validated = $request->validate([
-            'parent_id' => ['nullable', 'integer', Rule::exists('categories', 'id')->where('company_id', $company_id)],
-            'name' => 'required|string|max:255',
-            'slug' => 'nullable|string|max:255',
+            'parent_id' => ['nullable', 'integer', Rule::exists('categories', 'id')],
+            'name' => ['required', 'string', 'max:255', Rule::unique('categories', 'name')],
+            'slug' => ['nullable', 'string', 'max:255', Rule::unique('categories', 'slug')],
             'image' => 'nullable|image|mimes:jpeg,png,jpg,gif|max:2048',
             'description' => 'nullable|string',
             'is_active' => 'nullable|boolean',
@@ -80,9 +83,9 @@ class CategoryController extends Controller
 
     public function edit(Category $category)
     {
-        $this->authorizeCategory($category);
-        $company_id = auth()->user()->company_id;
-        $parentCategories = Category::where('company_id', $company_id)
+        abort_if(!auth()->user()?->can('category-edit'), 403);
+
+        $parentCategories = Category::query()
             ->where('id', '!=', $category->id)
             ->whereNull('parent_id')
             ->orderBy('name')
@@ -93,10 +96,10 @@ class CategoryController extends Controller
 
     public function update(Request $request, Category $category)
     {
-        $this->authorizeCategory($category);
+        abort_if(!auth()->user()?->can('category-edit'), 403);
 
         $validated = $request->validate([
-            'parent_id' => ['nullable', 'integer', Rule::exists('categories', 'id')->where('company_id', $category->company_id)],
+            'parent_id' => ['nullable', 'integer', Rule::exists('categories', 'id')],
             'name' => ['sometimes', 'required', 'string', 'max:255', Rule::unique('categories', 'name')->ignore($category->id)],
             'slug' => ['sometimes', 'required', 'string', 'max:255', Rule::unique('categories', 'slug')->ignore($category->id)],
             'image' => 'nullable|image|mimes:jpeg,png,jpg,gif|max:2048',
@@ -127,7 +130,7 @@ class CategoryController extends Controller
 
     public function destroy(Category $category)
     {
-        $this->authorizeCategory($category);
+        abort_if(!auth()->user()?->can('category-delete'), 403);
 
         // Delete image
         if ($category->image) {
@@ -142,6 +145,6 @@ class CategoryController extends Controller
 
     private function authorizeCategory(Category $category)
     {
-        abort_if($category->company_id !== auth()->user()->company_id, 403);
+        return;
     }
 }

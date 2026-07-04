@@ -69,8 +69,8 @@ class ProductController extends Controller
 
         $validated = $request->validate([
             'company_id' => 'required|integer|exists:companies,id',
-            'category_id' => ['required', 'integer', Rule::exists('categories', 'id')->where('company_id', $company_id)],
-            'brand_id' => ['required', 'integer', Rule::exists('brands', 'id')->where('company_id', $company_id)],
+            'category_id' => ['required', 'integer', Rule::exists('categories', 'id')],
+            'brand_id' => ['required', 'integer', Rule::exists('brands', 'id')],
             'name' => 'required|string|max:255',
             'slug' => ['nullable', 'string', 'max:255', Rule::unique('products', 'slug')],
             'description' => 'nullable|string',
@@ -163,8 +163,8 @@ class ProductController extends Controller
         $company_id = $request->user()->company_id ?? $product->company_id;
 
         $validated = $request->validate([
-            'category_id' => ['sometimes', 'integer', Rule::exists('categories', 'id')->where('company_id', $company_id)],
-            'brand_id' => ['sometimes', 'integer', Rule::exists('brands', 'id')->where('company_id', $company_id)],
+            'category_id' => ['sometimes', 'integer', Rule::exists('categories', 'id')],
+            'brand_id' => ['sometimes', 'integer', Rule::exists('brands', 'id')],
             'name' => 'sometimes|string|max:255',
             'slug' => ['sometimes', 'string', 'max:255', Rule::unique('products', 'slug')->ignore($product->id)],
             'description' => 'nullable|string',

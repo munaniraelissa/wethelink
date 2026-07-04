@@ -11,6 +11,8 @@ class CompanyController extends Controller
 {
     public function index(Request $request)
     {
+        abort_if(!auth()->user()?->can('company-list'), 403);
+
         $query = Company::withCount('locations');
 
         if ($request->filled('search')) {
@@ -32,17 +34,21 @@ class CompanyController extends Controller
 
     public function create()
     {
+        abort_if(!auth()->user()?->can('company-create'), 403);
+
         return view('companies.create');
     }
 
     public function store(Request $request)
     {
+        abort_if(!auth()->user()?->can('company-create'), 403);
+
         $validated = $request->validate([
             'name' => 'required|string|max:255|unique:companies,name',
             'email' => 'nullable|email|unique:companies,email',
             'telephone' => 'nullable|string|max:20',
             'website' => 'nullable|url|max:255',
-            'logo' => 'nullable|image|mimes:jpeg,png,jpg,gif,svg,webp|max:2048',
+            'logo' => 'nullable|image|mimes:jpeg,png,jpg,gif,svg,webp',
             'tax_number' => 'nullable|string|max:50|unique:companies,tax_number',
             'registration_number' => 'nullable|string|max:50|unique:companies,registration_number',
             'industry' => 'nullable|string|max:100',
@@ -65,6 +71,8 @@ class CompanyController extends Controller
 
     public function show(Company $company)
     {
+        abort_if(!auth()->user()?->can('company-list'), 403);
+
         $company->load(['locations', 'subscriptions']);
 
         return view('companies.show', compact('company'));
@@ -72,11 +80,15 @@ class CompanyController extends Controller
 
     public function edit(Company $company)
     {
+        abort_if(!auth()->user()?->can('company-edit'), 403);
+
         return view('companies.edit', compact('company'));
     }
 
     public function update(Request $request, Company $company)
     {
+        abort_if(!auth()->user()?->can('company-edit'), 403);
+
         $validated = $request->validate([
             'name' => 'required|string|max:255|unique:companies,name,'.$company->id,
             'email' => 'nullable|email|unique:companies,email,'.$company->id,
@@ -112,6 +124,8 @@ class CompanyController extends Controller
 
     public function destroy(Company $company)
     {
+        abort_if(!auth()->user()?->can('company-delete'), 403);
+
         if ($company->logo) {
             Storage::disk('public')->delete($company->logo);
         }

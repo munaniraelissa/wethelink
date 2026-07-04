@@ -97,7 +97,7 @@
         </div>
       </div>
 
-      <div class="col-12">
+      {{-- <div class="col-12">
         <div class="card">
           <div class="card-header d-flex flex-column flex-md-row justify-content-between align-items-start align-items-md-center gap-3">
             <div>
@@ -146,7 +146,7 @@
             @endif
           </div>
         </div>
-      </div>
+      </div> --}}
     </div>
   </div>
 </main>

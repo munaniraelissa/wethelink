@@ -36,7 +36,7 @@
     <section class="row g-3">
       <div class="col-12 col-xl-4">
         <div class="panel h-100 text-center profile-card">
-          <img class="avatar-img avatar-xl profile-photo" src="{{ $user->avatar ? asset('storage/' . $user->avatar) : 'https://via.placeholder.com/150' }}" alt="{{ $user->firstname }} {{ $user->lastname }}" style="width: 120px; height: 120px; object-fit: cover;">
+          {{-- <img class="avatar-img avatar-xl profile-photo" src="{{ $user->avatar ? asset('storage/' . $user->avatar) : 'https://via.placeholder.com/150' }}" alt="{{ $user->firstname }} {{ $user->lastname }}" style="width: 120px; height: 120px; object-fit: cover;"> --}}
           <h2 class="h5 mt-3 mb-1">{{ $user->firstname }} {{ $user->lastname }}</h2>
           <p class="text-muted mb-3">{{ $user->email }}</p>
           @if ($user->roles->count())
@@ -164,7 +164,7 @@
           </div>
 
           <!-- Avatar Upload -->
-          <div class="card mb-3">
+          {{-- <div class="card mb-3">
             <div class="card-header">
               <h5 class="card-title">{{ __('users.profile_photo') }}</h5>
             </div>
@@ -180,7 +180,7 @@
                 </div>
               </div>
             </div>
-          </div>
+          </div> --}}
 
           <div class="d-flex justify-content-end gap-2">
             <a href="{{ route('dashboard.index') }}" class="btn btn-secondary">

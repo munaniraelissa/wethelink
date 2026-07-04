@@ -11,9 +11,9 @@ class SizeController extends Controller
 {
     public function index(Request $request)
     {
-        $company_id = auth()->user()->company_id;
-        
-        $query = Size::where('company_id', $company_id);
+        abort_if(!auth()->user()?->can('size-list'), 403);
+
+        $query = Size::query();
 
         if ($request->filled('search')) {
             $query->where('name', 'like', '%' . $request->search . '%');
@@ -31,17 +31,19 @@ class SizeController extends Controller
 
     public function create()
     {
-        $company_id = auth()->user()->company_id;
-        
+        abort_if(!auth()->user()?->can('size-create'), 403);
+
         return view('dashboard.sizes.create');
     }
 
     public function store(Request $request)
     {
+        abort_if(!auth()->user()?->can('size-create'), 403);
+
         $company_id = auth()->user()->company_id;
 
         $validated = $request->validate([
-            'name' => ['required', 'string', 'max:255', Rule::unique('sizes', 'name')->where('company_id', $company_id)],
+            'name' => ['required', 'string', 'max:255', Rule::unique('sizes', 'name')],
             'code' => 'nullable|string|max:255',
             'sort_order' => 'nullable|integer',
             'is_active' => 'nullable|boolean',
@@ -49,7 +51,7 @@ class SizeController extends Controller
 
         $validated['company_id'] = $company_id;
         $validated['is_active'] = $request->has('is_active');
-        $validated['sort_order'] = $validated['sort_order'] ?? Size::where('company_id', $company_id)->max('sort_order') + 1;
+        $validated['sort_order'] = $validated['sort_order'] ?? Size::max('sort_order') + 1;
 
         $size = Size::create($validated);
 
@@ -65,18 +67,19 @@ class SizeController extends Controller
 
     public function edit(Size $size)
     {
-        abort_if($size->company_id !== auth()->user()->company_id, 403);
+        abort_if(!auth()->user()?->can('size-edit'), 403);
+        $this->authorizeSize($size);
         
         return view('dashboard.sizes.edit', compact('size'));
     }
 
     public function update(Request $request, Size $size)
     {
-        abort_if($size->company_id !== auth()->user()->company_id, 403);
-        $company_id = auth()->user()->company_id;
+        abort_if(!auth()->user()?->can('size-edit'), 403);
+        $this->authorizeSize($size);
 
         $validated = $request->validate([
-            'name' => ['required', 'string', 'max:255', Rule::unique('sizes', 'name')->ignore($size->id)->where('company_id', $company_id)],
+            'name' => ['required', 'string', 'max:255', Rule::unique('sizes', 'name')->ignore($size->id)],
             'code' => 'nullable|string|max:255',
             'sort_order' => 'nullable|integer',
             'is_active' => 'nullable|boolean',
@@ -91,10 +94,16 @@ class SizeController extends Controller
 
     public function destroy(Size $size)
     {
-        abort_if($size->company_id !== auth()->user()->company_id, 403);
+        abort_if(!auth()->user()?->can('size-delete'), 403);
+        $this->authorizeSize($size);
         
         $size->delete();
 
         return redirect()->route('sizes.index')->with('success', __('messages.size_deleted_successfully'));
+    }
+
+    private function authorizeSize(Size $size)
+    {
+        return;
     }
 }

@@ -43,6 +43,15 @@
                         <div class="border-top flex-grow-1"></div>
                     </div> --}}
 
+                    @if (session('inactive_account'))
+                        <div class="alert alert-warning alert-dismissible fade show" role="alert">
+                            <strong>{{ __('dashboard.common.warning') }}!</strong> {{ session('inactive_account') }}
+                            <button type="button" class="close" data-dismiss="alert" aria-label="Close">
+                                <span aria-hidden="true">&times;</span>
+                            </button>
+                        </div>
+                    @endif
+
                     <div id="errorAlert" class="alert alert-danger alert-dismissible fade hide" role="alert" style="display: none;">
                         <strong>Error!</strong> <span id="errorMessage"></span>
                         <button type="button" class="close" data-dismiss="alert" aria-label="Close">
@@ -71,12 +80,12 @@
 
                     <p class="text-center text-muted mt-4 mb-0">{{ __('cms.auth.by_continuing') }}</p>
                     <p class="text-center text-muted mt-4 mb-0">{{ __('cms.auth.dont_have_account') }} <a href="{{ route('register') }}" class="text-decoration-none">{{ __('cms.auth.create_account') }}</a></p>
-                    <div class="d-flex align-items-center mt-4 mb-0">
+                    {{-- <div class="d-flex align-items-center mt-4 mb-0">
                         <div class="border-top flex-grow-1"></div>
                         <span class="px-3 text-muted" style="font-size: 0.875rem;">{{ __('cms.auth.or') }}</span>
                         <div class="border-top flex-grow-1"></div>
                     </div>
-                    <p class="text-center text-muted mt-4 mb-0">{{ __('cms.auth.register_company_prompt') ?? 'Want to register your company?' }} <a href="{{ route('company.registration') }}" class="text-decoration-none font-weight-bold">{{ __('cms.auth.register_company') ?? 'Register Here' }}</a></p>
+                    <p class="text-center text-muted mt-4 mb-0">{{ __('cms.auth.register_company_prompt') ?? 'Want to register your company?' }} <a href="{{ route('company.registration') }}" class="text-decoration-none font-weight-bold">{{ __('cms.auth.register_company') ?? 'Register Here' }}</a></p> --}}
                 </div>
                 
             </div>

@@ -155,6 +155,7 @@ return [
         'revenue_target' => 'Inzira y\'ibyakurira yageze',
         'security_review' => 'Ubukekezi bw\'umutekano burangije',
         'profile' => 'Profilo',
+        'change_password' => 'Hindura ijambo ryibanga',
         'account_settings' => 'Igenamizira z\'akawonti',
         'sign_out' => 'Reka',
     ],

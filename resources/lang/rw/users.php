@@ -137,5 +137,11 @@ return [
     'choose_avatar' => 'Hitamo Ifoto',
     'max_file_size' => 'Ubunini bw\'idosiye bwa kinini: 2MB. Imiterere yemewe: JPEG, PNG, JPG, GIF',
     'profile_updated_successfully' => 'Profilo yakosoriwe neza',
+    'password_updated_successfully' => 'Ijambo ryibanga ryarahinduwe neza',
+    'current_password_incorrect' => 'Ijambo ryibanga ryariho si ryo.',
+    'change_password' => 'Hindura Ijambo Ryibanga',
+    'change_password_description' => 'Hindura ijambo ryibanga ryawe kenshi kugira ngo ukomeze akawunti yawe.',
+    'current_password' => 'Ijambo Ryibanga Ryariho',
+    'new_password' => 'Ijambo Ryibanga Rishya',
     'validation_error' => 'Ikosa ry\'Imibare',
 ];

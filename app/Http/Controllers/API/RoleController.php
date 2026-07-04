@@ -4,6 +4,7 @@ namespace App\Http\Controllers\API;
 
 use App\Http\Controllers\Controller;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Schema;
 use Spatie\Permission\Models\Role;
 use Spatie\Permission\Models\Permission;
 
@@ -42,7 +43,11 @@ class RoleController extends Controller
             'permission.*' => 'exists:permissions,id',
         ]);
 
-        $role = Role::create(['name' => $request->input('name')]);
+        $roleData = ['name' => $request->input('name')];
+        if (Schema::hasColumn('roles', 'is_protected')) {
+            $roleData['is_protected'] = $request->input('name') === 'Super Admin';
+        }
+        $role = Role::create($roleData);
         $role->syncPermissions($request->input('permission'));
         $role->load('permissions');
 

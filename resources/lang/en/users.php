@@ -137,5 +137,11 @@ return [
     'choose_avatar' => 'Choose Avatar',
     'max_file_size' => 'Maximum file size: 2MB. Allowed formats: JPEG, PNG, JPG, GIF',
     'profile_updated_successfully' => 'Profile updated successfully',
+    'password_updated_successfully' => 'Password updated successfully',
+    'current_password_incorrect' => 'The current password is incorrect.',
+    'change_password' => 'Change Password',
+    'change_password_description' => 'Update your password regularly to keep your account secure.',
+    'current_password' => 'Current Password',
+    'new_password' => 'New Password',
     'validation_error' => 'Validation Error',
 ];

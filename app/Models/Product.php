@@ -78,14 +78,12 @@ class Product extends Model
     // Locations
     public function locations()
     {
-        return $this->hasMany(ProductLocation::class);
+        return $this->companyLocations();
     }
 
     public function companyLocations()
     {
-        return $this->belongsToMany(CompanyLocation::class, 'product_locations')
-            ->withPivot('quantity', 'is_visible')
-            ->withTimestamps();
+        return $this->hasMany(CompanyLocation::class, 'company_id', 'company_id');
     }
 
     // Sizes
@@ -164,7 +162,14 @@ class Product extends Model
 
     public function getRouteKeyName()
     {
-        return 'slug';
+        return 'id';
+    }
+
+    public function resolveRouteBinding($value, $field = null)
+    {
+        $field = $field ?? (is_numeric($value) ? 'id' : 'slug');
+
+        return $this->where($field, $value)->first();
     }
 
     public function reviews()

@@ -82,12 +82,12 @@
                     </form>
 
                     <p class="text-center text-muted mt-4 mb-0">{{ __('cms.auth.have_account') }} <a href="{{ route('login') }}" class="text-decoration-none">{{ __('cms.auth.sign_in') }}</a></p>
-                    <div class="d-flex align-items-center mt-4 mb-0">
+                    {{-- <div class="d-flex align-items-center mt-4 mb-0">
                         <div class="border-top flex-grow-1"></div>
                         <span class="px-3 text-muted" style="font-size: 0.875rem;">{{ __('cms.auth.or') }}</span>
                         <div class="border-top flex-grow-1"></div>
                     </div>
-                    <p class="text-center text-muted mt-4 mb-0">{{ __('cms.auth.register_company_prompt') ?? 'Want to register your company?' }} <a href="{{ route('company.registration') }}" class="text-decoration-none font-weight-bold">{{ __('cms.auth.register_company') ?? 'Register Here' }}</a></p>
+                    <p class="text-center text-muted mt-4 mb-0">{{ __('cms.auth.register_company_prompt') ?? 'Want to register your company?' }} <a href="{{ route('company.registration') }}" class="text-decoration-none font-weight-bold">{{ __('cms.auth.register_company') ?? 'Register Here' }}</a></p> --}}
                 </div>
             </div>
         </div>

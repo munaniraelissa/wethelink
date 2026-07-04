@@ -84,6 +84,22 @@
                             @enderror
                         </div>
                     </div>
+                    @if($canSelectCompany)
+                        <div class="mb-3">
+                            <label class="form-label">{{ __('messages.assign_company') }}</label>
+                            <input type="text" id="companySearchInput" class="form-control @error('company_id') is-invalid @enderror" list="companyOptions" value="{{ old('company_id') ? ($companies->firstWhere('id', old('company_id'))?->name ?? '') : '' }}" placeholder="{{ __('messages.search_company') }}">
+                            <datalist id="companyOptions">
+                                @foreach($companies as $company)
+                                    <option value="{{ $company->name }}" data-id="{{ $company->id }}"></option>
+                                @endforeach
+                            </datalist>
+                            <input type="hidden" name="company_id" id="selectedCompanyId" value="{{ old('company_id') }}">
+                            @error('company_id')
+                                <div class="invalid-feedback">{{ $message }}</div>
+                            @enderror
+                        </div>
+                    @endif
+
                     <div class="row">
                         <div class="col-md-6 mb-3">
                             <div class="d-flex align-items-end">
@@ -138,7 +154,7 @@
                             <div class="invalid-feedback">{{ $message }}</div>
                         @enderror
                     </div>
-                    <div class="row">
+                    {{-- <div class="row">
                         <div class="col-md-3 mb-3">
                             <label class="form-label">{{ __('messages.price') }} *</label>
                             <input type="number" name="price" step="0.01" class="form-control @error('price') is-invalid @enderror" value="{{ old('price') }}" required>
@@ -167,12 +183,19 @@
                                 <div class="invalid-feedback">{{ $message }}</div>
                             @enderror
                         </div>
-                    </div>
+                    </div> --}}
                     <div class="row">
-                        <div class="col-md-4 mb-3">
+                        {{-- <div class="col-md-4 mb-3">
                             <label class="form-label">{{ __('messages.quantity') }}</label>
                             <input type="number" name="quantity" class="form-control @error('quantity') is-invalid @enderror" value="{{ old('quantity', 0) }}">
                             @error('quantity')
+                                <div class="invalid-feedback">{{ $message }}</div>
+                            @enderror
+                        </div> --}}
+                        <div class="col-md-4 mb-3">
+                            <label class="form-label">{{ __('messages.price') }} *</label>
+                            <input type="number" name="price" step="0.01" class="form-control @error('price') is-invalid @enderror" value="{{ old('price') }}" required>
+                            @error('price')
                                 <div class="invalid-feedback">{{ $message }}</div>
                             @enderror
                         </div>
@@ -185,7 +208,7 @@
                         </div>
                         <div class="col-md-4 mb-3">
                             <label class="form-label">{{ __('messages.unit') }}</label>
-                            <input type="text" name="unit" class="form-control @error('unit') is-invalid @enderror" value="{{ old('unit', 'pcs') }}">
+                            <input type="text" name="unit" class="form-control @error('unit') is-invalid @enderror" value="{{ old('unit', 'Pieces') }}">
                             @error('unit')
                                 <div class="invalid-feedback">{{ $message }}</div>
                             @enderror
@@ -193,7 +216,7 @@
                     </div>
 
                     <!-- Product Variants (Size-Color combinations) -->
-                    <div class="mb-4">
+                    {{-- <div class="mb-4">
                         <div class="d-flex align-items-end mb-2">
                             <h5 class="mb-0">{{ __('messages.product_variants') }} (Size & Color)</h5>
                             <button type="button" class="btn btn-outline-primary btn-sm ms-2" data-bs-toggle="modal" data-bs-target="#addSizeModal">
@@ -226,7 +249,7 @@
                                 </tbody>
                             </table>
                         </div>
-                    </div>
+                    </div> --}}
 
                     <!-- Product Images -->
                     <div class="mb-4">
@@ -257,7 +280,7 @@
                     </div>
 
                     <!-- Locations -->
-                    <div class="mb-4">
+                    {{-- <div class="mb-4">
                         <h5 class="mb-2">{{ __('messages.locations') }}</h5>
                         <div class="table-responsive">
                             <table class="table table-bordered">
@@ -288,7 +311,7 @@
                                 </tbody>
                             </table>
                         </div>
-                    </div>
+                    </div> --}}
 
                     <div class="mb-3">
                         <div class="form-check">
@@ -632,4 +655,27 @@
         });
     </script>
 </main>
+@endsection
+
+@section('scripts')
+<script>
+    document.addEventListener('DOMContentLoaded', function () {
+        var companyInput = document.getElementById('companySearchInput');
+        var companyHiddenInput = document.getElementById('selectedCompanyId');
+
+        if (!companyInput || !companyHiddenInput) {
+            return;
+        }
+
+        companyInput.addEventListener('input', function () {
+            var selectedName = companyInput.value.trim();
+            var options = document.querySelectorAll('#companyOptions option');
+            var matchingOption = Array.prototype.find.call(options, function (option) {
+                return option.value === selectedName;
+            });
+
+            companyHiddenInput.value = matchingOption ? matchingOption.getAttribute('data-id') : '';
+        });
+    });
+</script>
 @endsection

@@ -46,7 +46,7 @@
               <th scope="col">Name</th>
               <th scope="col">Email</th>
               <th scope="col">Industry</th>
-              <th scope="col">Locations</th>
+              {{-- <th scope="col">Locations</th> --}}
               <th scope="col">Status</th>
               <th scope="col" class="text-end">Actions</th>
             </tr>
@@ -60,11 +60,11 @@
                 </td>
                 <td>{{ $company->email ?? '—' }}</td>
                 <td>{{ $company->industry ?? '—' }}</td>
-                <td>
+                {{-- <td>
                   <a class="text-decoration-none text-dark" href="{{ route('companies.locations.index', $company) }}">
                     {{ $company->locations_count ?? $company->locations->count() }}
                   </a>
-                </td>
+                </td> --}}
                 <td>
                   <span class="badge {{ $company->status === 'active' ? 'bg-success' : ($company->status === 'pending' ? 'bg-warning text-dark' : 'bg-secondary') }}">
                     {{ ucfirst($company->status) }}

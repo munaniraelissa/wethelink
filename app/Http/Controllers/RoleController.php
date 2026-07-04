@@ -3,6 +3,7 @@
 namespace App\Http\Controllers;
 use Illuminate\Http\Request;
 use App\Http\Controllers\Controller;
+use Illuminate\Support\Facades\Schema;
 use Spatie\Permission\Models\Role;
 use Spatie\Permission\Models\Permission;
 use DB;
@@ -13,7 +14,8 @@ class RoleController extends Controller
     {
         abort_if(!auth()->user()->can('role-list'), 403);
         $roles = Role::with('permissions')
-            ->orderBy('id', 'DESC')
+            ->orderByRaw("CASE WHEN name = 'Super Admin' THEN 0 ELSE 1 END")
+            ->orderBy('name', 'ASC')
             ->paginate(10);
         return view('dashboard.roles.index', compact('roles'));
     }
@@ -34,7 +36,12 @@ class RoleController extends Controller
             'permissions.*' => 'exists:permissions,id',
         ]);
 
-        $role = Role::create(['name' => $request->input('name')]);
+        $roleName = trim($request->input('name'));
+        $roleData = ['name' => $roleName];
+        if (Schema::hasColumn('roles', 'is_protected')) {
+            $roleData['is_protected'] = $roleName === 'Super Admin';
+        }
+        $role = Role::create($roleData);
         
         // Convert permission IDs to names
         $permissionNames = Permission::whereIn('id', $request->input('permissions'))
@@ -105,7 +112,7 @@ class RoleController extends Controller
         abort_if(!auth()->user()->can('role-delete'), 403);
         $role = Role::findOrFail($id);
 
-        if ($role->is_protected || in_array($role->name, ['Admin', 'Normal Member'], true)) {
+        if ($this->isProtectedRole($role) || in_array($role->name, ['Admin', 'Normal Member'], true)) {
             return redirect()->route('roles.index')
                 ->with('error', __('dashboard.role.cannot_delete_protected'));
         }
@@ -114,5 +121,10 @@ class RoleController extends Controller
 
         return redirect()->route('roles.index')
             ->with('success', __('dashboard.role.deleted_successfully'));
+    }
+
+    private function isProtectedRole(Role $role): bool
+    {
+        return (bool) $role->is_protected || $role->name === 'Super Admin';
     }
 }

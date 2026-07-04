@@ -37,22 +37,30 @@
           <span class="nav-icon"><i class="bi bi-speedometer2" aria-hidden="true"></i></span>
           <span class="nav-text">{{ __('dashboard.sidebar.dashboard') }}</span>
         </a>
+        @can('user-list')
         <a class="nav-link" href="{{ route('users.index') }}">
           <span class="nav-icon"><i class="bi bi-people" aria-hidden="true"></i></span>
           <span class="nav-text">{{ __('dashboard.sidebar.users') }}</span>
         </a>
+        @endcan
+        @can('product-list')
         <a class="nav-link" href="{{ route('products.index') }}">
           <span class="nav-icon"><i class="bi bi-box-seam" aria-hidden="true"></i></span>
           <span class="nav-text">{{ __('products.products') }}</span>
         </a>
+        @endcan
+        @can('category-list')
         <a class="nav-link" href="{{ route('categories.index') }}">
           <span class="nav-icon"><i class="bi bi-tags" aria-hidden="true"></i></span>
           <span class="nav-text">Categories</span>
         </a>
+        @endcan
+        @can('company-list')
         <a class="nav-link" href="{{ route('companies.index') }}">
           <span class="nav-icon"><i class="bi bi-building" aria-hidden="true"></i></span>
           <span class="nav-text">Companies</span>
         </a>
+        @endcan
         {{-- <a class="nav-link" href="{{ route('subscription-packages.index') }}">
           <span class="nav-icon"><i class="bi bi-box2-heart" aria-hidden="true"></i></span>
           <span class="nav-text">Subscription Packages</span>
@@ -61,22 +69,30 @@
           <span class="nav-icon"><i class="bi bi-box-seam" aria-hidden="true"></i></span>
           <span class="nav-text">Packages</span> --}}
         </a>
+        @can('brand-list')
         <a class="nav-link" href="{{ route('brands.index') }}">
           <span class="nav-icon"><i class="bi bi-building" aria-hidden="true"></i></span>
           <span class="nav-text">{{ __('messages.brands') }}</span>
         </a>
+        @endcan
+        @can('size-list')
         <a class="nav-link" href="{{ route('sizes.index') }}">
           <span class="nav-icon"><i class="bi bi-aspect-ratio" aria-hidden="true"></i></span>
           <span class="nav-text">{{ __('messages.sizes') }}</span>
         </a>
+        @endcan
+        @can('color-list')
         <a class="nav-link" href="{{ route('colors.index') }}">
           <span class="nav-icon"><i class="bi bi-palette" aria-hidden="true"></i></span>
           <span class="nav-text">{{ __('messages.colors') }}</span>
         </a>
+        @endcan
+        @can('role-list')
         <a class="nav-link" href="{{ route('roles.index') }}">
           <span class="nav-icon"><i class="bi bi-shield-lock" aria-hidden="true"></i></span>
           <span class="nav-text">{{ __('dashboard.sidebar.roles') }}</span>
         </a>
+        @endcan
         <a class="nav-link" href="{{ route('dashboard.homepage-features.index') }}">
           <span class="nav-icon"><i class="bi bi-stars" aria-hidden="true"></i></span>
           <span class="nav-text">Homepage Features</span>
@@ -186,14 +202,19 @@
 
             <div class="dropdown">
               <button class="profile-button dropdown-toggle" type="button" data-bs-toggle="dropdown" aria-expanded="false">
-                {{-- <img class="avatar-img avatar-sm" src="{{ asset('dashboard/assets/images/avatar/avatar.jpg') }}" alt="Admin Admin"> --}}
-                <span class="profile-name d-none d-sm-inline">{{ Auth::user()->firstname }}</span>
+                <span class="profile-name d-none d-sm-inline">{{ Auth::user()->firstname }} {{ Auth::user()->lastname }}</span>
               </button>
               <ul class="dropdown-menu dropdown-menu-end">
-                <li><a class="dropdown-item" href="profile.html">{{ __('dashboard.navbar.profile') }}</a></li>
-                <li><a class="dropdown-item" href="settings.html">{{ __('dashboard.navbar.account_settings') }}</a></li>
+                <li><h6 class="dropdown-header">{{ Auth::user()->firstname }} {{ Auth::user()->lastname }}</h6></li>
+                <li><a class="dropdown-item" href="{{ route('profile') }}"><i class="bi bi-person me-2"></i>{{ __('dashboard.navbar.profile') }}</a></li>
+                <li><a class="dropdown-item" href="{{ route('profile') }}#password-section"><i class="bi bi-key me-2"></i>{{ __('dashboard.navbar.change_password') }}</a></li>
                 <li><hr class="dropdown-divider"></li>
-                <li><a class="dropdown-item" href="login.html">{{ __('dashboard.navbar.sign_out') }}</a></li>
+                <li>
+                  <form method="POST" action="{{ route('logout') }}" class="d-inline w-100">
+                    @csrf
+                    <button type="submit" class="dropdown-item text-danger"><i class="bi bi-box-arrow-right me-2"></i>{{ __('dashboard.navbar.sign_out') }}</button>
+                  </form>
+                </li>
               </ul>
             </div>
           </div>

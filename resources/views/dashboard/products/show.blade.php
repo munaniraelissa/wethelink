@@ -12,9 +12,11 @@
         </div>
       </div>
       <div class="heading-actions">
+        @can('product-edit')
         <a class="btn btn-light btn-sm" href="{{ route('products.edit', $product->id) }}">
           <i class="bi bi-pencil" aria-hidden="true"></i> Edit
         </a>
+        @endcan
         <a class="btn btn-secondary btn-sm" href="{{ route('products.index') }}">
           <i class="bi bi-arrow-left" aria-hidden="true"></i> Back
         </a>

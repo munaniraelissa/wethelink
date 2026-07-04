@@ -12,9 +12,11 @@
         </div>
       </div>
       <div class="heading-actions">
+        @can('brand-create')
         <a class="btn btn-primary btn-sm" href="{{ route('brands.create') }}">
           <i class="bi bi-plus-circle" aria-hidden="true"></i> Add Brand
         </a>
+        @endcan
       </div>
     </div>
 
@@ -78,9 +80,12 @@
                   @endif
                 </td>
                 <td class="text-end">
+                  @can('brand-edit')
                   <a class="btn btn-light btn-sm" href="{{ route('brands.edit', $brand->id) }}">
                     Edit
                   </a>
+                  @endcan
+                  @can('brand-delete')
                   <form action="{{ route('brands.destroy', $brand->id) }}" method="POST" style="display:inline;">
                     @csrf
                     @method('DELETE')
@@ -88,6 +93,7 @@
                       Delete
                     </button>
                   </form>
+                  @endcan
                 </td>
               </tr>
             @empty

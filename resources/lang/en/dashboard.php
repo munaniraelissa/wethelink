@@ -192,6 +192,7 @@ return [
         'revenue_target' => 'Revenue target reached',
         'security_review' => 'Security review completed',
         'profile' => 'Profile',
+        'change_password' => 'Change password',
         'account_settings' => 'Account settings',
         'sign_out' => 'Sign out',
     ],

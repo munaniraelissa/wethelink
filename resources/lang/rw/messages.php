@@ -97,6 +97,8 @@ return [
     'drag_to_reorder' => 'Kwandika tugende ibyo kuzungurura',
     'variants' => 'Ubwoko',
     'locations' => 'Aho ziri',
+    'assign_company' => 'Shyiraho icyicuruzwa kuri kigo',
+    'search_company' => 'Shakisha ikigo',
 
     // Product Status
     'draft' => 'Ntacyo',

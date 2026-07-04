@@ -72,6 +72,7 @@ Route::middleware('auth')->group(function () {
         return view('dashboard.profile', ['user' => auth()->user()]);
     })->name('profile');
     Route::put('/profile', [UserController::class, 'updateProfile'])->name('profile.update');
+    Route::post('/profile/password', [UserController::class, 'updatePassword'])->name('profile.password.update');
 
     // User Management
     Route::resource('users', UserController::class);

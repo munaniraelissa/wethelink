@@ -12,9 +12,11 @@
         </div>
       </div>
       <div class="heading-actions">
+        @can('product-create')
         <a class="btn btn-primary btn-sm" href="{{ route('products.create') }}">
           <i class="bi bi-plus-circle" aria-hidden="true"></i> {{ __('products.add_product') }}
         </a>
+        @endcan
       </div>
     </div>
 
@@ -118,8 +120,13 @@
                   <span class="badge {{ $statusBadges[$product->status] ?? 'bg-secondary' }}">{{ __('products.status_' . $product->status) }}</span>
                 </td>
                 <td class="text-end">
+                  @can('product-show')
                   <a class="btn btn-light btn-sm" href="{{ route('products.show', $product->id) }}">{{ __('products.view') }}</a>
+                  @endcan
+                  @can('product-edit')
                   <a class="btn btn-light btn-sm" href="{{ route('products.edit', $product->id) }}">{{ __('products.edit') }}</a>
+                  @endcan
+                  @can('product-delete')
                   <form action="{{ route('products.destroy', $product->id) }}" method="POST" style="display:inline;">
                     @csrf
                     @method('DELETE')
@@ -127,6 +134,7 @@
                       {{ __('products.delete') }}
                     </button>
                   </form>
+                  @endcan
                 </td>
               </tr>
             @empty

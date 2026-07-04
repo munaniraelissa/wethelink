@@ -11,9 +11,9 @@ class ColorController extends Controller
 {
     public function index(Request $request)
     {
-        $company_id = auth()->user()->company_id;
-        
-        $query = Color::where('company_id', $company_id);
+        abort_if(!auth()->user()?->can('color-list'), 403);
+
+        $query = Color::query();
 
         if ($request->filled('search')) {
             $query->where('name', 'like', '%' . $request->search . '%');
@@ -31,17 +31,19 @@ class ColorController extends Controller
 
     public function create()
     {
-        $company_id = auth()->user()->company_id;
-        
+        abort_if(!auth()->user()?->can('color-create'), 403);
+
         return view('dashboard.colors.create');
     }
 
     public function store(Request $request)
     {
+        abort_if(!auth()->user()?->can('color-create'), 403);
+
         $company_id = auth()->user()->company_id;
 
         $validated = $request->validate([
-            'name' => ['required', 'string', 'max:255', Rule::unique('colors', 'name')->where('company_id', $company_id)],
+            'name' => ['required', 'string', 'max:255', Rule::unique('colors', 'name')],
             'code' => 'nullable|string|max:255',
             'sort_order' => 'nullable|integer',
             'is_active' => 'nullable|boolean',
@@ -49,7 +51,7 @@ class ColorController extends Controller
 
         $validated['company_id'] = $company_id;
         $validated['is_active'] = $request->has('is_active');
-        $validated['sort_order'] = $validated['sort_order'] ?? Color::where('company_id', $company_id)->max('sort_order') + 1;
+        $validated['sort_order'] = $validated['sort_order'] ?? Color::max('sort_order') + 1;
 
         $color = Color::create($validated);
 
@@ -65,18 +67,19 @@ class ColorController extends Controller
 
     public function edit(Color $color)
     {
-        abort_if($color->company_id !== auth()->user()->company_id, 403);
+        abort_if(!auth()->user()?->can('color-edit'), 403);
+        $this->authorizeColor($color);
         
         return view('dashboard.colors.edit', compact('color'));
     }
 
     public function update(Request $request, Color $color)
     {
-        abort_if($color->company_id !== auth()->user()->company_id, 403);
-        $company_id = auth()->user()->company_id;
+        abort_if(!auth()->user()?->can('color-edit'), 403);
+        $this->authorizeColor($color);
 
         $validated = $request->validate([
-            'name' => ['required', 'string', 'max:255', Rule::unique('colors', 'name')->ignore($color->id)->where('company_id', $company_id)],
+            'name' => ['required', 'string', 'max:255', Rule::unique('colors', 'name')->ignore($color->id)],
             'code' => 'nullable|string|max:255',
             'sort_order' => 'nullable|integer',
             'is_active' => 'nullable|boolean',
@@ -91,10 +94,16 @@ class ColorController extends Controller
 
     public function destroy(Color $color)
     {
-        abort_if($color->company_id !== auth()->user()->company_id, 403);
+        abort_if(!auth()->user()?->can('color-delete'), 403);
+        $this->authorizeColor($color);
         
         $color->delete();
 
         return redirect()->route('colors.index')->with('success', __('messages.color_deleted_successfully'));
+    }
+
+    private function authorizeColor(Color $color)
+    {
+        return;
     }
 }

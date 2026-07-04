@@ -4,10 +4,12 @@ namespace App\Http\Controllers;
 
 use App\Models\Brand;
 use App\Models\Category;
-use App\Models\Product;
-use App\Models\User;
 use App\Models\Company;
 use App\Models\CompanyLocation;
+use App\Models\Order;
+use App\Models\Product;
+use App\Models\Subscription;
+use App\Models\User;
 use Illuminate\Http\Request;
 
 class DashboardController extends Controller
@@ -34,40 +36,83 @@ class DashboardController extends Controller
             $query->where('company_id', $request->company_id);
         }
 
-        $users = $query->paginate(15);
-        $companies = Company::all();
+        $users = $query->take(5)->get();
+        $companies = Company::latest()->take(5)->get();
         $statuses = ['pending', 'active', 'inactive', 'suspended'];
-         // Fetch the 5 most recent users
-        $company_id = auth()->user()->company_id;
+        $company_id = auth()->user()?->company_id;
 
-        $query = Product::where('company_id', $company_id)
-            ->with(['category', 'brand', 'images'])
-            ->orderBy('id', 'desc');
+        $productQuery = Product::query()->with(['category', 'brand', 'images'])->orderBy('id', 'desc');
+
+        if ($company_id) {
+            $productQuery->where('company_id', $company_id);
+        }
 
         if ($request->filled('search')) {
             $search = $request->search;
-            $query->where('name', 'like', "%{$search}%")
+            $productQuery->where('name', 'like', "%{$search}%")
                 ->orWhere('sku', 'like', "%{$search}%")
                 ->orWhere('barcode', 'like', "%{$search}%");
         }
 
         if ($request->filled('category')) {
-            $query->where('category_id', $request->category);
+            $productQuery->where('category_id', $request->category);
         }
 
         if ($request->filled('brand')) {
-            $query->where('brand_id', $request->brand);
+            $productQuery->where('brand_id', $request->brand);
         }
 
         if ($request->filled('status')) {
-            $query->where('status', $request->status);
+            $productQuery->where('status', $request->status);
         }
 
-        $products = $query->paginate(15);
-        $categories = Category::where('company_id', $company_id)->orderBy('name')->get();
-        $brands = Brand::where('company_id', $company_id)->orderBy('name')->get();
+        $products = $productQuery->take(5)->get();
+        $categories = Category::query()->orderBy('name')->get();
+        $brands = Brand::query()->orderBy('name')->get();
         $statuses = ['draft', 'published', 'out_of_stock', 'inactive'];
 
-        return view('dashboard.index', compact('users', 'companies', 'statuses', 'products', 'categories', 'brands', 'statuses'));
+        $metrics = [
+            'revenue' => Order::where('payment_status', 'paid')->sum('total'),
+            'orders' => Order::count(),
+            'companies' => Company::count(),
+            'active_users' => User::where('status', 'active')->count(),
+        ];
+
+        $recentActivities = collect()
+            ->merge($users->map(fn (User $user) => [
+                'title' => 'New user registered',
+                'description' => trim("{$user->firstname} {$user->lastname}") . ' joined the platform.',
+                'created_at' => $user->created_at,
+                'icon_class' => 'bg-primary',
+            ]))
+            ->merge($companies->map(fn (Company $company) => [
+                'title' => 'Company added',
+                'description' => $company->name . ' was added to the system.',
+                'created_at' => $company->created_at,
+                'icon_class' => 'bg-success',
+            ]))
+            ->merge($products->map(fn (Product $product) => [
+                'title' => 'Product published',
+                'description' => $product->name . ' is now available in the catalog.',
+                'created_at' => $product->created_at,
+                'icon_class' => 'bg-warning',
+            ]))
+            ->merge(Order::latest()->take(5)->get()->map(fn (Order $order) => [
+                'title' => 'Order received',
+                'description' => 'Order #' . $order->order_number . ' is now ' . $order->status . '.',
+                'created_at' => $order->created_at,
+                'icon_class' => 'bg-info',
+            ]))
+            ->merge(Subscription::latest()->take(5)->get()->map(fn (Subscription $subscription) => [
+                'title' => 'Subscription updated',
+                'description' => 'Subscription for ' . ($subscription->company?->name ?? 'a company') . ' is ' . $subscription->approval_status . '.',
+                'created_at' => $subscription->created_at,
+                'icon_class' => 'bg-secondary',
+            ]))
+            ->sortByDesc('created_at')
+            ->take(6)
+            ->values();
+
+        return view('dashboard.index', compact('users', 'companies', 'statuses', 'products', 'categories', 'brands', 'metrics', 'recentActivities'));
     }
 }

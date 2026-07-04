@@ -28,7 +28,7 @@ class CreateAdminUserSeeder extends Seeder
             ]
         );
 
-        // 2️⃣ Create or find Admin role
+        // 2️⃣ Create or find Super Admin role
         $adminRole = Role::firstOrCreate(['name' => 'Super Admin']);
 
         // 3️⃣ Get all permissions
@@ -40,7 +40,7 @@ class CreateAdminUserSeeder extends Seeder
         // 5️⃣ Assign Admin role to the user
         $user->assignRole($adminRole->name);
 
-        // 6️⃣ Mark Admin role as protected (cannot be renamed/deleted)
+        // 6️⃣ Mark Super Admin role as protected (cannot be renamed/deleted)
         if (Schema::hasColumn('roles', 'is_protected')) {
             $adminRole->update(['is_protected' => true]);
         }

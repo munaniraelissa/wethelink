@@ -139,7 +139,7 @@
                             <div class="invalid-feedback">{{ $message }}</div>
                         @enderror
                     </div>
-                    <div class="row">
+                    {{-- <div class="row">
                         <div class="col-md-3 mb-3">
                             <label class="form-label">{{ __('messages.price') }} *</label>
                             <input type="number" name="price" step="0.01" class="form-control @error('price') is-invalid @enderror" value="{{ old('price', $product->price) }}" required>
@@ -168,12 +168,19 @@
                                 <div class="invalid-feedback">{{ $message }}</div>
                             @enderror
                         </div>
-                    </div>
+                    </div> --}}
                     <div class="row">
-                        <div class="col-md-4 mb-3">
+                        {{-- <div class="col-md-4 mb-3">
                             <label class="form-label">{{ __('messages.quantity') }}</label>
                             <input type="number" name="quantity" class="form-control @error('quantity') is-invalid @enderror" value="{{ old('quantity', $product->quantity) }}">
                             @error('quantity')
+                                <div class="invalid-feedback">{{ $message }}</div>
+                            @enderror
+                        </div> --}}
+                        <div class="col-md-4 mb-3">
+                            <label class="form-label">{{ __('messages.price') }} *</label>
+                            <input type="number" name="price" step="0.01" class="form-control @error('price') is-invalid @enderror" value="{{ old('price', $product->price) }}" required>
+                            @error('price')
                                 <div class="invalid-feedback">{{ $message }}</div>
                             @enderror
                         </div>
@@ -194,7 +201,7 @@
                     </div>
 
                     <!-- Product Variants (Size-Color combinations) -->
-                    <div class="mb-4">
+                    {{-- <div class="mb-4">
                         <div class="d-flex align-items-end mb-2">
                             <h5 class="mb-0">{{ __('messages.product_variants') }} (Size & Color)</h5>
                             <button type="button" class="btn btn-outline-primary btn-sm ms-2" data-bs-toggle="modal" data-bs-target="#addSizeModal">
@@ -227,7 +234,7 @@
                                 </tbody>
                             </table>
                         </div>
-                    </div>
+                    </div> --}}
 
                     <!-- Product Images -->
                     <div class="mb-4">
@@ -288,7 +295,7 @@
                     </div>
 
                     <!-- Locations -->
-                    <div class="mb-4">
+                    {{-- <div class="mb-4">
                         <h5 class="mb-2">{{ __('messages.locations') }}</h5>
                         <div class="table-responsive">
                             <table class="table table-bordered">
@@ -301,16 +308,13 @@
                                 </thead>
                                 <tbody>
                                     @foreach($locations as $location)
-                                        @php
-                                            $productLocation = $product->locations->where('location_id', $location->id)->first();
-                                        @endphp
                                         <tr>
                                             <td>
-                                                <input type="checkbox" name="locations[{{ $location->id }}][selected]" value="1" class="form-check-input" {{ $productLocation ? 'checked' : '' }}>
+                                                <input type="checkbox" name="locations[{{ $location->id }}][selected]" value="1" class="form-check-input" checked>
                                             </td>
                                             <td>{{ $location->name }}</td>
                                             <td>
-                                                <input type="number" name="locations[{{ $location->id }}][quantity]" class="form-control form-control-sm" min="0" value="{{ $productLocation ? $productLocation->quantity : 0 }}">
+                                                <input type="number" name="locations[{{ $location->id }}][quantity]" class="form-control form-control-sm" min="0" value="0">
                                             </td>
                                         </tr>
                                     @endforeach
@@ -322,7 +326,7 @@
                                 </tbody>
                             </table>
                         </div>
-                    </div>
+                    </div> --}}
 
                     <div class="mb-3">
                         <div class="form-check">

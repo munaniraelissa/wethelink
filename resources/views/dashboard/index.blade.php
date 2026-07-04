@@ -21,10 +21,10 @@
               <span class="metric-label">{{ __('dashboard.index.revenue') }}</span>
               <span class="metric-icon"><i class="bi bi-currency-dollar" aria-hidden="true"></i></span>
             </div>
-            <div class="metric-value">$48,240</div>
+            <div class="metric-value">${{ number_format($metrics['revenue'] ?? 0, 2) }}</div>
             <div class="metric-meta">
-              <span class="text-success">+12.5%</span>
-              <span>{{ __('dashboard.index.from_last_month') }}</span>
+              <span class="text-success">{{ number_format($metrics['orders'] ?? 0) }}</span>
+              <span>{{ __('dashboard.index.new_orders') }}</span>
             </div>
           </article>
         </div>
@@ -35,9 +35,9 @@
               <span class="metric-label">{{ __('dashboard.index.orders') }}</span>
               <span class="metric-icon"><i class="bi bi-bag-check" aria-hidden="true"></i></span>
             </div>
-            <div class="metric-value">1,284</div>
+            <div class="metric-value">{{ number_format($metrics['orders'] ?? 0) }}</div>
             <div class="metric-meta">
-              <span class="text-success">+8.2%</span>
+              <span class="text-success">{{ number_format($metrics['orders'] ?? 0) }}</span>
               <span>{{ __('dashboard.index.new_orders') }}</span>
             </div>
           </article>
@@ -46,13 +46,13 @@
         <div class="col-12 col-sm-6 col-xl-3">
           <article class="metric-card metric-warning">
             <div class="metric-top">
-              <span class="metric-label">{{ __('dashboard.index.customers') }}</span>
-              <span class="metric-icon"><i class="bi bi-people" aria-hidden="true"></i></span>
+              <span class="metric-label">{{ __('users.company') }}</span>
+              <span class="metric-icon"><i class="bi bi-building" aria-hidden="true"></i></span>
             </div>
-            <div class="metric-value">8,742</div>
+            <div class="metric-value">{{ number_format($metrics['companies'] ?? 0) }}</div>
             <div class="metric-meta">
-              <span class="text-success">+5.1%</span>
-              <span>{{ __('dashboard.index.active_users') }}</span>
+              <span class="text-success">{{ number_format($metrics['companies'] ?? 0) }}</span>
+              <span>{{ __('users.company') }}</span>
             </div>
           </article>
         </div>
@@ -60,13 +60,13 @@
         <div class="col-12 col-sm-6 col-xl-3">
           <article class="metric-card metric-danger">
             <div class="metric-top">
-              <span class="metric-label">{{ __('dashboard.index.tickets') }}</span>
-              <span class="metric-icon"><i class="bi bi-life-preserver" aria-hidden="true"></i></span>
+              <span class="metric-label">{{ __('dashboard.index.customers') }}</span>
+              <span class="metric-icon"><i class="bi bi-people" aria-hidden="true"></i></span>
             </div>
-            <div class="metric-value">36</div>
+            <div class="metric-value">{{ number_format($metrics['active_users'] ?? 0) }}</div>
             <div class="metric-meta">
-              <span class="text-danger">3 {{ __('dashboard.index.urgent') }}</span>
-              <span>{{ __('dashboard.index.need_review') }}</span>
+              <span class="text-danger">{{ number_format($metrics['active_users'] ?? 0) }}</span>
+              <span>{{ __('dashboard.index.active_users') }}</span>
             </div>
           </article>
         </div>
@@ -80,7 +80,7 @@
                 <h2 class="h5 mb-1 section-title"><i class="bi bi-graph-up-arrow" aria-hidden="true"></i><span>{{ __('dashboard.index.sales_performance') }}</span></h2>
                 <p class="text-muted mb-0">{{ __('dashboard.index.monthly_revenue') }}</p>
               </div>
-              <a class="btn btn-light btn-sm" href="charts.blade.php">{{ __('dashboard.index.view_details') }}</a>
+              <a class="btn btn-light btn-sm" href="{{ route('charts') }}">{{ __('dashboard.index.view_details') }}</a>
             </div>
 
             <div class="chart-bars" aria-label="Sales performance chart">
@@ -104,9 +104,21 @@
             </div>
 
             <div class="activity-list">
-              <div class="activity-item"><span class="activity-dot bg-primary"></span><div><p class="mb-1 fw-semibold">{{ __('dashboard.index.new_campaign') }}</p><p class="text-muted small mb-0">{{ __('dashboard.index.campaign_desc') }}</p></div></div>
-              <div class="activity-item"><span class="activity-dot bg-success"></span><div><p class="mb-1 fw-semibold">{{ __('dashboard.index.payment_cleared') }}</p><p class="text-muted small mb-0">{{ __('dashboard.index.payment_desc') }}</p></div></div>
-              <div class="activity-item"><span class="activity-dot bg-warning"></span><div><p class="mb-1 fw-semibold">{{ __('dashboard.index.support_queue') }}</p><p class="text-muted small mb-0">{{ __('dashboard.index.support_desc') }}</p></div></div>
+              @forelse($recentActivities as $activity)
+                <div class="activity-item">
+                  <span class="activity-dot {{ $activity['icon_class'] }}"></span>
+                  <div>
+                    <p class="mb-1 fw-semibold">{{ $activity['title'] }}</p>
+                    <p class="text-muted small mb-0">{{ $activity['description'] }}</p>
+                  </div>
+                </div>
+              @empty
+                <div class="activity-item">
+                  <div>
+                    <p class="mb-1 fw-semibold">{{ __('dashboard.common.no_data') }}</p>
+                  </div>
+                </div>
+              @endforelse
             </div>
           </div>
         </div>
@@ -137,9 +149,9 @@
                 <tr>
                   <td>
                     <div class="d-flex align-items-center gap-2">
-                      <img class="avatar-img avatar-sm" src="{{ $user->profile_photo_url ?? asset('dashboard/assets/images/avatar/avatar-1.jpg') }}" alt="{{ $user->name }}">
+                      {{-- <img class="avatar-img avatar-sm" src="{{ $user->avatar ? asset('storage/' . $user->avatar) : asset('dashboard/assets/images/avatar/avatar-1.jpg') }}" alt="{{ trim($user->firstname . ' ' . $user->lastname) }}"> --}}
                       <div>
-                        <p class="fw-semibold mb-0">{{ $user->name }}</p>
+                        <p class="fw-semibold mb-0">{{ trim($user->firstname . ' ' . $user->lastname) ?: $user->email }}</p>
                         <p class="text-muted small mb-0">{{ $user->email }}</p>
                       </div>
                     </div>

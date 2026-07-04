@@ -97,6 +97,8 @@ return [
     'drag_to_reorder' => 'Drag to reorder',
     'variants' => 'Variants',
     'locations' => 'Locations',
+    'assign_company' => 'Assign product to company',
+    'search_company' => 'Search company',
 
     // Product Status
     'draft' => 'Draft',

@@ -7,7 +7,9 @@ use App\Models\Company;
 use App\Models\CompanyLocation;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Hash;
+use Illuminate\Support\Facades\Mail;
 use Illuminate\Validation\Rule;
+use App\Mail\AccountActivatedMail;
 use Spatie\Permission\Models\Role;
 
 class UserController extends Controller
@@ -19,6 +21,8 @@ class UserController extends Controller
      */
     public function index(Request $request)
     {
+        abort_if(!auth()->user()?->can('user-list'), 403);
+
         $query = User::with(['company', 'roles'])->orderBy('id', 'desc');
 
         if ($request->filled('search')) {
@@ -51,8 +55,13 @@ class UserController extends Controller
      */
     public function create()
     {
+        abort_if(!auth()->user()?->can('user-create'), 403);
+
         $companies = Company::all();
-        $roles = Role::all();
+        $roles = Role::query()
+            ->orderByRaw("CASE WHEN name = 'Super Admin' THEN 0 ELSE 1 END")
+            ->orderBy('name', 'ASC')
+            ->get();
         $genders = ['male', 'female', 'other'];
         $statuses = ['pending', 'active', 'inactive', 'suspended'];
 
@@ -64,6 +73,8 @@ class UserController extends Controller
      */
     public function store(Request $request)
     {
+        abort_if(!auth()->user()?->can('user-create'), 403);
+
         $validated = $request->validate([
             'firstname' => 'required|string|max:100',
             'lastname' => 'required|string|max:100',
@@ -111,6 +122,8 @@ class UserController extends Controller
      */
     public function show(User $user)
     {
+        abort_if(!auth()->user()?->can('user-list'), 403);
+
         $user->load(['company', 'roles']);
 
         return view('dashboard.users.show', compact('user'));
@@ -121,8 +134,13 @@ class UserController extends Controller
      */
     public function edit(User $user)
     {
+        abort_if(!auth()->user()?->can('user-edit'), 403);
+
         $companies = Company::all();
-        $roles = Role::all();
+        $roles = Role::query()
+            ->orderByRaw("CASE WHEN name = 'Super Admin' THEN 0 ELSE 1 END")
+            ->orderBy('name', 'ASC')
+            ->get();
         $genders = ['male', 'female', 'other'];
         $statuses = ['pending', 'active', 'inactive', 'suspended'];
         $userRoles = $user->roles->pluck('id')->toArray();
@@ -135,6 +153,8 @@ class UserController extends Controller
      */
     public function update(Request $request, User $user)
     {
+        abort_if(!auth()->user()?->can('user-edit'), 403);
+
         $validated = $request->validate([
             'firstname' => 'required|string|max:100',
             'lastname' => 'required|string|max:100',
@@ -190,6 +210,8 @@ class UserController extends Controller
      */
     public function destroy(User $user)
     {
+        abort_if(!auth()->user()?->can('user-delete'), 403);
+
         $user->delete();
 
         return redirect()->route('users.index')
@@ -205,10 +227,16 @@ class UserController extends Controller
             'status' => 'required|in:pending,active,inactive,suspended',
         ]);
 
+        $wasActivated = $validated['status'] === 'active' && $user->status !== 'active';
+
         $user->update([
             'status' => $validated['status'],
             'activated_at' => $validated['status'] === 'active' && !$user->activated_at ? now() : $user->activated_at,
         ]);
+
+        if ($wasActivated) {
+            Mail::to($user->email)->send(new AccountActivatedMail($user));
+        }
 
         return redirect()->back()
                         ->with('success', __('users.user_status_updated'));
@@ -269,5 +297,26 @@ class UserController extends Controller
 
         return redirect()->route('profile')
                         ->with('success', __('users.profile_updated_successfully'));
+    }
+
+    public function updatePassword(Request $request)
+    {
+        $user = auth()->user();
+
+        $validated = $request->validate([
+            'current_password' => ['required', function ($attribute, $value, $fail) use ($user) {
+                if (!Hash::check($value, $user->password)) {
+                    $fail(__('users.current_password_incorrect'));
+                }
+            }],
+            'password' => ['required', 'confirmed', 'min:8'],
+        ]);
+
+        $user->update([
+            'password' => Hash::make($validated['password']),
+        ]);
+
+        return redirect()->route('profile')
+            ->with('success', __('users.password_updated_successfully'));
     }
 }
