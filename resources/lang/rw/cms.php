@@ -19,6 +19,7 @@ return [
     'nav' => [
         'home' => 'Ahabanza',
         'shop' => 'Duka',
+        'products' => 'Ibicuruzwa',
         'manufacturers' => 'Abacuruzi',
         'detail' => 'Ibisobanuro by\'iduka',
         'pages' => 'Paji',
@@ -66,14 +67,19 @@ return [
 
     'product' => [
         'trendy' => 'Ibicuruzwa by\'impyisi',
+        'new_arrivals' => 'Ibicuruzwa Bishya',
+        'no_products_found' => 'Nta bicuruzwa byaboneka Aho.',
         'just_arrived' => 'Bageze Ubu',
         'view_detail' => 'Reba Ibisobanuro',
         'add_to_cart' => 'Ongeramo mu gasanduku',
         'colorful_shirt' => 'Shati Ibara',
+        'products' => 'Ibicuruzwa',
     ],
 
     'footer' => [
         'quick_links' => 'Amaherezo Yihuse',
+        'services' => 'Serivisi',
+        'follow_us' => 'Dukurikirane',
         'newsletter' => 'Ikinyamakuru',
         'about' => 'Dolore erat dolor sit lorem vero amet. Sed sit lorem magna, ipsum no sit erat lorem et magna ipsum dolore amet erat.',
         'address' => '123 Street, New York, USA',
@@ -91,6 +97,7 @@ return [
     'page' => [
         'home' => 'Ahabanza',
         'shop' => 'Duka ryacu',
+        'store' => 'Duka',
         'detail' => 'Ibisobanuro by\'iduka',
         'contact' => 'Vugana Natwe',
         'cart' => 'Agasanduku k\'ibicuruzwa',
@@ -99,6 +106,8 @@ return [
 
     'shop' => [
         'page_title' => 'Duka ryacu',
+        'all_products' => 'Bicuruzwa Byose',
+        'no_products_in_category' => 'Nta bicuruzwa byaboneka muri iki cyiciro',
         'filter_price' => 'Shakisha n\'igiciro',
         'filter_color' => 'Shakisha n\'ibara',
         'filter_size' => 'Shakisha n\'ingano',
@@ -182,11 +191,23 @@ return [
 
     'contact' => [
         'header' => 'Vugana Natwe ku bibazo byose',
+        'get_in_touch' => 'Tumanisha Natwe',
+        'marketplace_description' => 'Shaka Abacuruzi Bizewe, Abatunzi, Ababwire, Abagurutse Mu Bubiko, Abakiraniro, Abatwara, n\'Abaguruza Kurabura Rwanda, Iburasirazuba bya Afrika & Afrika. Gerazamo ibigo bisuzumwe, ibicuruzwa by\'ivuriro, hamwe n\'amahirwe mashya yo guhatanisha ku Wethelink.com, isimu ryacu ry\'umuhinga w\'isimu ryingenzi sa B2B.',
         'name' => 'Izina ryawe',
         'email' => 'Imeyili yawe',
         'subject' => 'Umutwe w\'ubutumwa',
         'message' => 'Ubutumwa',
         'send_message' => 'Ohereza Ubutumwa',
+        'message_sent_successfully' => 'Ubutumwa bwacu bwatanzwe neza! Tugiye kugaruka kuri inzira iyo vuba.',
+        'message_sent_error' => 'Habaye ikosa mugihe cyo gutanga ubutumwa bwacu. Menya gerageza indi gihe.',
+    ],
+
+    'product_inquiry' => [
+        'title' => 'Ikibazo ku Bicuruzwa',
+        'message_template' => 'Nshaka {{category}} ifite barcode {{barcode}}',
+        'send' => 'Ohereza Ikibazo',
+        'inquiry_sent' => 'Ikibazo cyacu cyatanzwe neza!',
+        'inquiry_error' => 'Habaye ikosa mugihe cyo gutanga ikibazo. Menya gerageza indi gihe.',
     ],
 
     'cart' => [

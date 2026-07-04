@@ -107,7 +107,7 @@ return [
     // Sidebar
     'sidebar' => [
         'home' => 'Ahabanza',
-        'dashboard' => 'Dashboard',
+        'dashboard' => 'Ikibaho',
         'users' => 'Abakoresha',
         'roles' => 'Imidiri',
         'permissions' => 'Uburenganzira',

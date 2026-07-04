@@ -19,6 +19,7 @@ return [
     'nav' => [
         'home' => 'Home',
         'shop' => 'Shop',
+        'products' => 'Products',
         'manufacturers' => 'Manufacturers',
         'detail' => 'Shop Detail',
         'pages' => 'Pages',
@@ -66,14 +67,19 @@ return [
 
     'product' => [
         'trendy' => 'Trendy Products',
+        'new_arrivals' => 'New Arrivals',
+        'no_products_found' => 'No products found Here.',
         'just_arrived' => 'Just Arrived',
         'view_detail' => 'View Detail',
         'add_to_cart' => 'Add To Cart',
         'colorful_shirt' => 'Colorful Stylish Shirt',
+        'products' => 'Products',
     ],
 
     'footer' => [
         'quick_links' => 'Quick Links',
+        'services' => 'Services',
+        'follow_us' => 'Follow Us',
         'newsletter' => 'Newsletter',
         'about' => 'Dolore erat dolor sit lorem vero amet. Sed sit lorem magna, ipsum no sit erat lorem et magna ipsum dolore amet erat.',
         'address' => '123 Street, New York, USA',
@@ -91,6 +97,7 @@ return [
     'page' => [
         'home' => 'Home',
         'shop' => 'Our Shop',
+        'store' => 'Store',
         'detail' => 'Shop Detail',
         'contact' => 'Contact Us',
         'cart' => 'Shopping Cart',
@@ -99,6 +106,8 @@ return [
 
     'shop' => [
         'page_title' => 'Our Shop',
+        'all_products' => 'All Products',
+        'no_products_in_category' => 'No products found in this category',
         'filter_price' => 'Filter by price',
         'filter_color' => 'Filter by color',
         'filter_size' => 'Filter by size',
@@ -182,11 +191,23 @@ return [
 
     'contact' => [
         'header' => 'Contact For Any Queries',
+        'get_in_touch' => 'Get In Touch',
+        'marketplace_description' => 'Find Trusted Manufacturers, Suppliers, Retailers, Wholesalers, Buyers, Importers, and Exporters Across Rwanda, East Africa & Africa. Discover verified businesses, factory-direct products, and new trade opportunities on Wethelink.com, Rwanda\'s trusted B2B marketplace.',
         'name' => 'Your Name',
         'email' => 'Your Email',
         'subject' => 'Subject',
         'message' => 'Message',
         'send_message' => 'Send Message',
+        'message_sent_successfully' => 'Your message has been sent successfully! We will get back to you soon.',
+        'message_sent_error' => 'An error occurred while sending your message. Please try again.',
+    ],
+
+    'product_inquiry' => [
+        'title' => 'Product Inquiry',
+        'message_template' => 'I want the {{category}} with the barcode {{barcode}}',
+        'send' => 'Send Inquiry',
+        'inquiry_sent' => 'Your inquiry has been sent successfully!',
+        'inquiry_error' => 'Error sending inquiry. Please try again.',
     ],
 
     'cart' => [

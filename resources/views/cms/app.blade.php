@@ -9,7 +9,7 @@
     <meta content="Free HTML Templates" name="description">
 
     <!-- Favicon -->
-    <link href="{{ asset('cms/img/favicon.ico') }}" rel="icon">
+    {{-- <link href="{{ asset('cms/img/favicon.ico') }}" rel="icon"> --}}
 
     <!-- Google Web Fonts -->
     <link rel="preconnect" href="https://fonts.gstatic.com">
@@ -24,6 +24,16 @@
 
     <!-- Customized Bootstrap Stylesheet -->
     <link href="{{ asset('cms/css/style.css') }}" rel="stylesheet">
+
+
+    {{-- favicaon --}}
+
+    <link rel="icon" type="image/png" href="{{ asset('favicon/favicon-96x96.png') }}" sizes="96x96" />
+    <link rel="icon" type="image/svg+xml" href="{{ asset('favicon/favicon.svg') }}" />
+    <link rel="shortcut icon" href="{{ asset('favicon/favicon.ico') }}" />
+    <link rel="apple-touch-icon" sizes="180x180" href="{{ asset('favicon/apple-touch-icon.png') }}" />
+    <meta name="apple-mobile-web-app-title" content="wethelink" />
+    <link rel="manifest" href="{{ asset('favicon/site.webmanifest') }}" />
 
     <style>
         .social-icon-link {
@@ -92,22 +102,28 @@
             </div>
             <div class="col-lg-6 text-center text-lg-right">
                 <div class="d-inline-flex align-items-center">
-                    <a class="social-icon-link" href="https://www.facebook.com/share/1azXLevQkf/" target="_blank" rel="noopener noreferrer" aria-label="Facebook">
+                    <a class="social-icon-link" href="https://www.facebook.com/share/1azXLevQkf/" target="_blank"
+                        rel="noopener noreferrer" aria-label="Facebook">
                         <i class="fab fa-facebook-f"></i>
                     </a>
-                    <a class="social-icon-link" href="https://x.com/wethelink_com" target="_blank" rel="noopener noreferrer" aria-label="Twitter">
+                    <a class="social-icon-link" href="https://x.com/wethelink_com" target="_blank"
+                        rel="noopener noreferrer" aria-label="Twitter">
                         <i class="fab fa-twitter"></i>
                     </a>
-                    <a class="social-icon-link" href="#" target="_blank" rel="noopener noreferrer" aria-label="LinkedIn">
+                    <a class="social-icon-link" href="#" target="_blank" rel="noopener noreferrer"
+                        aria-label="LinkedIn">
                         <i class="fab fa-linkedin-in"></i>
                     </a>
-                    <a class="social-icon-link" href="https://www.instagram.com/wethelink_com?igsh=eTlyZHl3YmpmN21v" target="_blank" rel="noopener noreferrer" aria-label="Instagram">
+                    <a class="social-icon-link" href="https://www.instagram.com/wethelink_com?igsh=eTlyZHl3YmpmN21v"
+                        target="_blank" rel="noopener noreferrer" aria-label="Instagram">
                         <i class="fab fa-instagram"></i>
                     </a>
-                    <a class="social-icon-link" href="#" target="_blank" rel="noopener noreferrer" aria-label="YouTube">
+                    <a class="social-icon-link" href="#" target="_blank" rel="noopener noreferrer"
+                        aria-label="YouTube">
                         <i class="fab fa-youtube"></i>
                     </a>
-                    <a class="social-icon-link" href="https://www.tiktok.com/@wethelink_com?_r=1&_t=ZS-97j5RJE7ZnL" target="_blank" rel="noopener noreferrer" aria-label="TikTok">
+                    <a class="social-icon-link" href="https://www.tiktok.com/@wethelink_com?_r=1&_t=ZS-97j5RJE7ZnL"
+                        target="_blank" rel="noopener noreferrer" aria-label="TikTok">
                         <i class="fab fa-tiktok"></i>
                     </a>
                 </div>
@@ -121,7 +137,7 @@
                 </a>
             </div>
             <div class="col-lg-6 col-6 text-left">
-                {{-- <form action="">
+                <form action="">
                     <div class="input-group">
                         <input type="text" class="form-control" placeholder="{{ __('cms.search.placeholder') }}">
                         <div class="input-group-append">
@@ -130,7 +146,7 @@
                             </span>
                         </div>
                     </div>
-                </form> --}}
+                </form>
             </div>
             {{-- <div class="col-lg-3 col-6 text-right">
                 <a href="#" class="btn border">
@@ -198,14 +214,15 @@
                         <h1 class="m-0 display-5 font-weight-semi-bold"><span
                                 class="text-primary font-weight-bold border px-3 mr-1">E</span>Shopper</h1>
                     </a>
-                    <button type="button" class="navbar-toggler" data-toggle="collapse" data-target="#navbarCollapse">
+                    <button type="button" class="navbar-toggler" data-toggle="collapse"
+                        data-target="#navbarCollapse">
                         <span class="navbar-toggler-icon"></span>
                     </button>
                     <div class="collapse navbar-collapse justify-content-between" id="navbarCollapse">
                         <div class="navbar-nav mr-auto py-0">
                             <a href="{{ route('home') }}"
                                 class="nav-item nav-link active">{{ __('cms.nav.home') }}</a>
-                            <a href="{{ route('shop') }}" class="nav-item nav-link">Products</a>
+                            <a href="{{ route('shop') }}" class="nav-item nav-link">{{ __('cms.nav.products') }}</a>
                             <a href="{{ route('manufacturers') }}"
                                 class="nav-item nav-link">{{ __('cms.nav.manufacturers') }}</a>
                             {{-- <a href="{{ route('detail') }}" class="nav-item nav-link">{{ __('cms.nav.detail') }}</a> --}}
@@ -247,7 +264,8 @@
                                             class="dropdown-item">{{ __('dashboard.sidebar.dashboard') }}</a>
                                         <form method="POST" action="{{ route('logout') }}" class="d-inline">
                                             @csrf
-                                            <button type="submit" class="dropdown-item">{{ __('cms.auth.logout') }}</button>
+                                            <button type="submit"
+                                                class="dropdown-item">{{ __('cms.auth.logout') }}</button>
                                         </form>
                                     </div>
                                 </div>
@@ -258,17 +276,23 @@
                 @if (Route::is('home'))
                     <div id="header-carousel" class="carousel slide" data-ride="carousel">
                         <div class="carousel-inner">
-                            @foreach($heroSlides as $index => $slide)
+                            @foreach ($heroSlides as $index => $slide)
                                 <div class="carousel-item {{ $index === 0 ? 'active' : '' }}" style="height: 410px;">
-                                    <img class="img-fluid" src="{{ asset($slide->image_path ?? 'cms/img/carousel-1.jpg') }}" alt="{{ $slide->title }}">
-                                    <div class="carousel-caption d-flex flex-column align-items-center justify-content-center">
+                                    <img class="img-fluid"
+                                        src="{{ asset($slide->image_path ?? 'cms/img/carousel-1.jpg') }}"
+                                        alt="{{ $slide->title }}">
+                                    <div
+                                        class="carousel-caption d-flex flex-column align-items-center justify-content-center">
                                         <div class="p-3" style="max-width: 700px;">
-                                            @if(!empty($slide->subtitle))
-                                                <h4 class="text-light text-uppercase font-weight-medium mb-3">{{ $slide->subtitle }}</h4>
+                                            @if (!empty($slide->subtitle))
+                                                <h4 class="text-light text-uppercase font-weight-medium mb-3">
+                                                    {{ $slide->subtitle }}</h4>
                                             @endif
-                                            <h3 class="display-4 text-white font-weight-semi-bold mb-4">{{ $slide->title }}</h3>
-                                            @if(!empty($slide->button_text))
-                                                <a href="{{ $slide->button_url ?? '/login' }}" class="btn btn-light py-2 px-3">{{ $slide->button_text }}</a>
+                                            <h3 class="display-4 text-white font-weight-semi-bold mb-4">
+                                                {{ $slide->title }}</h3>
+                                            @if (!empty($slide->button_text))
+                                                <a href="{{ $slide->button_url ?? '/login' }}"
+                                                    class="btn btn-light py-2 px-3">{{ $slide->button_text }}</a>
                                             @endif
                                         </div>
                                     </div>
@@ -314,30 +338,46 @@
                     <div class="col-md-4 mb-5">
                         <h5 class="font-weight-bold text-dark mb-4">{{ __('cms.footer.quick_links') }}</h5>
                         <div class="d-flex flex-column justify-content-start">
-                            <a class="text-dark mb-2" href="{{ route('home') }}"><i class="fa fa-angle-right mr-2"></i>{{ __('cms.nav.home') }}</a>
-                            <a class="text-dark mb-2" href="{{ route('shop') }}"><i class="fa fa-angle-right mr-2"></i>products</a>
-                            <a class="text-dark mb-2" href="{{ route('manufacturers') }}"><i class="fa fa-angle-right mr-2"></i>{{ __('cms.nav.manufacturers') }}</a>
-                            <a class="text-dark" href="{{ route('contact') }}"><i class="fa fa-angle-right mr-2"></i>{{ __('cms.nav.contact') }}</a>
+                            <a class="text-dark mb-2" href="{{ route('home') }}"><i
+                                    class="fa fa-angle-right mr-2"></i>{{ __('cms.nav.home') }}</a>
+                            <a class="text-dark mb-2" href="{{ route('shop') }}"><i
+                                    class="fa fa-angle-right mr-2"></i>{{ __('cms.nav.products') }}</a>
+                            <a class="text-dark mb-2" href="{{ route('manufacturers') }}"><i
+                                    class="fa fa-angle-right mr-2"></i>{{ __('cms.nav.manufacturers') }}</a>
+                            <a class="text-dark" href="{{ route('contact') }}"><i
+                                    class="fa fa-angle-right mr-2"></i>{{ __('cms.nav.contact') }}</a>
                         </div>
                     </div>
                     <div class="col-md-4 mb-5">
-                        <h5 class="font-weight-bold text-dark mb-4">Services</h5>
+                        <h5 class="font-weight-bold text-dark mb-4">{{ __('cms.footer.services') }}</h5>
                         <div class="d-flex flex-column justify-content-start">
-                            <a class="text-dark mb-2" href="{{ route('shop') }}"><i class="fa fa-angle-right mr-2"></i>Quality Product</a>
-                            <a class="text-dark mb-2" href="{{ route('shop') }}"><i class="fa fa-angle-right mr-2"></i>Free Shipping</a>
-                            <a class="text-dark mb-2" href="{{ route('shop') }}"><i class="fa fa-angle-right mr-2"></i>14-Day Return</a>
-                            <a class="text-dark" href="{{ route('contact') }}"><i class="fa fa-angle-right mr-2"></i>24/7 Support</a>
+                            <a class="text-dark mb-2" href="{{ route('shop') }}"><i
+                                    class="fa fa-angle-right mr-2"></i>Quality Product</a>
+                            <a class="text-dark mb-2" href="{{ route('shop') }}"><i
+                                    class="fa fa-angle-right mr-2"></i>Free Shipping</a>
+                            <a class="text-dark mb-2" href="{{ route('shop') }}"><i
+                                    class="fa fa-angle-right mr-2"></i>14-Day Return</a>
+                            <a class="text-dark" href="{{ route('contact') }}"><i
+                                    class="fa fa-angle-right mr-2"></i>24/7 Support</a>
                         </div>
                     </div>
                     <div class="col-md-4 mb-5">
-                        <h5 class="font-weight-bold text-dark mb-4">Follow Us</h5>
+                        <h5 class="font-weight-bold text-dark mb-4">{{ __('cms.footer.follow_us') }}</h5>
                         <div class="d-flex flex-column justify-content-start">
-                            <a class="text-dark mb-2" href="https://www.facebook.com/share/1azXLevQkf/" target="_blank" rel="noopener noreferrer"><i class="fab fa-facebook-f text-primary mr-3"></i>Facebook</a>
-                            <a class="text-dark mb-2" href="https://x.com/wethelink_com" target="_blank" rel="noopener noreferrer"><i class="fab fa-twitter text-primary mr-3"></i>Twitter</a>
+                            <a class="text-dark mb-2" href="https://www.facebook.com/share/1azXLevQkf/"
+                                target="_blank" rel="noopener noreferrer"><i
+                                    class="fab fa-facebook-f text-primary mr-3"></i>Facebook</a>
+                            <a class="text-dark mb-2" href="https://x.com/wethelink_com" target="_blank"
+                                rel="noopener noreferrer"><i class="fab fa-twitter text-primary mr-3"></i>Twitter</a>
                             {{-- <a class="text-dark mb-2" href="#" target="_blank" rel="noopener noreferrer"><i class="fab fa-linkedin-in text-primary mr-3"></i>LinkedIn</a> --}}
-                            <a class="text-dark mb-2" href="https://www.instagram.com/wethelink_com?igsh=eTlyZHl3YmpmN21v" target="_blank" rel="noopener noreferrer"><i class="fab fa-instagram text-primary mr-3"></i>Instagram</a>
+                            <a class="text-dark mb-2"
+                                href="https://www.instagram.com/wethelink_com?igsh=eTlyZHl3YmpmN21v" target="_blank"
+                                rel="noopener noreferrer"><i
+                                    class="fab fa-instagram text-primary mr-3"></i>Instagram</a>
                             {{-- <a class="text-dark mb-2" href="#" target="_blank" rel="noopener noreferrer"><i class="fab fa-youtube text-primary mr-3"></i>YouTube</a> --}}
-                            <a class="text-dark" href="https://www.tiktok.com/@wethelink_com?_r=1&_t=ZS-97j5RJE7ZnL" target="_blank" rel="noopener noreferrer"><i class="fab fa-tiktok text-primary mr-3"></i>TikTok</a>
+                            <a class="text-dark" href="https://www.tiktok.com/@wethelink_com?_r=1&_t=ZS-97j5RJE7ZnL"
+                                target="_blank" rel="noopener noreferrer"><i
+                                    class="fab fa-tiktok text-primary mr-3"></i>TikTok</a>
                         </div>
                     </div>
                 </div>
@@ -346,17 +386,18 @@
         <div class="row border-top border-light mx-xl-5 py-4">
             <div class="col-md-6 px-xl-0">
                 <p class="mb-md-0 text-center text-md-left text-dark">
-                    &copy; <a class="text-dark font-weight-semi-bold"
-                        href="/">wethelink</a>. {{ __('cms.footer.all_rights') }}.
+                    &copy; <a class="text-dark font-weight-semi-bold" href="/">wethelink</a>.
+                    {{ __('cms.footer.all_rights') }}.
                     {{ __('cms.footer.designed_by') }}
                     <a class="text-dark font-weight-semi-bold" href="https://elissamunanira.netrify.app/">EM</a>
-                    
+
                 </p>
             </div>
             <div class="col-md-6 px-xl-0 text-center text-md-right">
                 {{-- <img class="img-fluid" src="{{ asset('cms/img/payments.png') }}" alt=""> --}}
-                {{ __('cms.footer.distributed_by') }} <a href="https://elissamunanira.netrify.app/" target="_blank">EM
-                        </a>
+                {{ __('cms.footer.distributed_by') }} <a href="https://elissamunanira.netrify.app/"
+                    target="_blank">EM
+                </a>
             </div>
         </div>
     </div>

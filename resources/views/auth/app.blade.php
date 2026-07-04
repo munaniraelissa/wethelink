@@ -93,7 +93,7 @@
     <script src="/cms/lib/owlcarousel/owl.carousel.min.js"></script>
     <script src="{{ asset('cms/js/main.js') }}"></script>
     <script src="{{ asset('cms/js/auth.js') }}"></script>
-    <script src="{{ asset('auth/js/auth.js') }}"></script>
+    <script src="{{ asset('auth/js/auth.js') }}"></script>  
 
 </body>
 

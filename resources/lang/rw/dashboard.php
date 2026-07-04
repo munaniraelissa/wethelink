@@ -131,7 +131,7 @@ return [
     ],
 
     'sidebar' => [
-        'dashboard' => 'Ubuyobozi',
+        'dashboard' => 'Ikibaho',
         'users' => 'Abakozi',
         'roles' => 'Inshingano',
         'add_user' => 'Ongeramo Umukozi',

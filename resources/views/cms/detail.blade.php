@@ -383,7 +383,8 @@
                             </button>
                         </div>
                     </div> --}}
-                    <button class="btn btn-primary px-3"><a href="https://wa.me/{{ preg_replace('/[^0-9]/', '', $product->company->telephone ?? '') }}?text={{ urlencode($product->short_description ?? 'Hello, I am interested in ' . $product->name) }}" class="btn btn-sm text-dark p-0" target="_blank"><i class="fab fa-whatsapp text-success mr-1"></i>Chat Now</a></button>
+                                                    <a href="https://wa.me/{{ preg_replace('/[^0-9]/', '', $product->company->telephone ?? '') }}?text={{ urlencode('I want the ' . ($product->category->name ?? $product->name) . ' with barcode ' . $product->barcode) }}">
+                                                        <button class="btn btn-success px-3">
                     {{-- <button class="btn btn-primary px-3"><i class="fa fa-shopping-cart mr-1"></i> {{ __('cms.product.add_to_cart') }}</button> --}}
                 </div>
                 {{-- <div class="d-flex pt-2">
@@ -554,8 +555,9 @@
                             </div>
                             <div class="card-footer d-flex justify-content-between bg-light border">
                                 <a href="{{ route('product.detail', $related->slug) }}" class="btn btn-sm text-dark p-0"><i class="fas fa-eye text-primary mr-1"></i>View Detail</a>
-                                {{-- <a href="" class="btn btn-sm text-dark p-0"><i class="fas fa-shopping-cart text-primary mr-1"></i>Add To Cart</a> --}}
-                                <a href="https://wa.me/{{ preg_replace('/[^0-9]/', '', $product->company->telephone ?? '') }}?text={{ urlencode($product->short_description ?? 'Hello, I am interested in ' . $product->name) }}" class="btn btn-sm text-dark p-0" target="_blank"><i class="fab fa-whatsapp text-success mr-1"></i>Chat Now</a>
+                               <a href="https://wa.me/{{ preg_replace('/[^0-9]/', '', $product->company->telephone ?? '') }}?text={{ urlencode('I want the ' . ($product->category->name ?? $product->name) . ' with barcode ' . $product->barcode) }}"
+                                        class="btn btn-sm text-dark p-0" target="_blank"><i
+                                            class="fab fa-whatsapp text-success mr-1"></i>Chat Now</a>
                             </div>
                         </div>
                     @endforeach

@@ -167,6 +167,50 @@ class CmsController extends Controller
     }
 
     /**
+     * Store the contact message.
+     *
+     * @param  \Illuminate\Http\Request  $request
+     * @return \Illuminate\Http\JsonResponse
+     */
+    public function storeContactMessage(Request $request)
+    {
+        $validated = $request->validate([
+            'name' => 'required|string|max:255',
+            'email' => 'required|email|max:255',
+            'subject' => 'required|string|max:255',
+            'message' => 'required|string|min:10',
+        ]);
+
+        try {
+            // Store the message in database
+            $contactMessage = \App\Models\ContactMessage::create($validated);
+
+            // Try to send email to admin
+            try {
+                $adminEmail = config('mail.from.address', 'munanira64@gmail.com');
+                if ($adminEmail && filter_var($adminEmail, FILTER_VALIDATE_EMAIL)) {
+                    \Illuminate\Support\Facades\Mail::to($adminEmail)
+                        ->send(new \App\Mail\ContactMessageMail($contactMessage));
+                }
+            } catch (\Exception $mailException) {
+                // Log the email error but don't fail the request
+                \Illuminate\Support\Facades\Log::error('Contact form email failed: ' . $mailException->getMessage());
+            }
+
+            return response()->json([
+                'success' => true,
+                'message' => __('cms.contact.message_sent_successfully'),
+            ]);
+        } catch (\Exception $e) {
+            \Illuminate\Support\Facades\Log::error('Contact form error: ' . $e->getMessage());
+            return response()->json([
+                'success' => false,
+                'message' => __('cms.contact.message_sent_error') . ' - ' . $e->getMessage(),
+            ], 500);
+        }
+    }
+
+    /**
      * Display the shopping cart.
      *
      * @return \Illuminate\View\View
