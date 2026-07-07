@@ -25,6 +25,7 @@ return [
     'is_active' => 'Is Active',
     'yes' => 'Yes',
     'no' => 'No',
+    'no_items' => 'No item',
 
     // Categories
     'categories' => 'Categories',

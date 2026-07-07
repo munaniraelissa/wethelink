@@ -23,8 +23,8 @@
             <div class="col-lg-5 bg-white d-flex align-items-center">
                 <div class="w-100 p-4 p-md-5">
                     <div class="text-center mb-4">
-                        <h3 class="font-weight-bold mb-1">{{ __('cms.auth.signin_or_create') }}</h3>
-                        <p class="text-muted mb-0">{{ __('cms.auth.by_continuing') }}</p>
+                        <h3 class="font-weight-bold mb-1">{{ __('cms.auth.signin') }}</h3>
+                        {{-- <p class="text-muted mb-0">{{ __('cms.auth.by_continuing') }}</p> --}}
                     </div>
 
                     {{-- <a href="#" class="btn btn-outline-secondary btn-block btn-lg mb-3 text-left btn-social">
@@ -75,10 +75,10 @@
                                 <small class="form-text text-danger">{{ $message }}</small>
                             @enderror
                         </div>
+                        <p class="text-center text-muted mt-4 mb-0">{{ __('cms.auth.by_continuing') }}<a href="#" class="text-decoration-none">{{ __('cms.auth.terms_and_conditions') }}</a></p><br>
                         <button type="submit" class="btn btn-primary btn-block btn-lg py-3" id="submitBtn">{{ __('cms.auth.continue') }}</button>
                     </form>
 
-                    <p class="text-center text-muted mt-4 mb-0">{{ __('cms.auth.by_continuing') }}</p>
                     <p class="text-center text-muted mt-4 mb-0">{{ __('cms.auth.dont_have_account') }} <a href="{{ route('register') }}" class="text-decoration-none">{{ __('cms.auth.create_account') }}</a></p>
                     {{-- <div class="d-flex align-items-center mt-4 mb-0">
                         <div class="border-top flex-grow-1"></div>

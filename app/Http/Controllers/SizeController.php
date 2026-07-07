@@ -65,6 +65,14 @@ class SizeController extends Controller
         return redirect()->route('sizes.index')->with('success', __('messages.size_created_successfully'));
     }
 
+    public function show(Size $size)
+    {
+        abort_if(!auth()->user()?->can('size-list'), 403);
+        $this->authorizeSize($size);
+
+        return view('dashboard.sizes.show', compact('size'));
+    }
+
     public function edit(Size $size)
     {
         abort_if(!auth()->user()?->can('size-edit'), 403);

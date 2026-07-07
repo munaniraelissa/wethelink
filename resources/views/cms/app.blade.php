@@ -3,10 +3,22 @@
 
 <head>
     <meta charset="utf-8">
-    <title>{{ __('cms.site_name') }}</title>
+    <title>Wethelink.com- Online Marketplace Company.</title>
     <meta content="width=device-width, initial-scale=1.0" name="viewport">
-    <meta content="Free HTML Templates" name="keywords">
-    <meta content="Free HTML Templates" name="description">
+    <meta name="description" content="Find Trusted Manufacturers, Suppliers, Retailers, Wholesalers, Buyers, Importers, and Exporters Across Rwanda, East Africa & Africa. Discover verified businesses, factory-direct products, and new trade opportunities on Wethelink.com, Rwanda's trusted B2B marketplace.">
+    <meta name="keywords" content="Rwanda B2B marketplace, manufacturers Rwanda, suppliers Rwanda, wholesalers Rwanda, retailers Rwanda, importers Rwanda, exporters Rwanda, African trade, East Africa business directory, factory direct products, Wethelink">
+    <meta name="author" content="Wethelink">
+    <meta name="color-scheme" content="light dark">
+
+    <script>
+        (function () {
+            const storedTheme = localStorage.getItem('wethelink-theme');
+            const systemPrefersDark = window.matchMedia('(prefers-color-scheme: dark)').matches;
+            const theme = storedTheme || (systemPrefersDark ? 'dark' : 'light');
+            document.documentElement.setAttribute('data-theme', theme);
+            document.documentElement.style.colorScheme = theme;
+        })();
+    </script>
 
     <!-- Favicon -->
     {{-- <link href="{{ asset('cms/img/favicon.ico') }}" rel="icon"> --}}
@@ -89,7 +101,7 @@
 
 <body>
     <!-- Topbar Start -->
-    <div class="container-fluid">
+    <div class="container-fluid cms-topbar">
         <div class="row bg-secondary py-2 px-xl-5">
             <div class="col-lg-6 d-none d-lg-block">
                 <div class="d-inline-flex align-items-center">
@@ -126,6 +138,11 @@
                         target="_blank" rel="noopener noreferrer" aria-label="TikTok">
                         <i class="fab fa-tiktok"></i>
                     </a>
+                    <button type="button" class="theme-toggle" id="theme-toggle" aria-label="Toggle dark mode"
+                        aria-pressed="false">
+                        <i class="fas fa-moon"></i>
+                        <span class="theme-toggle-label">Dark</span>
+                    </button>
                 </div>
             </div>
         </div>
@@ -164,7 +181,7 @@
 
 
     <!-- Navbar Start -->
-    <div class="container-fluid mb-5">
+    <div class="container-fluid mb-5 cms-navbar">
         <div class="row border-top px-xl-5">
             <div class="col-lg-3 d-none d-lg-block">
                 <a class="btn shadow-none d-flex align-items-center justify-content-between bg-primary text-white w-100"
@@ -211,8 +228,8 @@
             <div class="col-lg-9">
                 <nav class="navbar navbar-expand-lg bg-light navbar-light py-3 py-lg-0 px-0">
                     <a href="{{ route('home') }}" class="text-decoration-none d-block d-lg-none">
-                        <h1 class="m-0 display-5 font-weight-semi-bold"><span
-                                class="text-primary font-weight-bold border px-3 mr-1">E</span>Shopper</h1>
+                        <img src="{{ asset('cms/logo/Logo.png') }}" alt="We thelink logo" class="img-fluid"
+                            style="max-height: 42px;" />
                     </a>
                     <button type="button" class="navbar-toggler" data-toggle="collapse"
                         data-target="#navbarCollapse">
@@ -321,7 +338,7 @@
 
 
     <!-- Footer Start -->
-    <div class="container-fluid bg-secondary text-dark mt-5 pt-5">
+    <div class="container-fluid bg-secondary text-dark mt-5 pt-5 cms-footer">
         <div class="row px-xl-5 pt-5">
             <div class="col-lg-4 col-md-12 mb-5 pr-3 pr-xl-5">
                 <a href="{{ route('home') }}" class="text-decoration-none d-inline-block">
@@ -385,20 +402,21 @@
         </div>
         <div class="row border-top border-light mx-xl-5 py-4">
             <div class="col-md-6 px-xl-0">
-                <p class="mb-md-0 text-center text-md-left text-dark">
-                    &copy; <a class="text-dark font-weight-semi-bold" href="/">wethelink</a>.
+                <p>&copy;  {{ date('Y') }} wethelink.com. All Rights Reserved.</p>
+                {{-- <p class="mb-md-0 text-center text-md-left text-dark">
+                    &copy; <a class="text-dark font-weight-semi-bold" href="/">wethelink.com</a>.
                     {{ __('cms.footer.all_rights') }}.
                     {{ __('cms.footer.designed_by') }}
                     <a class="text-dark font-weight-semi-bold" href="https://elissamunanira.netrify.app/">EM</a>
 
-                </p>
+                </p> --}}
             </div>
-            <div class="col-md-6 px-xl-0 text-center text-md-right">
+            {{-- <div class="col-md-6 px-xl-0 text-center text-md-right">--}}
                 {{-- <img class="img-fluid" src="{{ asset('cms/img/payments.png') }}" alt=""> --}}
-                {{ __('cms.footer.distributed_by') }} <a href="https://elissamunanira.netrify.app/"
+               {{-- {{ __('cms.footer.distributed_by') }} <a href="https://elissamunanira.netrify.app/"
                     target="_blank">EM
                 </a>
-            </div>
+            </div> --}}
         </div>
     </div>
     <!-- Footer End -->
@@ -420,6 +438,39 @@
 
     <!-- Template Javascript -->
     <script src="{{ asset('cms/js/main.js') }}"></script>
+    <script>
+        (function () {
+            const toggle = document.getElementById('theme-toggle');
+            const root = document.documentElement;
+
+            const applyTheme = (theme) => {
+                root.setAttribute('data-theme', theme);
+                root.style.colorScheme = theme;
+
+                if (toggle) {
+                    toggle.setAttribute('aria-pressed', String(theme === 'dark'));
+                    const icon = toggle.querySelector('i');
+                    const label = toggle.querySelector('.theme-toggle-label');
+                    if (icon) {
+                        icon.className = theme === 'dark' ? 'fas fa-sun' : 'fas fa-moon';
+                    }
+                    if (label) {
+                        label.textContent = theme === 'dark' ? 'Light' : 'Dark';
+                    }
+                }
+            };
+
+            const storedTheme = localStorage.getItem('wethelink-theme');
+            const initialTheme = storedTheme || (window.matchMedia('(prefers-color-scheme: dark)').matches ? 'dark' : 'light');
+            applyTheme(initialTheme);
+
+            toggle?.addEventListener('click', () => {
+                const nextTheme = root.getAttribute('data-theme') === 'dark' ? 'light' : 'dark';
+                localStorage.setItem('wethelink-theme', nextTheme);
+                applyTheme(nextTheme);
+            });
+        })();
+    </script>
     @stack('scripts')
 </body>
 

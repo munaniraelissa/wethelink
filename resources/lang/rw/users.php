@@ -30,7 +30,7 @@ return [
     // Search and Filter
     'search_users' => 'Shakisha abakoresha kubyerekeye izina, e-mail, cyangwa terefoni...',
     'all_statuses' => 'Imitwe Yose',
-    'all_companies' => 'Ibikorwa Byose',
+    'all_companies' => 'Ama kompanyi Yose',
     'filter' => 'Shingira',
     'search' => 'Shakisha',
 
@@ -44,7 +44,7 @@ return [
     'email' => 'E-mail',
     'telephone' => 'Terefoni',
     'alternative_phone' => 'Terefoni Irindi',
-    'company' => 'Ikigire',
+    'company' => 'Ikompanyi',
     'status' => 'Imiterere',
     'joined_date' => 'Itariki Y\'Ubwiteganyiriza',
     'gender' => 'Ubwikira',
@@ -66,7 +66,7 @@ return [
     // Form Sections
     'personal_information' => 'Ingufu Z\'Umuntu',
     'contact_information' => 'Umusanzu W\'Ubigirira Inzira',
-    'company_assignment' => 'Guha Ikigire',
+    'company_assignment' => 'Guha Ikompanyi',
     'authentication' => 'Kwemeza Inyandiko',
     'account_settings' => 'Igenamigambi Ry\'Akawuntu',
     'account_information' => 'Umusanzu W\'Akawuntu',
@@ -76,7 +76,7 @@ return [
     'roles_and_permissions' => 'Inkingi N\'Itsinda Ry\'Ijambo Ryinzira',
 
     // Form Labels
-    'select_company' => 'Hitamo Ikigire',
+    'select_company' => 'Hitamo Ikompanyi',
     'select_status' => 'Hitamo Imiterere',
     'password' => 'Ijambo Ryinzira',
     'confirm_password' => 'Wemeze Ijambo Ryinzira',

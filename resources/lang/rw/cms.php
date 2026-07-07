@@ -132,7 +132,7 @@ return [
         'explore' => 'Reba ibicuruzwa byinshi',
         'view_detail' => 'Reba ibisobanuro',
         'chat_now' => 'Kanda kuganira',
-        'company_info' => 'Amakuru y’Ikigo',
+        'company_info' => 'Amakuru y’Ikompanyi',
         'products_count' => 'Ibicuruzwa :count',
         'locations_count' => 'Aho bakorera :count',
         'staff_count' => 'Abakozi :count',
@@ -245,12 +245,13 @@ return [
     ],
 
     'auth' => [
-        'signin_or_create' => 'Injira cyangwa wiyandikishe',
+        'signi' => 'Injira',
         'create_account' => 'Iyandikishe',
         'continue_with' => 'Komeza ukoresheje :provider',
         'or' => 'CYANGWA',
         'enter_email' => 'Shyiramo aderesi imeyili yawe',
-        'by_continuing' => 'Uko ukomeza wemera amategeko n\'uburyo bwo kubika amakuru.',
+        'by_continuing' => 'Uko ukomeza wemera',
+        'terms_and_conditions' => 'amategeko n\'uburyo bwo kubika amakuru.',
         'have_account' => 'Ufite konti?',
         'dont_have_account' => 'Nta konte ufite?',
         'already_have_account' => 'Ufite konti?',
@@ -266,6 +267,7 @@ return [
         'password_placeholder' => 'Byombi 6 nibura',
         'password_requirements' => 'Igipimo cyo munsi ni imibare 6',
         'confirm_password' => 'Emeza ijambo ryibanga',
+        'passwords_not_match' => 'Ijambo ry\'ibanga ntirihura',
         'confirm_password_placeholder' => 'Emeza ijambo ryibanga',
         'create_account_button' => 'Iyandikishe',
         'sign_in' => 'Injira',
@@ -348,6 +350,12 @@ return [
         'feature_easy_setup_desc' => 'Subiramo ikibanza cya vuba mu mirongo.'  ,
         'feature_instant_access' => 'Ubwiyunge bwihebye',
         'feature_instant_access_desc' => 'Subiramo ubwishingizi wihebye nyuma y\'iyandikishe.',
-        'logout' => 'Sohoka'
+        'logout' => 'Sohoka',
+
+        'locale' => [
+            'label' => 'Ururimi',
+            'en' => 'English',
+            'rw' => 'Kiny',
+        ],
     ],
 ];

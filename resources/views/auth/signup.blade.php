@@ -27,7 +27,6 @@
                     <div class="text-center mb-4">
                         {{-- <img src="{{ asset('cms/logo/Logo.png') }}" alt="We thelink logo" class="mb-3" style="height: 55px; width: auto;" /> --}}
                         <h3 class="font-weight-bold mb-1">{{ __('cms.auth.create_account') }}</h3>
-                        <p class="text-muted mb-0">{{ __('cms.auth.by_continuing') }}</p>
                     </div>
 {{-- 
                     <a href="#" class="btn btn-outline-secondary btn-block btn-lg mb-3 text-left btn-social">
@@ -46,11 +45,14 @@
                         <div class="border-top flex-grow-1"></div>
                     </div> --}}
 
-                    <div id="successAlert" class="alert alert-info alert-dismissible fade hide" role="alert" style="display: none;">
-                        <strong>Info!</strong> <span id="successMessage"></span>
+                    <div id="successAlert" class="alert alert-success alert-dismissible fade show" role="alert" style="display: none;">
+                        <strong>Success!</strong> <span id="successMessage"></span>
+                        <button type="button" class="close" data-dismiss="alert" aria-label="Close">
+                            <span aria-hidden="true">&times;</span>
+                        </button>
                     </div>
 
-                    <div id="errorAlert" class="alert alert-danger alert-dismissible fade hide" role="alert" style="display: none;">
+                    <div id="errorAlert" class="alert alert-danger alert-dismissible fade show" role="alert" style="display: none;">
                         <strong>Error!</strong> <span id="errorMessage"></span>
                         <button type="button" class="close" data-dismiss="alert" aria-label="Close">
                             <span aria-hidden="true">&times;</span>
@@ -78,6 +80,19 @@
                             <label for="password" class="font-weight-bold">{{ __('cms.auth.password') }}</label>
                             <input type="password" id="password" name="password" class="form-control form-control-lg" placeholder="{{ __('cms.auth.password') }}" required>
                         </div>
+                        <div class="form-group">
+                            <label for="password_confirmation" class="font-weight-bold">{{ __('cms.auth.confirm_password') ?? 'Confirm Password' }}</label>
+                            <input type="password" id="password_confirmation" name="password_confirmation" class="form-control form-control-lg" placeholder="{{ __('cms.auth.confirm_password') ?? 'Confirm Password' }}" required>
+                        </div>
+                        <div class="form-group">
+                            <div class="custom-control custom-checkbox">
+                                <input type="checkbox" class="custom-control-input" id="agreeTerms" name="agreeTerms" required>
+                                <label class="custom-control-label" for="agreeTerms">
+                                    {{ __('cms.auth.by_continuing') ?? 'By continuing, you agree to our' }} <a href="#" class="text-decoration-none">{{ __('cms.auth.terms_and_conditions') ?? 'Terms and Conditions' }}</a> 
+                                    
+                                </label>
+                            </div>
+                        </div>
                         <button type="submit" class="btn btn-primary btn-block btn-lg py-3" id="submitBtn">{{ __('cms.auth.create_account_button') }}</button>
                     </form>
 
@@ -102,11 +117,27 @@
             const email = document.getElementById('email').value;
             const telephone = document.getElementById('telephone').value;
             const password = document.getElementById('password').value;
+            const passwordConfirmation = document.getElementById('password_confirmation').value;
+            const agreeTerms = document.getElementById('agreeTerms').checked;
             const submitBtn = document.getElementById('submitBtn');
             const errorAlert = document.getElementById('errorAlert');
             const errorMessage = document.getElementById('errorMessage');
             const successAlert = document.getElementById('successAlert');
             const successMessage = document.getElementById('successMessage');
+
+            // Validate password confirmation
+            if (password !== passwordConfirmation) {
+                errorMessage.textContent = '{{ __("cms.auth.passwords_not_match") ?? "Passwords do not match" }}';
+                errorAlert.style.display = 'block';
+                return;
+            }
+
+            // Validate terms and conditions
+            if (!agreeTerms) {
+                errorMessage.textContent = '{{ __("cms.auth.accept_terms") ?? "You must accept the Terms and Conditions and Privacy Policy" }}';
+                errorAlert.style.display = 'block';
+                return;
+            }
 
             submitBtn.disabled = true;
             submitBtn.textContent = '{{ __("cms.auth.creating_account") }}';
@@ -145,7 +176,7 @@
                     successAlert.style.display = 'block';
                     submitBtn.disabled = false;
                     submitBtn.textContent = '{{ __("cms.auth.create_account_button") }}';
-                    e.currentTarget.reset();
+                    document.getElementById('signupForm').reset();
                     return;
                 }
 

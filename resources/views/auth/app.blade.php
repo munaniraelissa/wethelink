@@ -3,7 +3,7 @@
 
 <head>
     <meta charset="utf-8">
-    <title>{{ __('cms.site_name') }}</title>
+    <title>Wethelink.com- Online Marketplace Company.</title>
     <meta content="width=device-width, initial-scale=1.0" name="viewport">
     <meta content="Free HTML Templates" name="keywords">
     <meta content="Free HTML Templates" name="description">
@@ -73,11 +73,11 @@
 
         <div class="auth-locale dropdown">
             <button class="btn dropdown-toggle" type="button" id="authLocaleDropdown" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
-                {{ __('cms.locale.label') }} ({{ strtoupper(app()->getLocale()) }})
+                {{ __('cms.auth.locale.label') }}
             </button>
             <div class="dropdown-menu dropdown-menu-right" aria-labelledby="authLocaleDropdown">
-                <a class="dropdown-item" href="{{ route('locale.switch', 'en') }}">{{ __('cms.locale.en') }}</a>
-                <a class="dropdown-item" href="{{ route('locale.switch', 'rw') }}">{{ __('cms.locale.rw') }}</a>
+                <a class="dropdown-item" href="{{ route('locale.switch', 'en') }}">{{ __('cms.auth.locale.en') }}</a>
+                <a class="dropdown-item" href="{{ route('locale.switch', 'rw') }}">{{ __('cms.auth.locale.rw') }}</a>
             </div>
         </div>
     </div>

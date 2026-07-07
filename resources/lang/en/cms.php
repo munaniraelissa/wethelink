@@ -4,12 +4,6 @@ return [
     'site_name' => 'Wthelink',
     'categories' => 'Categories',
 
-    'locale' => [
-        'label' => 'Language',
-        'en' => 'English',
-        'rw' => 'Kinyarwanda',
-    ],
-
     'topbar' => [
         'faqs' => 'FAQs',
         'help' => 'Help',
@@ -245,12 +239,13 @@ return [
     ],
 
     'auth' => [
-        'signin_or_create' => 'Sign in or create account',
+        'signin' => 'Sign in',
         'create_account' => 'Create an account',
         'continue_with' => 'Continue with :provider',
         'or' => 'OR',
         'enter_email' => 'Enter your email address',
-        'by_continuing' => 'By continuing, you agree to our terms and privacy policy.',
+        'by_continuing' => 'By continuing, you agree to our',
+        'terms_and_conditions' => ' terms and privacy policy.',
         'have_account' => 'Already have an account?',
         'dont_have_account' => 'Don\'t have an account?',
         'already_have_account' => 'Already have an account?',
@@ -266,6 +261,7 @@ return [
         'password_placeholder' => 'At least 6 characters',
         'password_requirements' => 'Must be at least 6 characters',
         'confirm_password' => 'Confirm Password',
+        'passwords_not_match' => 'Passwords do not match',
         'confirm_password_placeholder' => 'Confirm your password',
         'create_account_button' => 'Create account',
         'sign_in' => 'Sign in',
@@ -349,5 +345,10 @@ return [
         'feature_instant_access' => 'Instant Access',
         'feature_instant_access_desc' => 'Start managing your business immediately after registration.',
         'logout' => 'Logout',
+        'locale' => [
+            'label' => 'Lang',
+            'en' => 'English',
+            'rw' => 'Kiny',
+        ],
     ],
 ];

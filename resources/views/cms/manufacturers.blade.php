@@ -47,26 +47,7 @@
 
                                         <div class="mb-3">
                                             <h6 class="font-weight-semi-bold">{{ __('cms.manufacturers.company_info') }}</h6>
-                                            <ul class="list-unstyled text-muted small mb-0">
-                                                <li>{{ __('cms.manufacturers.products_count', ['count' => $manufacturer->products_count]) }}</li>
-                                                <li>{{ __('cms.manufacturers.locations_count', ['count' => $manufacturer->locations->count()]) }}</li>
-                                                <li>{{ __('cms.manufacturers.staff_count', ['count' => $manufacturer->users_count]) }}</li>
-                                                @if($manufacturer->credit_limit)
-                                                    <li>{{ __('cms.manufacturers.credit_limit', ['amount' => number_format($manufacturer->credit_limit)]) }}</li>
-                                                @endif
-                                                @if($manufacturer->telephone)
-                                                    <li>{{ __('cms.manufacturers.telephone') }}: {{ $manufacturer->telephone }}</li>
-                                                @endif
-                                                @if($manufacturer->email)
-                                                    <li>{{ __('cms.manufacturers.email') }}: {{ $manufacturer->email }}</li>
-                                                @endif
-                                                @if($manufacturer->website)
-                                                    <li>{{ __('cms.manufacturers.website') }}: <a href="{{ $manufacturer->website }}" target="_blank">{{ $manufacturer->website }}</a></li>
-                                                @endif
-                                                @if($manufacturer->created_at)
-                                                    <li>{{ __('cms.manufacturers.verified_years', ['years' => $manufacturer->created_at->diffInYears(now())]) }}</li>
-                                                @endif
-                                            </ul>
+                                            
                                         </div>
 
                                         <p class="text-muted">{{ \Illuminate\Support\Str::limit($manufacturer->description ?? __('cms.manufacturers.no_description'), 220) }}</p>

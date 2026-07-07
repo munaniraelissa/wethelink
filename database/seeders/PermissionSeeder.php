@@ -12,7 +12,7 @@ class PermissionSeeder extends Seeder
     public function run(): void
     {
         $modules = [
-            'user', 'role', 'permission', 'company', 'category', 'brand', 'color', 'size', 'product', 'order', 'subscription'
+            'user', 'role', 'permission', 'company', 'category', 'brand', 'color', 'size', 'product', 'order', 'subscription',
         ];
 
         $actions = ['list', 'create', 'edit', 'delete'];
@@ -30,6 +30,7 @@ class PermissionSeeder extends Seeder
         $all[] = 'product-show';
         $all[] = 'subscription-approve';
         $all[] = 'select_product_company';
+        $all[] = 'manage-feature';
 
         foreach ($all as $name) {
             Permission::firstOrCreate(['name' => $name]);
@@ -51,7 +52,7 @@ class PermissionSeeder extends Seeder
             'product-manage-media',
         ]);
 
-        $admin = Role::firstOrCreate(['name' => 'Admin']);
+        $admin = Role::firstOrCreate(['name' => 'Super Admin']);
         $admin->syncPermissions(Permission::all());
     }
 }

@@ -52,13 +52,13 @@
         @can('category-list')
         <a class="nav-link" href="{{ route('categories.index') }}">
           <span class="nav-icon"><i class="bi bi-tags" aria-hidden="true"></i></span>
-          <span class="nav-text">Categories</span>
+          <span class="nav-text">{{ __('messages.categories') }}</span>
         </a>
         @endcan
         @can('company-list')
         <a class="nav-link" href="{{ route('companies.index') }}">
           <span class="nav-icon"><i class="bi bi-building" aria-hidden="true"></i></span>
-          <span class="nav-text">Companies</span>
+          <span class="nav-text">{{ __('users.company') }}</span>
         </a>
         @endcan
         {{-- <a class="nav-link" href="{{ route('subscription-packages.index') }}">
@@ -93,10 +93,12 @@
           <span class="nav-text">{{ __('dashboard.sidebar.roles') }}</span>
         </a>
         @endcan
+        @can('manage-feature')
         <a class="nav-link" href="{{ route('dashboard.homepage-features.index') }}">
           <span class="nav-icon"><i class="bi bi-stars" aria-hidden="true"></i></span>
           <span class="nav-text">Homepage Features</span>
         </a>
+        @endcan
         {{-- <a class="nav-link" href="add-user.html">
           <span class="nav-icon"><i class="bi bi-person-plus" aria-hidden="true"></i></span>
           <span class="nav-text">{{ __('dashboard.sidebar.add_user') }}</span>
@@ -225,8 +227,8 @@
 
       <footer class="admin-footer">
         <div class="container-fluid px-3 px-lg-4">
-          <span>Copyright 2026 wethelink. <br> Developed by <a target="_blank" class="fw-bold text-success" href="https://elissamunanira.netrify.app">Elissa MUNANIRA</a> • Distributed by <a target="_blank" class="fw-bold text-success" href="#">EMUNAH LTD</a> </span>
-          <span>Professional ecommerce dashboard.</span>
+          <span>&copy; {{ date('Y') }} wethelink.com. All Rights Reserved.</span>
+          {{-- <span>Professional ecommerce dashboard.</span> --}}
         </div>
       </footer>
     </div>

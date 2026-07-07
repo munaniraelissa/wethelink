@@ -65,6 +65,14 @@ class ColorController extends Controller
         return redirect()->route('colors.index')->with('success', __('messages.color_created_successfully'));
     }
 
+    public function show(Color $color)
+    {
+        abort_if(!auth()->user()?->can('color-list'), 403);
+        $this->authorizeColor($color);
+
+        return view('dashboard.colors.show', compact('color'));
+    }
+
     public function edit(Color $color)
     {
         abort_if(!auth()->user()?->can('color-edit'), 403);

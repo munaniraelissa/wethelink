@@ -12,6 +12,8 @@ class HomepageFeatureController extends Controller
 {
     public function index()
     {
+        abort_if(!auth()->user()?->can('manage-feature'), 403);
+
         $features = HomepageFeature::query()
             ->orderBy('sort_order')
             ->orderBy('id')
@@ -101,6 +103,7 @@ class HomepageFeatureController extends Controller
 
     public function update(Request $request)
     {
+        abort_if(!auth()->user()?->can('manage-feature'), 403);
         $request->validate([
             'features' => ['nullable', 'array'],
             'features.*.title' => ['nullable', 'string', 'max:255'],
@@ -121,7 +124,7 @@ class HomepageFeatureController extends Controller
         foreach ($request->input('features', []) as $payload) {
             $feature = HomepageFeature::find($payload['id'] ?? null);
 
-            if (! $feature) {
+            if (!$feature) {
                 continue;
             }
 
@@ -137,17 +140,17 @@ class HomepageFeatureController extends Controller
         foreach ($request->input('hero_slides', []) as $index => $payload) {
             $slide = HomepageHeroSlide::find($payload['id'] ?? null);
 
-            if (! $slide) {
+            if (!$slide) {
                 continue;
             }
 
             $imagePath = $payload['image_path'] ?? null;
-            $uploadedImage = $request->file('hero_images.' . $index);
+            $uploadedImage = $request->file('hero_images.'.$index);
 
             if ($uploadedImage) {
-                $fileName = Str::slug(pathinfo($uploadedImage->getClientOriginalName(), PATHINFO_FILENAME)) . '-' . time() . '.' . $uploadedImage->getClientOriginalExtension();
+                $fileName = Str::slug(pathinfo($uploadedImage->getClientOriginalName(), PATHINFO_FILENAME)).'-'.time().'.'.$uploadedImage->getClientOriginalExtension();
                 $uploadedImage->storeAs('homepage-hero', $fileName, 'public');
-                $imagePath = 'storage/homepage-hero/' . $fileName;
+                $imagePath = 'storage/homepage-hero/'.$fileName;
             }
 
             $slide->update([

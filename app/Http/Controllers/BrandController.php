@@ -72,7 +72,15 @@ class BrandController extends Controller
         }
 
         return redirect()->route('brands.index')
-            ->with('success', __('brands.brand_created_successfully'));
+            ->with('success', __('messages.brand_created_successfully'));
+    }
+
+    public function show(Brand $brand)
+    {
+        abort_if(!auth()->user()?->can('brand-list'), 403);
+        $this->authorizeBrand($brand);
+
+        return view('dashboard.brands.show', compact('brand'));
     }
 
     public function edit(Brand $brand)
@@ -114,7 +122,7 @@ class BrandController extends Controller
         $brand->update($validated);
 
         return redirect()->route('brands.index')
-            ->with('success', __('brands.brand_updated_successfully'));
+            ->with('success', __('messages.brand_updated_successfully'));
     }
 
     public function destroy(Brand $brand)
@@ -130,7 +138,7 @@ class BrandController extends Controller
         $brand->delete();
 
         return redirect()->route('brands.index')
-            ->with('success', __('brands.brand_deleted_successfully'));
+            ->with('success', __('messages.brand_deleted_successfully'));
     }
 
     private function authorizeBrand(Brand $brand)

@@ -18,13 +18,13 @@
         <div class="col-12 col-sm-6 col-xl-3">
           <article class="metric-card metric-primary">
             <div class="metric-top">
-              <span class="metric-label">{{ __('dashboard.index.revenue') }}</span>
-              <span class="metric-icon"><i class="bi bi-currency-dollar" aria-hidden="true"></i></span>
+              <span class="metric-label">{{ __('products.products') }}</span>
+              <span class="nav-icon"><i class="bi bi-box-seam" aria-hidden="true"></i></span>
             </div>
-            <div class="metric-value">${{ number_format($metrics['revenue'] ?? 0, 2) }}</div>
+            <div class="metric-value">{{ number_format($metrics['productCount'] ?? 0) }}</div>
             <div class="metric-meta">
-              <span class="text-success">{{ number_format($metrics['orders'] ?? 0) }}</span>
-              <span>{{ __('dashboard.index.new_orders') }}</span>
+              <span class="text-success">{{ number_format($metrics['productCount'] ?? 0) }}</span>
+              <span>{{ __('products.products') }}</span>
             </div>
           </article>
         </div>
@@ -32,13 +32,13 @@
         <div class="col-12 col-sm-6 col-xl-3">
           <article class="metric-card metric-success">
             <div class="metric-top">
-              <span class="metric-label">{{ __('dashboard.index.orders') }}</span>
+              <span class="metric-label">{{ __('messages.categories') }}</span>
               <span class="metric-icon"><i class="bi bi-bag-check" aria-hidden="true"></i></span>
             </div>
-            <div class="metric-value">{{ number_format($metrics['orders'] ?? 0) }}</div>
+            <div class="metric-value">{{ number_format($metrics['categoryCounts'] ?? 0) }}</div>
             <div class="metric-meta">
-              <span class="text-success">{{ number_format($metrics['orders'] ?? 0) }}</span>
-              <span>{{ __('dashboard.index.new_orders') }}</span>
+              <span class="text-success">{{ number_format($metrics['categoryCounts'] ?? 0) }}</span>
+              <span>{{ __('messages.categories') }}</span>
             </div>
           </article>
         </div>
@@ -60,7 +60,7 @@
         <div class="col-12 col-sm-6 col-xl-3">
           <article class="metric-card metric-danger">
             <div class="metric-top">
-              <span class="metric-label">{{ __('dashboard.index.customers') }}</span>
+              <span class="metric-label">{{ __('dashboard.sidebar.users') }}</span>
               <span class="metric-icon"><i class="bi bi-people" aria-hidden="true"></i></span>
             </div>
             <div class="metric-value">{{ number_format($metrics['active_users'] ?? 0) }}</div>

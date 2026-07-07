@@ -171,11 +171,21 @@ class AuthController extends Controller
         $superAdminPhone = config('app.super_admin_phone', '+250788565520');
         $signupPendingMessage = config('app.signup_pending_message', 'Registration successful. Your account is pending approval.');
 
-        if (!empty($superAdminEmail)) {
-            Mail::to($superAdminEmail)->send(new SuperAdminNewUserRegistrationMail($user, $signupPendingMessage));
+        try {
+            if (!empty($superAdminEmail)) {
+                Mail::to($superAdminEmail)->send(new SuperAdminNewUserRegistrationMail($user, $signupPendingMessage));
+                Log::info('Super admin notification email sent', ['user_id' => $user->id, 'admin_email' => $superAdminEmail]);
+            }
+        } catch (\Exception $e) {
+            Log::error('Failed to send super admin notification email', ['user_id' => $user->id, 'error' => $e->getMessage()]);
         }
 
-        Mail::to($user->email)->send(new UserPendingApprovalMail($user, $signupPendingMessage));
+        try {
+            Mail::to($user->email)->send(new UserPendingApprovalMail($user, $signupPendingMessage));
+            Log::info('User pending approval email sent', ['user_id' => $user->id, 'user_email' => $user->email]);
+        } catch (\Exception $e) {
+            Log::error('Failed to send user pending approval email', ['user_id' => $user->id, 'error' => $e->getMessage()]);
+        }
 
         $token = $user->createToken('api-token')->plainTextToken;
 

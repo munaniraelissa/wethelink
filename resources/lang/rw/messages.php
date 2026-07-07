@@ -25,6 +25,7 @@ return [
     'is_active' => 'Koreshwa',
     'yes' => 'Yego',
     'no' => 'Oya',
+    'no_items' => 'Ntakintu gihari',
 
     // Categories
     'categories' => 'Ibyiciro',
@@ -97,8 +98,8 @@ return [
     'drag_to_reorder' => 'Kwandika tugende ibyo kuzungurura',
     'variants' => 'Ubwoko',
     'locations' => 'Aho ziri',
-    'assign_company' => 'Shyiraho icyicuruzwa kuri kigo',
-    'search_company' => 'Shakisha ikigo',
+    'assign_company' => 'Shyiraho igicuruzwa kuri kompanyi',
+    'search_company' => 'Shakisha ikompanyi',
 
     // Product Status
     'draft' => 'Ntacyo',

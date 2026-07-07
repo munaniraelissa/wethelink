@@ -5,7 +5,6 @@ namespace App\Http\Controllers;
 use App\Models\Brand;
 use App\Models\Category;
 use App\Models\Company;
-use App\Models\CompanyLocation;
 use App\Models\Order;
 use App\Models\Product;
 use App\Models\Subscription;
@@ -72,8 +71,8 @@ class DashboardController extends Controller
         $statuses = ['draft', 'published', 'out_of_stock', 'inactive'];
 
         $metrics = [
-            'revenue' => Order::where('payment_status', 'paid')->sum('total'),
-            'orders' => Order::count(),
+            'productCount' => Product::count(),
+            'categoryCounts' => Category::count(),
             'companies' => Company::count(),
             'active_users' => User::where('status', 'active')->count(),
         ];
@@ -81,36 +80,36 @@ class DashboardController extends Controller
         $recentActivities = collect()
             ->merge($users->map(fn (User $user) => [
                 'title' => 'New user registered',
-                'description' => trim("{$user->firstname} {$user->lastname}") . ' joined the platform.',
+                'description' => trim("{$user->firstname} {$user->lastname}").' joined the platform.',
                 'created_at' => $user->created_at,
                 'icon_class' => 'bg-primary',
             ]))
             ->merge($companies->map(fn (Company $company) => [
                 'title' => 'Company added',
-                'description' => $company->name . ' was added to the system.',
+                'description' => $company->name.' was added to the system.',
                 'created_at' => $company->created_at,
                 'icon_class' => 'bg-success',
             ]))
             ->merge($products->map(fn (Product $product) => [
                 'title' => 'Product published',
-                'description' => $product->name . ' is now available in the catalog.',
+                'description' => $product->name.' is now available in the catalog.',
                 'created_at' => $product->created_at,
                 'icon_class' => 'bg-warning',
             ]))
             ->merge(Order::latest()->take(5)->get()->map(fn (Order $order) => [
                 'title' => 'Order received',
-                'description' => 'Order #' . $order->order_number . ' is now ' . $order->status . '.',
+                'description' => 'Order #'.$order->order_number.' is now '.$order->status.'.',
                 'created_at' => $order->created_at,
                 'icon_class' => 'bg-info',
             ]))
             ->merge(Subscription::latest()->take(5)->get()->map(fn (Subscription $subscription) => [
                 'title' => 'Subscription updated',
-                'description' => 'Subscription for ' . ($subscription->company?->name ?? 'a company') . ' is ' . $subscription->approval_status . '.',
+                'description' => 'Subscription for '.($subscription->company?->name ?? 'a company').' is '.$subscription->approval_status.'.',
                 'created_at' => $subscription->created_at,
                 'icon_class' => 'bg-secondary',
             ]))
             ->sortByDesc('created_at')
-            ->take(6)
+            ->take(4)
             ->values();
 
         return view('dashboard.index', compact('users', 'companies', 'statuses', 'products', 'categories', 'brands', 'metrics', 'recentActivities'));

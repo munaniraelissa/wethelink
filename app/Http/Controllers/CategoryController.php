@@ -55,7 +55,7 @@ class CategoryController extends Controller
             'parent_id' => ['nullable', 'integer', Rule::exists('categories', 'id')],
             'name' => ['required', 'string', 'max:255', Rule::unique('categories', 'name')],
             'slug' => ['nullable', 'string', 'max:255', Rule::unique('categories', 'slug')],
-            'image' => 'nullable|image|mimes:jpeg,png,jpg,gif|max:2048',
+            'image' => 'nullable|image|mimes:jpeg,png,jpg,gif',
             'description' => 'nullable|string',
             'is_active' => 'nullable|boolean',
         ]);
@@ -102,7 +102,7 @@ class CategoryController extends Controller
             'parent_id' => ['nullable', 'integer', Rule::exists('categories', 'id')],
             'name' => ['sometimes', 'required', 'string', 'max:255', Rule::unique('categories', 'name')->ignore($category->id)],
             'slug' => ['sometimes', 'required', 'string', 'max:255', Rule::unique('categories', 'slug')->ignore($category->id)],
-            'image' => 'nullable|image|mimes:jpeg,png,jpg,gif|max:2048',
+            'image' => 'nullable|image|mimes:jpeg,png,jpg,gif|',
             'description' => 'nullable|string',
             'is_active' => 'nullable|boolean',
         ]);
