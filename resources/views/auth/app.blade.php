@@ -5,8 +5,10 @@
     <meta charset="utf-8">
     <title>Wethelink.com- Online Marketplace Company.</title>
     <meta content="width=device-width, initial-scale=1.0" name="viewport">
-    <meta content="Free HTML Templates" name="keywords">
-    <meta content="Free HTML Templates" name="description">
+    <meta name="description" content="Find Trusted Manufacturers, Suppliers, Retailers, Wholesalers, Buyers, Importers, and Exporters Across Rwanda, East Africa & Africa. Discover verified businesses, factory-direct products, and new trade opportunities on Wethelink.com, Rwanda's trusted B2B marketplace.">
+    <meta name="keywords" content="Trusted B2B Marketplace in Rwanda, Verified Suppliers Rwanda, Rwanda Wholesale Suppliers, Factory Price Products Rwanda, Direct Suppliers Rwanda, Rwanda Manufacturers Directory, Find Suppliers in Rwanda, Trusted B2B Marketplace, Wholesale Products Rwanda, Buy Wholesale in Rwanda, Rwanda Retailers and Suppliers, Rwanda Factory Direct Products, Wholesale Prices Rwanda, Textile Suppliers Rwanda, Fabric Manufacturers Rwanda, Clothing Manufacturers Rwanda, Jeans Manufacturers Rwanda, Quality Denim Suppliers, Best B2B Platform Rwanda, Connect with Rwanda Manufacturers, Trusted B2B Marketplace East Africa, East Africa Wholesale Suppliers, Verified East Africa Businesses, Find Manufacturers in East Africa, B2B Trade Platform East Africa, Factory Price Products East Africa, Direct Suppliers East Africa, Trusted African B2B Marketplace, African Wholesale Network, Verified African Suppliers, African Manufacturers Directory, Gorilla Textile Jeans, Rwanda Jeans Manufacturer">
+    <meta name="author" content="Wethelink">
+    <meta name="color-scheme" content="light dark">
 
     <!-- Favicon -->
     <link href="{{ asset('cms/img/favicon.ico') }}" rel="icon">

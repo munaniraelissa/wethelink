@@ -24,6 +24,9 @@
 
     <!-- Categories Start -->
     <div class="container-fluid pt-5">
+        <div class="text-center mb-4">
+            <h2 class="section-title px-5"><span class="px-2">{{ __('cms.categories') }}</span></h2>
+        </div>
         <div class="row px-xl-5 pb-3">
             @foreach($categories as $category)
                 <div class="col-lg-4 col-md-6 pb-1">
@@ -74,7 +77,7 @@
     <!-- Products Start -->
     <div class="container-fluid pt-5">
         <div class="text-center mb-4">
-            <h2 class="section-title px-5"><span class="px-2">Trendy Products</span></h2>
+            <h2 class="section-title px-5"><span class="px-2">{{ __('cms.trendy_products') }}</span></h2>
         </div>
         <div class="row px-xl-5 pb-3">
             @forelse($trendyProducts as $product)
@@ -121,10 +124,10 @@
                             </p>
                         </div>
                         <div class="card-footer d-flex justify-content-between bg-light border">
-                            <a href="{{ route('product.detail', $product->slug) }}" class="btn btn-sm text-dark p-0"><i class="fas fa-eye text-primary mr-1"></i>View Detail</a>
+                            <a href="{{ route('product.detail', $product->slug) }}" class="btn btn-sm text-dark p-0"><i class="fas fa-eye text-primary mr-1"></i>{{__('cms.view_details')}}</a>
                             <a href="https://wa.me/{{ preg_replace('/[^0-9]/', '', $product->company->telephone ?? '') }}?text={{ urlencode('I want the ' . ($product->category->name ?? $product->name) . ' with barcode ' . $product->barcode) }}"
                                         class="btn btn-sm text-dark p-0" target="_blank"><i
-                                            class="fab fa-whatsapp text-success mr-1"></i>Chat Now</a>
+                                            class="fab fa-whatsapp text-success mr-1"></i>{{ __('cms.chat_now') }}</a>
                         </div>
                     </div>
                 </div>
@@ -213,10 +216,10 @@
                             </p>
                         </div>
                         <div class="card-footer d-flex justify-content-between bg-light border">
-                            <a href="{{ route('product.detail', $product->slug) }}" class="btn btn-sm text-dark p-0"><i class="fas fa-eye text-primary mr-1"></i>View Detail</a>
+                            <a href="{{ route('product.detail', $product->slug) }}" class="btn btn-sm text-dark p-0"><i class="fas fa-eye text-primary mr-1"></i>{{ __('cms.view_details') }}</a>
                             <a href="https://wa.me/{{ preg_replace('/[^0-9]/', '', $product->company->telephone ?? '') }}?text={{ urlencode('I want the ' . ($product->category->name ?? $product->name) . ' with barcode ' . $product->barcode) }}"
                                         class="btn btn-sm text-dark p-0" target="_blank"><i
-                                            class="fab fa-whatsapp text-success mr-1"></i>Chat Now</a>
+                                            class="fab fa-whatsapp text-success mr-1"></i>{{ __('cms.chat_now') }}</a>
                         </div>
                     </div>
                 </div>
@@ -235,7 +238,12 @@
 
 
     <!-- Vendor Start -->
+    
+            {{-- <h1 class="font-weight-semi-bold text-uppercase mb-3">{{ __('cms.manufacturers.title') }}</h1> --}}
     <div class="container-fluid py-5">
+        <div class="text-center mb-4">
+            <h2 class="section-title px-5"><span class="px-2">{{ __('cms.manufacturers.title') }}</span></h2>
+        </div>
         <div class="row px-xl-5">
             <div class="col">
                 <div class="owl-carousel vendor-carousel">

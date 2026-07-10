@@ -6,7 +6,7 @@
     <title>Wethelink.com- Online Marketplace Company.</title>
     <meta content="width=device-width, initial-scale=1.0" name="viewport">
     <meta name="description" content="Find Trusted Manufacturers, Suppliers, Retailers, Wholesalers, Buyers, Importers, and Exporters Across Rwanda, East Africa & Africa. Discover verified businesses, factory-direct products, and new trade opportunities on Wethelink.com, Rwanda's trusted B2B marketplace.">
-    <meta name="keywords" content="Rwanda B2B marketplace, manufacturers Rwanda, suppliers Rwanda, wholesalers Rwanda, retailers Rwanda, importers Rwanda, exporters Rwanda, African trade, East Africa business directory, factory direct products, Wethelink">
+    <meta name="keywords" content="Trusted B2B Marketplace in Rwanda, Verified Suppliers Rwanda, Rwanda Wholesale Suppliers, Factory Price Products Rwanda, Direct Suppliers Rwanda, Rwanda Manufacturers Directory, Find Suppliers in Rwanda, Trusted B2B Marketplace, Wholesale Products Rwanda, Buy Wholesale in Rwanda, Rwanda Retailers and Suppliers, Rwanda Factory Direct Products, Wholesale Prices Rwanda, Textile Suppliers Rwanda, Fabric Manufacturers Rwanda, Clothing Manufacturers Rwanda, Jeans Manufacturers Rwanda, Quality Denim Suppliers, Best B2B Platform Rwanda, Connect with Rwanda Manufacturers, Trusted B2B Marketplace East Africa, East Africa Wholesale Suppliers, Verified East Africa Businesses, Find Manufacturers in East Africa, B2B Trade Platform East Africa, Factory Price Products East Africa, Direct Suppliers East Africa, Trusted African B2B Marketplace, African Wholesale Network, Verified African Suppliers, African Manufacturers Directory, Gorilla Textile Jeans, Rwanda Jeans Manufacturer">
     <meta name="author" content="Wethelink">
     <meta name="color-scheme" content="light dark">
 
@@ -107,7 +107,7 @@
                 <div class="d-inline-flex align-items-center">
                     <a class="text-dark" href="#">{{ __('cms.topbar.faqs') }}</a>
                     <span class="text-muted px-2">|</span>
-                    <a class="text-dark" href="#">{{ __('cms.topbar.help') }}</a>
+                    <a class="text-dark" href="{{ route('help') }}">{{ __('cms.topbar.help') }}</a>
                     <span class="text-muted px-2">|</span>
                     <a class="text-dark" href="#">{{ __('cms.topbar.support') }}</a>
                 </div>
@@ -154,13 +154,13 @@
                 </a>
             </div>
             <div class="col-lg-6 col-6 text-left">
-                <form action="">
+                <form action="{{ route('shop') }}" method="GET">
                     <div class="input-group">
-                        <input type="text" class="form-control" placeholder="{{ __('cms.search.placeholder') }}">
+                        <input type="text" name="search" class="form-control" placeholder="{{ __('cms.search.placeholder') }}" value="{{ request('search') }}">
                         <div class="input-group-append">
-                            <span class="input-group-text bg-transparent text-primary">
+                            <button type="submit" class="input-group-text bg-transparent text-primary border-0">
                                 <i class="fa fa-search"></i>
-                            </span>
+                            </button>
                         </div>
                     </div>
                 </form>
@@ -252,6 +252,8 @@
                                         class="dropdown-item">{{ __('cms.nav.checkout') }}</a>
                                 </div>
                             </div> --}}
+                            <a href="{{ route('about') }}"
+                                class="nav-item nav-link">{{ __('cms.page.about') }}</a>
                             <a href="{{ route('contact') }}"
                                 class="nav-item nav-link">{{ __('cms.nav.contact') }}</a>
                         </div>
@@ -361,6 +363,8 @@
                                     class="fa fa-angle-right mr-2"></i>{{ __('cms.nav.products') }}</a>
                             <a class="text-dark mb-2" href="{{ route('manufacturers') }}"><i
                                     class="fa fa-angle-right mr-2"></i>{{ __('cms.nav.manufacturers') }}</a>
+                            <a class="text-dark mb-2" href="{{ route('about') }}"><i
+                                    class="fa fa-angle-right mr-2"></i>{{ __('cms.page.about') }}</a>
                             <a class="text-dark" href="{{ route('contact') }}"><i
                                     class="fa fa-angle-right mr-2"></i>{{ __('cms.nav.contact') }}</a>
                         </div>
@@ -376,6 +380,8 @@
                                     class="fa fa-angle-right mr-2"></i>14-Day Return</a>
                             <a class="text-dark" href="{{ route('contact') }}"><i
                                     class="fa fa-angle-right mr-2"></i>24/7 Support</a>
+                            <a class="text-dark" href="{{ route('help') }}"><i
+                                    class="fa fa-angle-right mr-2"></i>{{ __('cms.topbar.help') }}</a>
                         </div>
                     </div>
                     <div class="col-md-4 mb-5">
@@ -401,8 +407,8 @@
             </div>
         </div>
         <div class="row border-top border-light mx-xl-5 py-4">
-            <div class="col-md-6 px-xl-0">
-                <p>&copy;  {{ date('Y') }} wethelink.com. All Rights Reserved.</p>
+            <div class="col-md-12 px-xl-0">
+                <center><p>&copy;  {{ date('Y') }} wethelink.com. All Rights Reserved.</p></center>
                 {{-- <p class="mb-md-0 text-center text-md-left text-dark">
                     &copy; <a class="text-dark font-weight-semi-bold" href="/">wethelink.com</a>.
                     {{ __('cms.footer.all_rights') }}.

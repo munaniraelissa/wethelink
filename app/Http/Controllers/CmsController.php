@@ -82,21 +82,65 @@ class CmsController extends Controller
 
         $query = Product::with(['images', 'company']);
 
-        // Filter by category if provided in the URL
         if ($request->filled('category')) {
             $query->where('category_id', $request->category);
-        }
-
-        // Filter by search keyword if provided
-        if ($request->filled('search')) {
-            $query->where('name', 'like', '%'.$request->search.'%');
         }
 
         if ($request->filled('manufacturer')) {
             $query->where('company_id', $request->manufacturer);
         }
 
+        if ($request->filled('search')) {
+            $search = trim($request->search);
+            $terms = preg_split('/\s+/', $search);
+            $searchValue = strtolower($search);
+
+            $query->where(function ($productQuery) use ($terms, $searchValue) {
+                $productQuery->whereRaw('LOWER(name) LIKE ?', ['%' . $searchValue . '%'])
+                    ->orWhereRaw('LOWER(sku) LIKE ?', ['%' . $searchValue . '%'])
+                    ->orWhereRaw('LOWER(barcode) LIKE ?', ['%' . $searchValue . '%']);
+
+                foreach ($terms as $term) {
+                    $termValue = strtolower(trim($term));
+                    if ($termValue === '') {
+                        continue;
+                    }
+
+                    $productQuery->orWhereHas('category', function ($categoryQuery) use ($termValue) {
+                        $categoryQuery->whereRaw('LOWER(name) LIKE ?', ['%' . $termValue . '%']);
+                    })
+                    ->orWhereHas('company', function ($companyQuery) use ($termValue) {
+                        $companyQuery->whereRaw('LOWER(name) LIKE ?', ['%' . $termValue . '%']);
+                    });
+                }
+            });
+        }
+
         $products = $query->latest()->paginate(9);
+
+        $searchTerm = trim((string) $request->input('search', ''));
+        $searchCategories = collect();
+        $searchCompanies = collect();
+
+        if ($request->filled('search')) {
+            $normalized = strtolower($searchTerm);
+            $normalized = strtolower($searchTerm);
+
+            $searchCategories = Category::query()
+                ->where('is_active', true)
+                ->whereRaw('LOWER(name) LIKE ?', ['%' . $normalized . '%'])
+                ->orderBy('name')
+                ->take(6)
+                ->get();
+
+            $searchCompanies = Company::query()
+                ->where('status', 'active')
+                ->whereRaw('LOWER(name) LIKE ?', ['%' . $normalized . '%'])
+                ->orderBy('name')
+                ->take(6)
+                ->get();
+        }
+
         $manufacturers = Company::where('status', 'active')
             ->withCount(['products', 'users'])
             ->with(['products' => function ($query) {
@@ -105,7 +149,7 @@ class CmsController extends Controller
             ->orderBy('name')
             ->get();
 
-        return view('cms.shop', compact('categories', 'products', 'manufacturers'));
+        return view('cms.shop', compact('categories', 'products', 'manufacturers', 'searchCategories', 'searchCompanies', 'searchTerm'));
     }
 
     public function manufacturers()

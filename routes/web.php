@@ -1,25 +1,25 @@
 <?php
 
 use App\Http\Controllers\AuthController;
-use App\Http\Controllers\CmsController;
-use App\Http\Controllers\RoleController;
-use App\Http\Controllers\UserController;
-use App\Http\Controllers\SubscriptionPackageController;
-use App\Http\Controllers\SubscriptionController;
-use App\Http\Controllers\CompanyRegistrationController;
-use App\Http\Controllers\ProductController;
-use App\Http\Controllers\CategoryController;
 use App\Http\Controllers\BrandController;
-use App\Http\Controllers\SizeController;
+use App\Http\Controllers\CategoryController;
+use App\Http\Controllers\CmsController;
 use App\Http\Controllers\ColorController;
 use App\Http\Controllers\CompanyController;
 use App\Http\Controllers\CompanyLocationController;
-use App\Http\Controllers\DashboardController;
-use App\Http\Controllers\Dashboard\HomepageFeatureController;
+use App\Http\Controllers\CompanyRegistrationController;
 use App\Http\Controllers\Dashboard\ContactMessageController;
+use App\Http\Controllers\Dashboard\HomepageFeatureController;
+use App\Http\Controllers\DashboardController;
+use App\Http\Controllers\ProductController;
 use App\Http\Controllers\ReviewController;
+use App\Http\Controllers\RoleController;
+use App\Http\Controllers\SizeController;
+use App\Http\Controllers\SubscriptionController;
+use App\Http\Controllers\SubscriptionPackageController;
+use App\Http\Controllers\UserController;
+use App\Models\Category;
 use Illuminate\Support\Facades\Route;
-
 
 Route::view('/user-details', 'dashboard.user-details')->name('user.details');
 Route::view('/users', 'dashboard.users')->name('users');
@@ -47,6 +47,16 @@ Route::get('/product/{slug}', [CmsController::class, 'detail'])->name('product.d
 Route::post('product/{id}/review', [ReviewController::class, 'store'])->name('reviews.store');
 Route::get('/contact', [CmsController::class, 'contact'])->name('contact');
 Route::post('/contact', [CmsController::class, 'storeContactMessage'])->name('contact.store');
+Route::get('/about', function () {
+    $categories = Category::withCount('products')->get();
+
+    return view('cms.about', compact('categories'));
+})->name('about');
+Route::get('/help', function () {
+    $categories = Category::withCount('products')->get();
+
+    return view('cms.help', compact('categories'));
+})->name('help');
 Route::get('/cart', [CmsController::class, 'cart'])->name('cart');
 Route::get('/checkout', [CmsController::class, 'checkout'])->name('checkout');
 
@@ -117,7 +127,7 @@ Route::middleware('auth')->group(function () {
     Route::prefix('dashboard')->name('dashboard.')->group(function () {
         Route::get('/homepage-features', [HomepageFeatureController::class, 'index'])->name('homepage-features.index');
         Route::post('/homepage-features', [HomepageFeatureController::class, 'update'])->name('homepage-features.update');
-        
+
         Route::resource('contact-messages', ContactMessageController::class, ['only' => ['index', 'show', 'destroy']]);
         Route::post('contact-messages/{message}/mark-as-read', [ContactMessageController::class, 'markAsRead'])->name('contact-messages.mark-as-read');
         Route::post('contact-messages/delete-read', [ContactMessageController::class, 'deleteRead'])->name('contact-messages.delete-read');

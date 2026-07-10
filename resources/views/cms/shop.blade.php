@@ -195,6 +195,38 @@
                             </div> --}}
                         </div>
                     </div>
+                    @if (request('search') && ($searchCategories->isNotEmpty() || $searchCompanies->isNotEmpty()))
+                        <div class="col-12 mb-4">
+                            <div class="border rounded p-3 bg-light">
+                                @if ($searchCategories->isNotEmpty())
+                                    <div class="mb-3">
+                                        <h6 class="font-weight-semi-bold mb-2">{{ __('cms.shop.filter_categories') }}</h6>
+                                        <div class="d-flex flex-wrap gap-2">
+                                            @foreach ($searchCategories as $category)
+                                                <a href="{{ route('shop', ['search' => request('search'), 'category' => $category->id]) }}" class="btn btn-sm btn-outline-primary">
+                                                    {{ $category->name }}
+                                                </a>
+                                            @endforeach
+                                        </div>
+                                    </div>
+                                @endif
+
+                                @if ($searchCompanies->isNotEmpty())
+                                    <div>
+                                        <h6 class="font-weight-semi-bold mb-2">{{ __('cms.shop.filter_manufacturers') }}</h6>
+                                        <div class="d-flex flex-wrap gap-2">
+                                            @foreach ($searchCompanies as $company)
+                                                <a href="{{ route('shop', ['search' => request('search'), 'manufacturer' => $company->id]) }}" class="btn btn-sm btn-outline-secondary">
+                                                    {{ $company->name }}
+                                                </a>
+                                            @endforeach
+                                        </div>
+                                    </div>
+                                @endif
+                            </div>
+                        </div>
+                    @endif
+
                     @forelse($products as $product)
                         <div class="col-lg-4 col-md-6 col-sm-12 pb-1">
                             <div class="card product-item border-0 mb-4">
