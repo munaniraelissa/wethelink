@@ -60,6 +60,33 @@
     });
 
 
+    // Category carousel
+    $('.category-carousel').owlCarousel({
+        loop: true,
+        margin: 16,
+        nav: false,
+        autoplay: true,
+        smartSpeed: 1000,
+        responsive: {
+            0:{
+                items:2
+            },
+            576:{
+                items:3
+            },
+            768:{
+                items:4
+            },
+            992:{
+                items:6
+            },
+            1200:{
+                items:12
+            }
+        }
+    });
+
+
     // Related carousel
     $('.related-carousel').owlCarousel({
         loop: true,

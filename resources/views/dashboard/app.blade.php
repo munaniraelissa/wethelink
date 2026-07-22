@@ -167,6 +167,7 @@
           </form>
 
           <div class="navbar-actions ms-auto">
+            <a class="btn btn-sm btn-outline-secondary" href="/" target="blank"><i class="bi bi-eye"></i> View Site</a>
             <div class="dropdown">
               <a href="#" class="nav-link dropdown-toggle" data-bs-toggle="dropdown" style="color: inherit; text-decoration: none;">
                 {{ __('dashboard.locale.label') }} ({{ strtoupper(app()->getLocale()) }})

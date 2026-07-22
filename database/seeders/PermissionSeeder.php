@@ -50,6 +50,18 @@ class PermissionSeeder extends Seeder
             'product-show',
             'product-delete',
             'product-manage-media',
+            'brand-list',
+            'brand-create',
+            'brand-edit',
+            'brand-delete',
+            'size-list',
+            'size-create',
+            'size-edit',
+            'size-delete',
+            'color-list',
+            'color-create',
+            'color-edit',
+            'color-delete',
         ]);
 
         $admin = Role::firstOrCreate(['name' => 'Super Admin']);

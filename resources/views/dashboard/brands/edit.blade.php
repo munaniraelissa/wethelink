@@ -6,17 +6,34 @@
       <div class="page-heading-copy">
         <span class="page-icon"><i class="bi bi-building" aria-hidden="true"></i></span>
         <div>
-          <p class="eyebrow mb-1">Brand Management</p>
-          <h1 class="h3 mb-1">Edit Brand</h1>
-          <p class="text-muted mb-0">Update brand details</p>
+          <p class="eyebrow mb-1">{{ __('messages.brand_management') }}</p>
+          <h1 class="h3 mb-1">{{ __('messages.edit_brand_heading') }}</h1>
+          <p class="text-muted mb-0">{{ __('messages.update_brand_details') }}</p>
         </div>
       </div>
       <div class="heading-actions">
         <a class="btn btn-secondary btn-sm" href="{{ route('brands.index') }}">
-          <i class="bi bi-arrow-left" aria-hidden="true"></i> Back
+          <i class="bi bi-arrow-left" aria-hidden="true"></i> {{ __('messages.back') }}
         </a>
       </div>
     </div>
+
+    @if ($errors->any())
+      <div class="alert alert-danger">
+        <ul>
+          @foreach ($errors->all() as $error)
+            <li>{{ $error }}</li>
+          @endforeach
+        </ul>
+      </div>
+    @endif
+
+    @if ($message = Session::get('success'))
+      <div class="alert alert-success alert-dismissible fade show" role="alert">
+        <strong>{{ __('messages.success') }}!</strong> {{ $message }}
+        <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+      </div>
+    @endif
 
     <section class="panel mt-3">
       <div class="panel-body">
@@ -25,14 +42,14 @@
           @method('PUT')
           <div class="row">
             <div class="col-md-6 mb-3">
-              <label class="form-label">Name *</label>
+              <label class="form-label">{{ __('messages.name') }} *</label>
               <input type="text" name="name" class="form-control @error('name') is-invalid @enderror" value="{{ old('name', $brand->name) }}" required>
               @error('name')
                 <div class="invalid-feedback">{{ $message }}</div>
               @enderror
             </div>
             <div class="col-md-6 mb-3">
-              <label class="form-label">Slug</label>
+              <label class="form-label">{{ __('messages.slug') }}</label>
               <input type="text" name="slug" class="form-control @error('slug') is-invalid @enderror" value="{{ old('slug', $brand->slug) }}">
               @error('slug')
                 <div class="invalid-feedback">{{ $message }}</div>
@@ -40,22 +57,22 @@
             </div>
           </div>
           <div class="mb-3">
-            <label class="form-label">Description</label>
+            <label class="form-label">{{ __('messages.description') }}</label>
             <textarea name="description" class="form-control @error('description') is-invalid @enderror" rows="4">{{ old('description', $brand->description) }}</textarea>
             @error('description')
               <div class="invalid-feedback">{{ $message }}</div>
             @enderror
           </div>
           @if($brand->logo)
-            <div class="mb-3">
-              <label class="form-label">Current Logo</label>
-              <div>
-                <img src="{{ asset('storage/' . $brand->logo) }}" alt="{{ $brand->name }}" class="img-thumbnail" style="max-width: 200px;">
-              </div>
+          <div class="mb-3">
+            <label class="form-label">{{ __('messages.current_logo') }}</label>
+            <div>
+              <img src="{{ asset('storage/' . $brand->logo) }}" alt="{{ $brand->name }}" class="img-thumbnail" style="max-width: 200px;">
             </div>
+          </div>
           @endif
           <div class="mb-3">
-            <label class="form-label">New Logo</label>
+            <label class="form-label">{{ __('messages.new_logo') }}</label>
             <input type="file" name="logo" class="form-control @error('logo') is-invalid @enderror" accept="image/*">
             @error('logo')
               <div class="invalid-feedback">{{ $message }}</div>
@@ -63,15 +80,15 @@
           </div>
           <div class="mb-3">
             <div class="form-check">
-              <input type="checkbox" name="is_active" id="is_active" class="form-check-input" {{ old('is_active', $brand->is_active) ? 'checked' : '' }}>
-              <label class="form-check-label" for="is_active">Active</label>
+              <input type="checkbox" name="is_active" id="is_active" class="form-check-input" value="1" {{ old('is_active', $brand->is_active) ? 'checked' : '' }}>
+              <label class="form-check-label" for="is_active">{{ __('messages.active') }}</label>
             </div>
           </div>
           <div class="d-flex gap-2">
             <button type="submit" class="btn btn-primary">
-              <i class="bi bi-save" aria-hidden="true"></i> Update
+              <i class="bi bi-save" aria-hidden="true"></i> {{ __('messages.update') }}
             </button>
-            <a href="{{ route('brands.index') }}" class="btn btn-secondary">Cancel</a>
+            <a href="{{ route('brands.index') }}" class="btn btn-secondary">{{ __('messages.cancel') }}</a>
           </div>
         </form>
       </div>

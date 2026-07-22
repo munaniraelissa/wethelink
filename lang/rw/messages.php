@@ -25,6 +25,18 @@ return [
     'is_active' => 'Koreshwa',
     'yes' => 'Yego',
     'no' => 'Oya',
+    'all_status' => 'Byose',
+    'active' => 'Koreshwa',
+    'inactive' => 'Ntikoreshwa',
+    'search_and_filter' => 'Shaka no kubabara',
+    'showing' => 'Ohereza',
+    'to' => 'kugeza',
+    'of' => 'ya',
+    'no_items' => 'Nta biboneka',
+    'status' => 'Imiterere',
+    'list' => 'Urutonde',
+    'manage_your' => 'Kubabara byawe',
+    'management' => 'Kubabara',
 
     // Categories
     'categories' => 'Ibyiciro',
@@ -37,6 +49,11 @@ return [
     'parent_category' => 'Icyiciro cyandikwe',
     'select_parent_category' => 'Hitamo Icyiciro cyandikwe',
     'no_parent' => 'Nta cyandikwe',
+    'category_management' => 'Kubabara Ibyiciro',
+    'category_list' => 'Urutonde rw\'Ibyiciro',
+    'search_categories' => 'Shaka icyiciro',
+    'manage_your_categories' => 'Kubabara icyiciro byawe by\'ibicuruzwa',
+    'are_you_sure_delete_category' => 'Ureba neza ushaka gusiba icyiciro kino?',
 
     // Brands
     'brands' => 'Ibrand',
@@ -46,6 +63,11 @@ return [
     'brand_deleted_successfully' => 'Brand yasibwe neza',
     'add_brand' => 'Ongera Brand',
     'edit_brand' => 'Kubabara Brand',
+    'brand_management' => 'Kubabara Ibrand',
+    'brand_list' => 'Urutonde rw\'Ibrand',
+    'search_brands' => 'Shaka brand',
+    'manage_your_brands' => 'Kubabara brand byawe by\'ibicuruzwa',
+    'are_you_sure_delete_brand' => 'Ureba neza ushaka gusiba brand kino?',
 
     // Sizes
     'sizes' => 'Ingano',
@@ -57,6 +79,11 @@ return [
     'edit_size' => 'Kubabara Ingano',
     'code' => 'Code',
     'sort_order' => 'Icyiciro cyo kubikora',
+    'size_management' => 'Kubabara Ingano',
+    'size_list' => 'Urutonde rw\'Ingano',
+    'search_sizes' => 'Shaka ingano',
+    'manage_your_sizes' => 'Kubabara ingano zyawe z\'ibicuruzwa',
+    'are_you_sure_delete_size' => 'Ureba neza ushaka gusiba ingano iyi?',
 
     // Colors
     'colors' => 'Ibara',
@@ -66,6 +93,13 @@ return [
     'color_deleted_successfully' => 'Ibara ryasibwe neza',
     'add_color' => 'Ongera Ibara',
     'edit_color' => 'Kubabara Ibara',
+    'color_management' => 'Kubabara Ibara',
+    'color_list' => 'Urutonde rw\'Ibara',
+    'search_colors' => 'Shaka ibara',
+    'manage_your_colors' => 'Kubabara ibara byawe by\'ibicuruzwa',
+    'are_you_sure_delete_color' => 'Ureba neza ushaka gusiba ibara ryo?',
+    'create_new_color' => 'Kurema ibara rishya ry\'ibicuruzwa',
+    'update_color' => 'Kuvugurura ibisobanuro by\'ibara',
 
     // Products
     'products' => 'Ibicuruzwa',

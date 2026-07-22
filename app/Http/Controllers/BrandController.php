@@ -12,8 +12,10 @@ class BrandController extends Controller
     public function index(Request $request)
     {
         abort_if(!auth()->user()?->can('brand-list'), 403);
+        $company_id = auth()->user()->company_id;
 
         $query = Brand::query()
+            ->where('company_id', $company_id)
             ->orderBy('id', 'desc');
 
         if ($request->filled('search')) {
@@ -46,11 +48,10 @@ class BrandController extends Controller
         $company_id = auth()->user()->company_id;
 
         $validated = $request->validate([
-            'name' => ['required', 'string', 'max:255', Rule::unique('brands', 'name')],
-            'slug' => ['nullable', 'string', 'max:255', Rule::unique('brands', 'slug')],
+            'name' => ['required', 'string', 'max:255', Rule::unique('brands', 'name')->where('company_id', $company_id)],
+            'slug' => ['nullable', 'string', 'max:255', Rule::unique('brands', 'slug')->where('company_id', $company_id)],
             'logo' => 'nullable|image|mimes:jpeg,png,jpg,gif|max:2048',
             'description' => 'nullable|string',
-            'is_active' => 'nullable|boolean',
         ]);
 
         $validated['company_id'] = $company_id;
@@ -95,13 +96,13 @@ class BrandController extends Controller
     {
         abort_if(!auth()->user()?->can('brand-edit'), 403);
         $this->authorizeBrand($brand);
+        $company_id = auth()->user()->company_id;
 
         $validated = $request->validate([
-            'name' => ['sometimes', 'required', 'string', 'max:255', Rule::unique('brands', 'name')->ignore($brand->id)],
-            'slug' => ['sometimes', 'required', 'string', 'max:255', Rule::unique('brands', 'slug')->ignore($brand->id)],
+            'name' => ['sometimes', 'required', 'string', 'max:255', Rule::unique('brands', 'name')->ignore($brand->id)->where('company_id', $company_id)],
+            'slug' => ['sometimes', 'required', 'string', 'max:255', Rule::unique('brands', 'slug')->ignore($brand->id)->where('company_id', $company_id)],
             'logo' => 'nullable|image|mimes:jpeg,png,jpg,gif|max:2048',
             'description' => 'nullable|string',
-            'is_active' => 'nullable|boolean',
         ]);
 
         $validated['is_active'] = $request->has('is_active');
@@ -143,6 +144,6 @@ class BrandController extends Controller
 
     private function authorizeBrand(Brand $brand)
     {
-        return;
+        abort_if($brand->company_id !== auth()->user()->company_id, 403);
     }
 }

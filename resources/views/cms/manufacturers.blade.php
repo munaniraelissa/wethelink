@@ -97,6 +97,9 @@
                                                         <div class="card-footer d-flex justify-content-between bg-light border">
                                                             <a href="{{ route('product.detail', $product->slug) }}" class="btn btn-sm text-dark p-0"><i class="fas fa-eye text-primary mr-1"></i>View Detail</a>
                                                             <a href="https://wa.me/{{ preg_replace('/[^0-9]/', '', $product->company->telephone ?? '') }}?text={{ urlencode('I want the ' . ($product->category->name ?? $product->name) . ' with barcode ' . $product->barcode) }}"
+                                                                class="btn btn-sm text-dark p-0" target="_blank">
+                                                                <i class="fab fa-whatsapp text-success mr-1"></i>Order on WhatsApp
+                                                            </a>
                                                         </div>
                                                     </div>
                                                 </div>

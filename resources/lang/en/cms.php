@@ -18,7 +18,7 @@ return [
         'home' => 'Home',
         'shop' => 'Shop',
         'products' => 'Products',
-        'manufacturers' => 'Manufacturers',
+        'manufacturers' => 'Manufacturers and Suppliers',
         'detail' => 'Shop Detail',
         'pages' => 'Pages',
         'cart' => 'Shopping Cart',
@@ -227,8 +227,8 @@ return [
     ],
 
     'manufacturers' => [
-        'title' => 'Trusted Manufacturers',
-        'intro' => 'Connect with the trusted and verified manufacturers.',
+        'title' => 'Trusted Manufacturers and Suppliers',
+        'intro' => 'Connect with the trusted and verified manufacturers and suppliers.',
         'verified' => 'Verified Manufacturer',
         'explore' => 'Explore More Products',
         'view_detail' => 'View Detail',

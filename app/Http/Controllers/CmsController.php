@@ -18,14 +18,35 @@ class CmsController extends Controller
      */
     public function index()
     {
-        // Fetch categories and count related products for the "Categories" section
-        $categories = Category::withCount('products')->get();
+        // Fetch the first 12 active top-level categories for the sliding category section
+        $categories = Category::query()
+            ->whereNull('parent_id')
+            ->where('is_active', true)
+            ->withCount(['products' => function ($q) {
+                $q->whereIn('status', ['published', 'out_of_stock']);
+            }])
+            ->orderBy('name')
+            ->take(12)
+            ->get();
 
-        // Fetch Trendy Products and eager load relationships for the view
-        $trendyProducts = Product::with(['images', 'company'])->latest()->paginate(8);
+        // Rank trendy products by detail-page views and show only the top 8
+        $trendyProducts = Product::query()
+            ->whereIn('status', ['published', 'out_of_stock'])
+            ->with(['images', 'company', 'category'])
+            ->withCount('reviews')
+            ->orderByDesc('views')
+            ->orderByDesc('id')
+            ->take(8)
+            ->get();
 
         // Fetch the 8 most recent products for the "Just Arrived" section
-        $newArrivals = Product::with(['images', 'company'])->latest()->paginate(8);
+        $newArrivals = Product::query()
+            ->whereIn('status', ['published', 'out_of_stock'])
+            ->with(['images', 'company', 'category'])
+            ->withCount('reviews')
+            ->latest()
+            ->take(8)
+            ->get();
 
         $companies = Company::where('status', 'active')->orderBy('name')->get();
 
@@ -78,9 +99,15 @@ class CmsController extends Controller
      */
     public function shop(Request $request)
     {
-        $categories = Category::withCount('products')->with('children')->get();
+        $categories = Category::where('is_active', true)
+            ->withCount(['products' => function ($q) {
+                $q->whereIn('status', ['published', 'out_of_stock']);
+            }])
+            ->with('children')
+            ->get();
 
-        $query = Product::with(['images', 'company']);
+        $query = Product::with(['images', 'company'])
+            ->whereIn('status', ['published', 'out_of_stock']);
 
         if ($request->filled('category')) {
             $query->where('category_id', $request->category);
@@ -107,10 +134,12 @@ class CmsController extends Controller
                     }
 
                     $productQuery->orWhereHas('category', function ($categoryQuery) use ($termValue) {
-                        $categoryQuery->whereRaw('LOWER(name) LIKE ?', ['%' . $termValue . '%']);
+                        $categoryQuery->where('is_active', true)
+                            ->whereRaw('LOWER(name) LIKE ?', ['%' . $termValue . '%']);
                     })
                     ->orWhereHas('company', function ($companyQuery) use ($termValue) {
-                        $companyQuery->whereRaw('LOWER(name) LIKE ?', ['%' . $termValue . '%']);
+                        $companyQuery->where('status', 'active')
+                            ->whereRaw('LOWER(name) LIKE ?', ['%' . $termValue . '%']);
                     });
                 }
             });
@@ -142,9 +171,14 @@ class CmsController extends Controller
         }
 
         $manufacturers = Company::where('status', 'active')
-            ->withCount(['products', 'users'])
+            ->withCount([
+                'products' => function ($q) {
+                    $q->whereIn('status', ['published', 'out_of_stock']);
+                },
+                'users'
+            ])
             ->with(['products' => function ($query) {
-                $query->with('images')->latest()->take(3);
+                $query->whereIn('status', ['published', 'out_of_stock'])->with('images')->latest()->take(3);
             }, 'locations'])
             ->orderBy('name')
             ->get();
@@ -154,11 +188,20 @@ class CmsController extends Controller
 
     public function manufacturers()
     {
-        $categories = Category::withCount('products')->get();
+        $categories = Category::where('is_active', true)
+            ->withCount(['products' => function ($q) {
+                $q->whereIn('status', ['published', 'out_of_stock']);
+            }])
+            ->get();
         $manufacturers = Company::where('status', 'active')
-            ->withCount(['products', 'users'])
+            ->withCount([
+                'products' => function ($q) {
+                    $q->whereIn('status', ['published', 'out_of_stock']);
+                },
+                'users'
+            ])
             ->with(['products' => function ($query) {
-                $query->with('images')->latest()->take(3);
+                $query->whereIn('status', ['published', 'out_of_stock'])->with('images')->latest()->take(3);
             }, 'locations'])
             ->orderBy('name')
             ->get();
@@ -179,23 +222,25 @@ class CmsController extends Controller
             'company',
             'reviews.user'
         ])->where('slug', $slug)
+        ->whereIn('status', ['published', 'out_of_stock'])
         ->firstOrFail();
 
-        $categories = Category::all();
+        $product->increment('views');
 
-        $query = Product::with(['images', 'company'])
-            ->where('id', '!=', $product->id);
+        $categories = Category::where('is_active', true)->get();
 
-        if ($request->filled('category')) {
-            $query->where('category_id', $request->category);
-        }
-
-        $relatedProducts = $query->latest()->paginate(9);
+        $companyProducts = Product::with(['images', 'company'])
+            ->where('company_id', $product->company_id)
+            ->where('id', '!=', $product->id)
+            ->whereIn('status', ['published', 'out_of_stock'])
+            ->latest()
+            ->take(8)
+            ->get();
 
         return view('cms.detail', compact(
             'categories',
             'product',
-            'relatedProducts'
+            'companyProducts'
         ));
     }
     /**
@@ -205,7 +250,7 @@ class CmsController extends Controller
      */
     public function contact()
     {
-        $categories = Category::all();
+        $categories = Category::where('is_active', true)->get();
 
         return view('cms.contact', compact('categories'));
     }

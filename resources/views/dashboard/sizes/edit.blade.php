@@ -8,7 +8,7 @@
         <div>
           <p class="eyebrow mb-1">{{ __('messages.sizes') }}</p>
           <h1 class="h3 mb-1">{{ __('messages.edit_size') }}</h1>
-          <p class="text-muted mb-0">{{ __('messages.update_size') ?? 'Update size details' }}</p>
+          <p class="text-muted mb-0">{{ __('messages.update_size') }}</p>
         </div>
       </div>
       <div class="heading-actions">
@@ -17,6 +17,30 @@
         </a>
       </div>
     </div>
+
+    @if ($message = Session::get('success'))
+      <div class="alert alert-success alert-dismissible fade show" role="alert">
+        <strong>{{ __('messages.success') }}!</strong> {{ $message }}
+        <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+      </div>
+    @endif
+
+    @if ($errors->any())
+      <div class="alert alert-danger">
+        <ul>
+          @foreach ($errors->all() as $error)
+            <li>{{ $error }}</li>
+          @endforeach
+        </ul>
+      </div>
+    @endif
+
+    @if ($message = Session::get('success'))
+      <div class="alert alert-success alert-dismissible fade show" role="alert">
+        <strong>{{ __('messages.success') }}!</strong> {{ $message }}
+        <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+      </div>
+    @endif
 
     <section class="panel mt-3">
       <div class="panel-body">
@@ -49,8 +73,8 @@
             </div>
             <div class="col-md-6 mb-3">
               <div class="form-check mt-4">
-                <input type="checkbox" name="is_active" id="is_active" class="form-check-input" {{ old('is_active', $size->is_active) ? 'checked' : '' }}>
-                <label class="form-check-label" for="is_active">{{ __('messages.is_active') }}</label>
+                <input type="checkbox" name="is_active" id="is_active" class="form-check-input" value="1" {{ old('is_active', $size->is_active) ? 'checked' : '' }}>
+                <label class="form-check-label" for="is_active">{{ __('messages.active') }}</label>
               </div>
             </div>
           </div>

@@ -28,19 +28,22 @@
             <h2 class="section-title px-5"><span class="px-2">{{ __('cms.categories') }}</span></h2>
         </div>
         <div class="row px-xl-5 pb-3">
+            <div class="col-12">
+                <div class="owl-carousel category-carousel">
             @foreach($categories as $category)
-                <div class="col-lg-4 col-md-6 pb-1">
-                    <div class="cat-item d-flex flex-column border mb-4" style="padding: 30px;">
-                        <p class="text-right">{{ $category->products_count }} Products</p>
-                        <a href="{{ route('shop', ['category' => $category->id]) }}" class="cat-img position-relative overflow-hidden mb-3">
-                            <img class="img-fluid w-100 category-img"
-                                src="{{ $category->image ? asset('storage/' . $category->image) : '/cms/img/cat-1.jpg' }}"
-                                alt="{{ $category->name }}">
-                        </a>
-                        <h5 class="font-weight-semi-bold m-0">{{ $category->name }}</h5>
+                    <div class="px-3">
+                        <div class="cat-item d-flex flex-column border mb-4 h-100 text-center" style="padding: 18px;">
+                            <a href="{{ route('shop', ['category' => $category->id]) }}" class="cat-img position-relative overflow-hidden mb-3" style="height: 140px;">
+                                <img class="img-fluid w-100 h-100 category-img"
+                                    src="{{ $category->image ? asset('storage/' . $category->image) : '/cms/img/cat-1.jpg' }}"
+                                    alt="{{ $category->name }}">
+                            </a>
+                            <h6 class="font-weight-semi-bold m-0 text-truncate">{{ $category->name }}</h6>
+                        </div>
                     </div>
-                </div>
             @endforeach
+                </div>
+            </div>
         </div>
     </div>
     <!-- Categories End -->
@@ -119,7 +122,7 @@
                                     <small class="fas fa-star"></small>
                                     <small class="fas fa-star-half-alt"></small>
                                     <small class="far fa-star"></small>
-                                    <small class="pt-1">({{ count($product->reviews ?? []) }} Reviews)</small>
+                                    <small class="pt-1">({{ $product->reviews_count ?? 0 }} Reviews)</small>
                                 </div>
                             </p>
                         </div>
@@ -137,9 +140,6 @@
                 </div>
             @endforelse
 
-            <div class="col-12 pb-1">
-                {{ $trendyProducts->appends(request()->query())->links() }}
-            </div>
         </div>
     </div>
     <!-- Products End -->
@@ -211,7 +211,7 @@
                                     <small class="fas fa-star"></small>
                                     <small class="fas fa-star-half-alt"></small>
                                     <small class="far fa-star"></small>
-                                    <small class="pt-1">({{ count($product->reviews ?? []) }} Reviews)</small>
+                                    <small class="pt-1">({{ $product->reviews_count ?? 0 }} Reviews)</small>
                                 </div>
                             </p>
                         </div>
@@ -229,9 +229,6 @@
                 </div>
             @endforelse
 
-            <div class="col-12 pb-1">
-                {{ $newArrivals->appends(request()->query())->links() }}
-            </div>
         </div>
     </div>
     <!-- Products End -->

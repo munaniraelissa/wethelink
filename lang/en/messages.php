@@ -25,6 +25,17 @@ return [
     'is_active' => 'Is Active',
     'yes' => 'Yes',
     'no' => 'No',
+    'all_status' => 'All Status',
+    'active' => 'Active',
+    'inactive' => 'Inactive',
+    'search_and_filter' => 'Search and filter',
+    'showing' => 'Showing',
+    'to' => 'to',
+    'of' => 'of',
+    'no_items' => 'No items found',
+    'list' => 'List',
+    'manage_your' => 'Manage your',
+    'management' => 'Management',
 
     // Categories
     'categories' => 'Categories',
@@ -37,6 +48,11 @@ return [
     'parent_category' => 'Parent Category',
     'select_parent_category' => 'Select Parent Category',
     'no_parent' => 'No Parent',
+    'category_management' => 'Category Management',
+    'category_list' => 'Category List',
+    'search_categories' => 'Search categories',
+    'manage_your_categories' => 'Manage your product categories',
+    'are_you_sure_delete_category' => 'Are you sure you want to delete this category?',
 
     // Brands
     'brands' => 'Brands',
@@ -46,6 +62,17 @@ return [
     'brand_deleted_successfully' => 'Brand deleted successfully',
     'add_brand' => 'Add Brand',
     'edit_brand' => 'Edit Brand',
+    'brand_management' => 'Brand Management',
+    'brand_list' => 'Brand List',
+    'search_brands' => 'Search brands',
+    'manage_your_brands' => 'Manage your product brands',
+    'are_you_sure_delete_brand' => 'Are you sure you want to delete this brand?',
+    'add_new_brand' => 'Add New Brand',
+    'create_new_brand' => 'Create a new product brand',
+    'edit_brand_heading' => 'Edit Brand',
+    'update_brand_details' => 'Update brand details',
+    'current_logo' => 'Current Logo',
+    'new_logo' => 'New Logo',
 
     // Sizes
     'sizes' => 'Sizes',
@@ -57,6 +84,13 @@ return [
     'edit_size' => 'Edit Size',
     'code' => 'Code',
     'sort_order' => 'Sort Order',
+    'size_management' => 'Size Management',
+    'size_list' => 'Size List',
+    'search_sizes' => 'Search sizes',
+    'manage_your_sizes' => 'Manage your product sizes',
+    'are_you_sure_delete_size' => 'Are you sure you want to delete this size?',
+    'create_new_size' => 'Create a new product size',
+    'update_size' => 'Update size details',
 
     // Colors
     'colors' => 'Colors',
@@ -66,6 +100,13 @@ return [
     'color_deleted_successfully' => 'Color deleted successfully',
     'add_color' => 'Add Color',
     'edit_color' => 'Edit Color',
+    'color_management' => 'Color Management',
+    'color_list' => 'Color List',
+    'search_colors' => 'Search colors',
+    'manage_your_colors' => 'Manage your product colors',
+    'are_you_sure_delete_color' => 'Are you sure you want to delete this color?',
+    'create_new_color' => 'Create a new product color',
+    'update_color' => 'Update color details',
 
     // Products
     'products' => 'Products',

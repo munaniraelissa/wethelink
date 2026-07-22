@@ -12,8 +12,9 @@ class SizeController extends Controller
     public function index(Request $request)
     {
         abort_if(!auth()->user()?->can('size-list'), 403);
+        $company_id = auth()->user()->company_id;
 
-        $query = Size::query();
+        $query = Size::query()->where('company_id', $company_id);
 
         if ($request->filled('search')) {
             $query->where('name', 'like', '%' . $request->search . '%');
@@ -43,7 +44,7 @@ class SizeController extends Controller
         $company_id = auth()->user()->company_id;
 
         $validated = $request->validate([
-            'name' => ['required', 'string', 'max:255', Rule::unique('sizes', 'name')],
+            'name' => ['required', 'string', 'max:255', Rule::unique('sizes', 'name')->where('company_id', $company_id)],
             'code' => 'nullable|string|max:255',
             'sort_order' => 'nullable|integer',
             'is_active' => 'nullable|boolean',
@@ -51,7 +52,7 @@ class SizeController extends Controller
 
         $validated['company_id'] = $company_id;
         $validated['is_active'] = $request->has('is_active');
-        $validated['sort_order'] = $validated['sort_order'] ?? Size::max('sort_order') + 1;
+        $validated['sort_order'] = $validated['sort_order'] ?? Size::where('company_id', $company_id)->max('sort_order') + 1;
 
         $size = Size::create($validated);
 
@@ -85,12 +86,12 @@ class SizeController extends Controller
     {
         abort_if(!auth()->user()?->can('size-edit'), 403);
         $this->authorizeSize($size);
+        $company_id = auth()->user()->company_id;
 
         $validated = $request->validate([
-            'name' => ['required', 'string', 'max:255', Rule::unique('sizes', 'name')->ignore($size->id)],
+            'name' => ['required', 'string', 'max:255', Rule::unique('sizes', 'name')->ignore($size->id)->where('company_id', $company_id)],
             'code' => 'nullable|string|max:255',
             'sort_order' => 'nullable|integer',
-            'is_active' => 'nullable|boolean',
         ]);
 
         $validated['is_active'] = $request->has('is_active');
@@ -112,6 +113,6 @@ class SizeController extends Controller
 
     private function authorizeSize(Size $size)
     {
-        return;
+        abort_if($size->company_id !== auth()->user()->company_id, 403);
     }
 }
