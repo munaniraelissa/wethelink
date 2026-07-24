@@ -24,28 +24,30 @@
 
     <!-- Categories Start -->
     <div class="container-fluid pt-5">
-        <div class="text-center mb-4">
-            <h2 class="section-title px-5"><span class="px-2">{{ __('cms.categories') }}</span></h2>
-        </div>
-        <div class="row px-xl-5 pb-3">
-            <div class="col-12">
-                <div class="owl-carousel category-carousel">
-            @foreach($categories as $category)
-                    <div class="px-3">
-                        <div class="cat-item d-flex flex-column border mb-4 h-100 text-center" style="padding: 18px;">
-                            <a href="{{ route('shop', ['category' => $category->id]) }}" class="cat-img position-relative overflow-hidden mb-3" style="height: 140px;">
-                                <img class="img-fluid w-100 h-100 category-img"
+    <div class="text-center mb-4">
+        <h2 class="section-title px-5"><span class="px-2">{{ __('cms.categories') }}</span></h2>
+    </div>
+    <div class="row px-xl-5 pb-3">
+        <div class="col-12">
+            <div class="owl-carousel category-carousel">
+                @foreach($categories as $category)
+                    <div class="px-4">
+                        <div class="cat-item d-flex flex-column align-items-center text-center">
+                            <a href="{{ route('shop', ['category' => $category->id]) }}"
+                               class="cat-img position-relative overflow-hidden mb-3 d-flex align-items-center justify-content-center"
+                               style="width: 100px; height: 100px; border-radius: 50%; margin: 0 auto;">
+                                <img class="img-fluid h-100 category-img"
                                     src="{{ $category->image ? asset('storage/' . $category->image) : '/cms/img/cat-1.jpg' }}"
-                                    alt="{{ $category->name }}">
+                                    alt="{{ $category->name }}" style="object-fit: cover; width: 100%; height: 100%;">
                             </a>
                             <h6 class="font-weight-semi-bold m-0 text-truncate">{{ $category->name }}</h6>
                         </div>
                     </div>
-            @endforeach
-                </div>
+                @endforeach
             </div>
         </div>
     </div>
+</div>
     <!-- Categories End -->
 
 
@@ -84,7 +86,7 @@
         </div>
         <div class="row px-xl-5 pb-3">
             @forelse($trendyProducts as $product)
-                <div class="col-lg-3 col-md-6 col-sm-12 pb-1">
+                <div class="col-lg-3 col-md-6 col-6 pb-1">
                     <div class="card product-item border-0 mb-4">
                         <a href="{{ route('product.detail', $product->slug) }}">
                             <div class="card-header product-img position-relative overflow-hidden bg-white border p-0" style="height: 300px;">
@@ -173,7 +175,7 @@
         </div>
         <div class="row px-xl-5 pb-3">
             @forelse($newArrivals as $product)
-                <div class="col-lg-3 col-md-6 col-sm-12 pb-1">
+                <div class="col-lg-3 col-md-6 col-6 pb-1">
                     <div class="card product-item border-0 mb-4">
                         <a href="{{ route('product.detail', $product->slug) }}">
                             <div class="card-header product-img position-relative overflow-hidden bg-white border p-0" style="height: 300px;">

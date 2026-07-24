@@ -141,6 +141,7 @@ return [
     'current_password_incorrect' => 'The current password is incorrect.',
     'change_password' => 'Change Password',
     'change_password_description' => 'Update your password regularly to keep your account secure.',
+    'update_password_info' => 'Change your password by entering your current password and then your new password.',
     'current_password' => 'Current Password',
     'new_password' => 'New Password',
     'validation_error' => 'Validation Error',

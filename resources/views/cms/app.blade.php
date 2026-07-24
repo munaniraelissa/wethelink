@@ -238,10 +238,10 @@
                     <div class="collapse navbar-collapse justify-content-between" id="navbarCollapse">
                         <div class="navbar-nav mr-auto py-0">
                             <a href="{{ route('home') }}"
-                                class="nav-item nav-link active">{{ __('cms.nav.home') }}</a>
-                            <a href="{{ route('shop') }}" class="nav-item nav-link">{{ __('cms.nav.products') }}</a>
+                                class="nav-item nav-link {{ Route::is('home') ? 'active' : '' }}">{{ __('cms.nav.home') }}</a>
+                            <a href="{{ route('shop') }}" class="nav-item nav-link {{ Route::is('shop') || Route::is('product.detail') ? 'active' : '' }}">{{ __('cms.nav.products') }}</a>
                             <a href="{{ route('manufacturers') }}"
-                                class="nav-item nav-link">{{ __('cms.nav.manufacturers') }}</a>
+                                class="nav-item nav-link {{ Route::is('manufacturers') ? 'active' : '' }}">{{ __('cms.nav.manufacturers') }}</a>
                             {{-- <a href="{{ route('detail') }}" class="nav-item nav-link">{{ __('cms.nav.detail') }}</a> --}}
                             {{-- <div class="nav-item dropdown">
                                 <a href="#" class="nav-link dropdown-toggle"
@@ -253,9 +253,9 @@
                                 </div>
                             </div> --}}
                             <a href="{{ route('about') }}"
-                                class="nav-item nav-link">{{ __('cms.page.about') }}</a>
+                                class="nav-item nav-link {{ Route::is('about') ? 'active' : '' }}">{{ __('cms.page.about') }}</a>
                             <a href="{{ route('contact') }}"
-                                class="nav-item nav-link">{{ __('cms.nav.contact') }}</a>
+                                class="nav-item nav-link {{ Route::is('contact') ? 'active' : '' }}">{{ __('cms.nav.contact') }}</a>
                         </div>
                         <div class="navbar-nav ml-auto py-0">
                             <div class="nav-item dropdown">
@@ -337,8 +337,6 @@
 
     @yield('content')
 
-
-
     <!-- Footer Start -->
     <div class="container-fluid bg-secondary text-dark mt-5 pt-5 cms-footer">
         <div class="row px-xl-5 pt-5">
@@ -377,7 +375,7 @@
                             <a class="text-dark mb-2" href="{{ route('shop') }}"><i
                                     class="fa fa-angle-right mr-2"></i>Free Shipping</a>
                             <a class="text-dark mb-2" href="{{ route('shop') }}"><i
-                                    class="fa fa-angle-right mr-2"></i>14-Day Return</a>
+                                    class="fa fa-angle-right mr-2"></i>7-Day Return</a>
                             <a class="text-dark" href="{{ route('contact') }}"><i
                                     class="fa fa-angle-right mr-2"></i>24/7 Support</a>
                             <a class="text-dark" href="{{ route('help') }}"><i
@@ -391,16 +389,27 @@
                                 target="_blank" rel="noopener noreferrer"><i
                                     class="fab fa-facebook-f text-primary mr-3"></i>Facebook</a>
                             <a class="text-dark mb-2" href="https://x.com/wethelink_com" target="_blank"
-                                rel="noopener noreferrer"><i class="fab fa-twitter text-primary mr-3"></i>Twitter</a>
-                            {{-- <a class="text-dark mb-2" href="#" target="_blank" rel="noopener noreferrer"><i class="fab fa-linkedin-in text-primary mr-3"></i>LinkedIn</a> --}}
+                                rel="noopener noreferrer">
+                                <svg xmlns="http://www.w3.org/2000/svg" width="14" height="14" viewBox="0 0 512 512"
+                                    fill="currentColor" class="text-primary mr-3" style="display:inline-block; vertical-align:middle;">
+                                    <path d="M389.2 48h70.6L305.6 224.2 487 464H345L233.7 318.6 106.5 464H35.8L200.7 275.5 26.8 48H172.4L272.9 180.9 389.2 48zM364.4 421.8h39.1L151.1 88h-42L364.4 421.8z"/>
+                                </svg>
+                                X
+                            </a>
+                            <a class="text-dark mb-2" href="https://www.linkedin.com/in/wethelink-group-454884415/" target="_blank" rel="noopener noreferrer"><i class="fab fa-linkedin-in text-primary mr-3"></i>LinkedIn</a>
                             <a class="text-dark mb-2"
                                 href="https://www.instagram.com/wethelink_com?igsh=eTlyZHl3YmpmN21v" target="_blank"
                                 rel="noopener noreferrer"><i
                                     class="fab fa-instagram text-primary mr-3"></i>Instagram</a>
                             {{-- <a class="text-dark mb-2" href="#" target="_blank" rel="noopener noreferrer"><i class="fab fa-youtube text-primary mr-3"></i>YouTube</a> --}}
                             <a class="text-dark" href="https://www.tiktok.com/@wethelink_com?_r=1&_t=ZS-97j5RJE7ZnL"
-                                target="_blank" rel="noopener noreferrer"><i
-                                    class="fab fa-tiktok text-primary mr-3"></i>TikTok</a>
+                                target="_blank" rel="noopener noreferrer">
+                                <svg xmlns="http://www.w3.org/2000/svg" width="14" height="14" viewBox="0 0 448 512"
+                                    fill="currentColor" class="text-primary mr-3" style="display:inline-block; vertical-align:middle;">
+                                    <path d="M448,209.91a210.06,210.06,0,0,1-122.77-39.25V349.38A162.55,162.55,0,1,1,185,188.31V278.2a74.62,74.62,0,1,0,52.23,71.18V0l88,0a121.18,121.18,0,0,0,1.86,22.17h0A122.18,122.18,0,0,0,381,102.39a121.43,121.43,0,0,0,67,20.14Z"/>
+                                </svg>
+                                TikTok
+                            </a>
                         </div>
                     </div>
                 </div>
@@ -408,7 +417,7 @@
         </div>
         <div class="row border-top border-light mx-xl-5 py-4">
             <div class="col-md-12 px-xl-0">
-                <center><p>&copy;  {{ date('Y') }} wethelink.com. All Rights Reserved.</p></center>
+                <center><p>&copy;  {{ date('Y') }} wethelink.com. All Rights Reserved. <a href="#">Privacy Policy</a></p></center>
                 {{-- <p class="mb-md-0 text-center text-md-left text-dark">
                     &copy; <a class="text-dark font-weight-semi-bold" href="/">wethelink.com</a>.
                     {{ __('cms.footer.all_rights') }}.

@@ -115,6 +115,8 @@ return [
         'subtitle' => 'Guhuza ibigo byo mu Rwanda ku mahirwe mashya',
         'intro' => 'Wethelink.com ni isoko ry’ubucuruzi bw’ubucuruzi hagati y’ibigo mu Rwanda ryagenewe gufasha ibigo guhuza, gukura, no gucuruza birimo kwizera. Tuhuriza hamwe abacuruzi, abatanga ibicuruzwa, abacuruzi bakuru, abacuruzi bato, n’abaguzi b’ibigo ku rubuga rumwe rwizewe.',
         'description' => 'Intego yacu y’ubu ni u Rwanda, aho twifuza gufasha ibigo by’icyiciro cy’icyiciro cy’icyiciro (SMEs) kubaha isoko rya interineti kugira ngo bagaragaze no kugurisha ibicuruzwa byabo. Turafasha kandi abacuruzi bo mu Rwanda kubona abacuruzi bakuru, abatanga ibicuruzwa, n’abaguzi b’ibicuruzwa byinshi, bigatuma haboneka uhuza rwihuse n’ukuri mu gihugu.',
+        'description2' => "Duteza imbere Abanyarwanda baba mu mahanga. Kuri Wethelink.com, twemera ko buri Munyarwanda, aho yaba atuye hose ku isi, ashobora kugira uruhare mu iterambere ry'ubukungu bw'u Rwanda. Urubuga rwacu rufasha Abanyarwanda baba mu mahanga kongera guhuza n'ubucuruzi bwo mu Rwanda, rubaha uburyo bwo kugera ku nganda zizewe, abatanga ibicuruzwa bizewe, ndetse n'ibicuruzwa byiza bigurishwa ku giciro cy'ikorwa (wholesale). Waba ushaka gutumiza ibicuruzwa, gushora imari mu bucuruzi bwo mu Rwanda, kubaka ubufatanye mu bucuruzi, cyangwa kugeza ibikorerwa mu Rwanda ku masoko mpuzamahanga, Wethelink.com ni ikiraro cyawe cyizewe. Twese hamwe, duhuza u Rwanda n'isi yose—duhanga amahirwe mashya, dushyigikira ibigo bito n'ibiciriritse (SMEs), duteza imbere inganda zo mu Rwanda, kandi dushimangira umuryango w'ubucuruzi w'Abanyarwanda ku rwego mpuzamahanga.",
+        
         'mission_title' => 'Intego yacu',
         'mission_text' => 'Gufasha ibigo byo mu Rwanda binyuze mu bucuruzi bwa digitale byorohereza kubona ibicuruzwa, kubaka ubufatanye bushingiye ku kwizerana, no gukura binyuze mu bucuruzi bwa B2B.',
         'vision_title' => 'Icyerekezo cyacu',
@@ -387,8 +389,18 @@ return [
         'passwords_do_not_match' => 'Amagambo ayibanga atavuye',
         'must_agree_terms' => 'Ugomba guvuza amategeko n\'ingingo za icyubahiro',
         'agree_terms' => 'Nimvuza amategeko n\'ingingo za icyubahiro',
-        'hero_heading_auth' => 'Gusaba ibicuruzwa ku isi hamwe n\'ububiko bwiza',
-        'hero_sub_auth' => 'Murakaza neza kuri We thelink — shaka ibicuruzwa byizewe, kohereza vuba, no kugura byoroshye.',
+        'hero_heading_auth' => 'Shaka ibicuruzwa ku isoko mpuzamahanga kandi uzigame byinshi, muburyo bukoroheye.',
+        'hero_sub_auth' => 'Abatanga ibicuruzwa bizewe',
+        'hero_sub_auth1' => 'Inganda zizewe ushobora kwizera.',
+
+        'hero_sub_auth2' => 'Ibiciro bihiganwa ku isoko.',
+
+        'hero_sub_auth3' => 'Ibiciro byiza bya wholesale byongera inyungu.',
+
+        'hero_sub_auth4' => 'Umuyoboro mpuzamahanga.',
+
+        'hero_sub_auth5' => 'Huza. Curuza. Utere imbere ku isi yose.',
+
         'feature_protection_title' => 'Kurinda ibyategetswe',
         'feature_protection_desc' => 'Kwishura neza no abacuruzi bizewe.',
         'feature_delivery_title' => 'Kohereza vuba',

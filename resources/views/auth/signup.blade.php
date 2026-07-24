@@ -10,6 +10,11 @@
                     </a> --}}
                     <h1 class="display-4 font-weight-bold mb-3">{{ __('cms.auth.hero_heading_auth') }}</h1>
                     <p class="lead mb-4" style="max-width: 520px;">{{ __('cms.auth.hero_sub_auth') }}</p>
+                    <p class="lead mb-4" style="max-width: 520px;">{{ __('cms.auth.hero_sub_auth1') }}</p>
+                    <p class="lead mb-4" style="max-width: 520px;">{{ __('cms.auth.hero_sub_auth2') }}</p>
+                    <p class="lead mb-4" style="max-width: 520px;">{{ __('cms.auth.hero_sub_auth3') }}</p>
+                    <p class="lead mb-4" style="max-width: 520px;">{{ __('cms.auth.hero_sub_auth4') }}</p>
+                    <p class="lead mb-4" style="max-width: 520px;">{{ __('cms.auth.hero_sub_auth5') }}</p>
                     <div class="d-flex flex-wrap">
                         <div class="mr-4 mb-3">
                             <h5 class="font-weight-bold mb-2">{{ __('cms.auth.feature_protection_title') }}</h5>
@@ -78,11 +83,25 @@
                         </div>
                         <div class="form-group">
                             <label for="password" class="font-weight-bold">{{ __('cms.auth.password') }}</label>
-                            <input type="password" id="password" name="password" class="form-control form-control-lg" placeholder="{{ __('cms.auth.password') }}" required>
+                            <div class="input-group">
+                                <input type="password" id="password" name="password" class="form-control form-control-lg" placeholder="{{ __('cms.auth.password') }}" required>
+                                <div class="input-group-append">
+                                    <button type="button" class="btn btn-outline-secondary toggle-password" data-target="#password">
+                                        <i class="fa fa-eye"></i>
+                                    </button>
+                                </div>
+                            </div>
                         </div>
                         <div class="form-group">
                             <label for="password_confirmation" class="font-weight-bold">{{ __('cms.auth.confirm_password') ?? 'Confirm Password' }}</label>
-                            <input type="password" id="password_confirmation" name="password_confirmation" class="form-control form-control-lg" placeholder="{{ __('cms.auth.confirm_password') ?? 'Confirm Password' }}" required>
+                            <div class="input-group">
+                                <input type="password" id="password_confirmation" name="password_confirmation" class="form-control form-control-lg" placeholder="{{ __('cms.auth.confirm_password') ?? 'Confirm Password' }}" required>
+                                <div class="input-group-append">
+                                    <button type="button" class="btn btn-outline-secondary toggle-password" data-target="#password_confirmation">
+                                        <i class="fa fa-eye"></i>
+                                    </button>
+                                </div>
+                            </div>
                         </div>
                         <div class="form-group">
                             <div class="custom-control custom-checkbox">

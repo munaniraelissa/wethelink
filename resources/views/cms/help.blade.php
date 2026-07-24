@@ -30,7 +30,7 @@
                                 ['question' => __('cms.help.faq_3_question'), 'answer' => __('cms.help.faq_3_answer')],
                                 ['question' => __('cms.help.faq_4_question'), 'answer' => __('cms.help.faq_4_answer')],
                                 ['question' => __('cms.help.faq_5_question'), 'answer' => __('cms.help.faq_5_answer')],
-                                ['question' => __('cms.help.faq_6_question'), 'answer' => __('cms.help.faq_6_answer')],
+                                // ['question' => __('cms.help.faq_6_question'), 'answer' => __('cms.help.faq_6_answer')],
                             ];
                         @endphp
                         @foreach ($faqs as $index => $faq)
@@ -93,7 +93,7 @@
 
             <div class="col-lg-4">
                 <div class="card border-0 shadow-sm mb-4">
-                    <img src="{{ asset('cms/img/vendor-3.jpg') }}" class="card-img-top" alt="Help center" style="height: 220px; object-fit: cover;">
+                    <img src="{{ asset('cms/img/3.jpeg') }}" class="card-img-top" alt="Help center" style="height: 220px; object-fit: cover;">
                     <div class="card-body">
                         <h5 class="font-weight-semi-bold mb-3">{{ __('cms.help.support_title') }}</h5>
                         <p class="mb-3">{{ __('cms.help.support_text') }}</p>

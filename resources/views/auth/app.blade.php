@@ -96,7 +96,29 @@
     <script src="{{ asset('cms/js/main.js') }}"></script>
     <script src="{{ asset('cms/js/auth.js') }}"></script>
     <script src="{{ asset('auth/js/auth.js') }}"></script>  
-
+    <script>
+        document.addEventListener('DOMContentLoaded', function() {
+            const toggleButtons = document.querySelectorAll('.toggle-password');
+            
+            toggleButtons.forEach(function(button) {
+                button.addEventListener('click', function() {
+                    const targetSelector = button.getAttribute('data-target');
+                    const passwordInput = document.querySelector(targetSelector);
+                    const icon = button.querySelector('i');
+                    
+                    if (passwordInput.type === 'password') {
+                        passwordInput.type = 'text';
+                        icon.classList.remove('fa-eye');
+                        icon.classList.add('fa-eye-slash');
+                    } else {
+                        passwordInput.type = 'password';
+                        icon.classList.remove('fa-eye-slash');
+                        icon.classList.add('fa-eye');
+                    }
+                });
+            });
+        });
+    </script>
 </body>
 
 </html>

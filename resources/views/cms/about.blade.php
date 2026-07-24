@@ -15,13 +15,14 @@
     <div class="container-fluid py-5">
         <div class="row px-xl-5 align-items-center">
             <div class="col-lg-6 mb-4 mb-lg-0">
-                <img src="{{ asset('cms/img/vendor-1.jpg') }}" alt="About Wethelink" class="img-fluid rounded shadow" style="max-height: 420px; object-fit: cover; width: 100%;">
+                <img src="{{ asset('cms/img/1.jpeg') }}" alt="About Wethelink" class="img-fluid rounded shadow" style=" object-fit: cover; width: 100%;">
             </div>
             <div class="col-lg-6">
                 <h2 class="section-title pr-5 mb-4"><span class="pr-2">{{ __('cms.about.title') }}</span></h2>
                 <h4 class="font-weight-semi-bold text-primary mb-4">{{ __('cms.about.subtitle') }}</h4>
                 <p class="mb-4">{{ __('cms.about.intro') }}</p>
                 <p class="mb-4">{{ __('cms.about.description') }}</p>
+                <p class="mb-4">{{ __('cms.about.description2') }}</p>
                 <div class="row">
                     <div class="col-sm-6 mb-3">
                         <div class="border rounded p-3 h-100">
@@ -110,7 +111,7 @@
                 </div>
             </div>
             <div class="col-lg-5">
-                <img src="{{ asset('cms/img/vendor-2.jpg') }}" alt="Wethelink business network" class="img-fluid rounded shadow" style="height: 360px; width: 100%; object-fit: cover;">
+                <img src="{{ asset('cms/img/2.jpeg') }}" alt="Wethelink business network" class="img-fluid rounded shadow" style="height: 360px; width: 100%; object-fit: cover;">
             </div>
         </div>
     </div>

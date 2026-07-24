@@ -128,7 +128,7 @@ Route::middleware('auth')->group(function () {
         Route::get('/homepage-features', [HomepageFeatureController::class, 'index'])->name('homepage-features.index');
         Route::post('/homepage-features', [HomepageFeatureController::class, 'update'])->name('homepage-features.update');
 
-        Route::resource('contact-messages', ContactMessageController::class, ['only' => ['index', 'show', 'destroy']]);
+        Route::resource('contact-messages', ContactMessageController::class, ['only' => ['index', 'show', 'destroy'], 'parameters' => ['contact-messages' => 'message']]);
         Route::post('contact-messages/{message}/mark-as-read', [ContactMessageController::class, 'markAsRead'])->name('contact-messages.mark-as-read');
         Route::post('contact-messages/delete-read', [ContactMessageController::class, 'deleteRead'])->name('contact-messages.delete-read');
     });

@@ -15,6 +15,36 @@ class DashboardController extends Controller
 {
     public function index(Request $request)
     {
+        $selectedYear = $request->input('year', date('Y'));
+        $company_id = auth()->user()?->company_id;
+
+        $productQuery = Product::query();
+        if ($company_id) {
+            $productQuery->where('company_id', $company_id);
+        }
+        $availableYears = $productQuery->selectRaw('YEAR(created_at) as year')
+            ->distinct()
+            ->orderBy('year', 'desc')
+            ->pluck('year')
+            ->toArray();
+        if (empty($availableYears)) {
+            $availableYears = [date('Y')];
+        }
+
+        $monthlyProducts = [];
+        for ($month = 1; $month <= 12; $month++) {
+            $count = (clone $productQuery)
+                ->whereYear('created_at', $selectedYear)
+                ->whereMonth('created_at', $month)
+                ->count();
+            $monthlyProducts[] = $count;
+        }
+
+        $maxProducts = max($monthlyProducts);
+        if ($maxProducts === 0) {
+            $maxProducts = 1;
+        }
+
         $query = User::with(['company', 'roles'])->orderBy('id', 'desc');
 
         if ($request->filled('search')) {
@@ -112,6 +142,10 @@ class DashboardController extends Controller
             ->take(4)
             ->values();
 
-        return view('dashboard.index', compact('users', 'companies', 'statuses', 'products', 'categories', 'brands', 'metrics', 'recentActivities'));
+        return view('dashboard.index', compact(
+            'users', 'companies', 'statuses', 'products', 'categories', 'brands',
+            'metrics', 'recentActivities', 'monthlyProducts', 'maxProducts',
+            'availableYears', 'selectedYear'
+        ));
     }
 }

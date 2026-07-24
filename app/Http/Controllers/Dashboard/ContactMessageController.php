@@ -39,8 +39,8 @@ class ContactMessageController extends Controller
     {
         $message->delete();
 
-        return redirect()->route('contact-messages.index')
-            ->with('success', 'Contact message deleted successfully.');
+        return redirect()->route('dashboard.contact-messages.index')
+            ->with('success', __('dashboard.contact_messages.message_deleted_successfully'));
     }
 
     /**
@@ -50,7 +50,7 @@ class ContactMessageController extends Controller
     {
         $message->update(['is_read' => true]);
 
-        return back()->with('success', 'Message marked as read.');
+        return back()->with('success', __('dashboard.contact_messages.message_marked_as_read'));
     }
 
     /**
@@ -60,6 +60,6 @@ class ContactMessageController extends Controller
     {
         ContactMessage::where('is_read', true)->delete();
 
-        return back()->with('success', 'All read messages have been deleted.');
+        return back()->with('success', __('dashboard.contact_messages.read_messages_deleted_successfully'));
     }
 }

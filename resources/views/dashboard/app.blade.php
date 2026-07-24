@@ -83,20 +83,24 @@
         @endcan
         @can('color-list')
         <a class="nav-link" href="{{ route('colors.index') }}">
-          <span class="nav-icon"><i class="bi bi-palette" aria-hidden="true"></i></span>
-          <span class="nav-text">{{ __('messages.colors') }}</span>
+            <span class="nav-icon"><i class="bi bi-palette" aria-hidden="true"></i></span>
+            <span class="nav-text">{{ __('messages.colors') }}</span>
         </a>
         @endcan
         @can('role-list')
         <a class="nav-link" href="{{ route('roles.index') }}">
-          <span class="nav-icon"><i class="bi bi-shield-lock" aria-hidden="true"></i></span>
-          <span class="nav-text">{{ __('dashboard.sidebar.roles') }}</span>
+            <span class="nav-icon"><i class="bi bi-shield-lock" aria-hidden="true"></i></span>
+            <span class="nav-text">{{ __('dashboard.sidebar.roles') }}</span>
         </a>
         @endcan
+        <a class="nav-link {{ Route::is('dashboard.contact-messages.*') ? 'active' : '' }}" href="{{ route('dashboard.contact-messages.index') }}">
+            <span class="nav-icon"><i class="bi bi-envelope" aria-hidden="true"></i></span>
+            <span class="nav-text">{{ __('dashboard.sidebar.contact_messages') }}</span>
+        </a>
         @can('manage-feature')
         <a class="nav-link" href="{{ route('dashboard.homepage-features.index') }}">
           <span class="nav-icon"><i class="bi bi-stars" aria-hidden="true"></i></span>
-          <span class="nav-text">Homepage Features</span>
+          <span class="nav-text">{{ __('dashboard.sidebar.home_settings') }}</span>
         </a>
         @endcan
         {{-- <a class="nav-link" href="add-user.html">
@@ -237,5 +241,28 @@
 
   <script src="{{ asset('dashboard/assets/js/bootstrap.bundle.min.js') }}"></script>
   <script src="{{ asset('dashboard/assets/js/main.js') }}"></script>
+  <script>
+    document.addEventListener('DOMContentLoaded', function() {
+      const toggleButtons = document.querySelectorAll('.toggle-password');
+      
+      toggleButtons.forEach(function(button) {
+        button.addEventListener('click', function() {
+          const targetSelector = button.getAttribute('data-target');
+          const passwordInput = document.querySelector(targetSelector);
+          const icon = button.querySelector('i');
+          
+          if (passwordInput.type === 'password') {
+            passwordInput.type = 'text';
+            icon.classList.remove('fa-eye');
+            icon.classList.add('fa-eye-slash');
+          } else {
+            passwordInput.type = 'password';
+            icon.classList.remove('fa-eye-slash');
+            icon.classList.add('fa-eye');
+          }
+        });
+      });
+    });
+  </script>
 </body>
 </html>

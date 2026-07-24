@@ -141,6 +141,7 @@ return [
     'current_password_incorrect' => 'Ijambo ryibanga ryariho si ryo.',
     'change_password' => 'Hindura Ijambo Ryibanga',
     'change_password_description' => 'Hindura ijambo ryibanga ryawe kenshi kugira ngo ukomeze akawunti yawe.',
+    'update_password_info' => 'Hindura ijambo ryibanga ryawe byandika ijambo ryibanga ryariho kandi na ijambo ryibanga rishya.',
     'current_password' => 'Ijambo Ryibanga Ryariho',
     'new_password' => 'Ijambo Ryibanga Rishya',
     'validation_error' => 'Ikosa ry\'Imibare',

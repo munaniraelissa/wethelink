@@ -191,6 +191,72 @@
             </button>
           </div>
         </form>
+
+        <!-- Change Password -->
+        <form action="{{ route('profile.password.update') }}" method="POST" class="panel mt-4" id="password-section">
+          @csrf
+
+          <div class="panel-header">
+            <div>
+              <h2 class="h5 mb-1 section-title"><i class="bi bi-key" aria-hidden="true"></i><span>{{ __('users.change_password') }}</span></h2>
+              <p class="text-muted mb-0">{{ __('users.update_password_info') }}</p>
+            </div>
+          </div>
+
+          <div class="card">
+            <div class="card-body">
+              <div class="row g-3">
+                <div class="col-md-12">
+                  <label class="form-label" for="current_password">{{ __('users.current_password') }}</label>
+                  <div class="input-group">
+                    <input class="form-control @error('current_password') is-invalid @enderror" id="current_password" type="password" name="current_password" required>
+                    <div class="input-group-append">
+                      <button type="button" class="btn btn-outline-secondary toggle-password" data-target="#current_password">
+                        <i class="fa fa-eye"></i>
+                      </button>
+                    </div>
+                  </div>
+                  @error('current_password')
+                    <div class="invalid-feedback">{{ $message }}</div>
+                  @enderror
+                </div>
+
+                <div class="col-md-6">
+                  <label class="form-label" for="password">{{ __('users.new_password') }}</label>
+                  <div class="input-group">
+                    <input class="form-control @error('password') is-invalid @enderror" id="password" type="password" name="password" required>
+                    <div class="input-group-append">
+                      <button type="button" class="btn btn-outline-secondary toggle-password" data-target="#password">
+                        <i class="fa fa-eye"></i>
+                      </button>
+                    </div>
+                  </div>
+                  @error('password')
+                    <div class="invalid-feedback">{{ $message }}</div>
+                  @enderror
+                </div>
+
+                <div class="col-md-6">
+                  <label class="form-label" for="password_confirmation">{{ __('users.confirm_password') }}</label>
+                  <div class="input-group">
+                    <input class="form-control" id="password_confirmation" type="password" name="password_confirmation" required>
+                    <div class="input-group-append">
+                      <button type="button" class="btn btn-outline-secondary toggle-password" data-target="#password_confirmation">
+                        <i class="fa fa-eye"></i>
+                      </button>
+                    </div>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+
+          <div class="d-flex justify-content-end gap-2 mt-3">
+            <button class="btn btn-primary" type="submit">
+              <i class="bi bi-key-fill" aria-hidden="true"></i> {{ __('users.change_password') }}
+            </button>
+          </div>
+        </form>
       </div>
     </section>
   </div>

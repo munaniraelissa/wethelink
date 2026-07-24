@@ -11,7 +11,7 @@
             <p class="text-muted mb-0">{{ __('dashboard.index.description') }}</p>
           </div>
         </div>
-        <div class="heading-actions"><button class="btn btn-outline-secondary btn-sm" type="button"><i class="bi bi-download" aria-hidden="true"></i> {{ __('dashboard.common.export') }}</button><button class="btn btn-primary btn-sm" type="button"><i class="bi bi-file-earmark-plus" aria-hidden="true"></i> {{ __('dashboard.common.create_report') }}</button></div>
+        <!-- <div class="heading-actions"><button class="btn btn-outline-secondary btn-sm" type="button"><i class="bi bi-download" aria-hidden="true"></i> {{ __('dashboard.common.export') }}</button><button class="btn btn-primary btn-sm" type="button"><i class="bi bi-file-earmark-plus" aria-hidden="true"></i> {{ __('dashboard.common.create_report') }}</button></div> -->
       </div>
 
       <section class="row g-3 mt-1" aria-label="Dashboard metrics">
@@ -77,20 +77,48 @@
           <div class="panel">
             <div class="panel-header">
               <div>
-                <h2 class="h5 mb-1 section-title"><i class="bi bi-graph-up-arrow" aria-hidden="true"></i><span>{{ __('dashboard.index.sales_performance') }}</span></h2>
-                <p class="text-muted mb-0">{{ __('dashboard.index.monthly_revenue') }}</p>
+                <h2 class="h5 mb-1 section-title"><i class="bi bi-graph-up-arrow" aria-hidden="true"></i><span>{{ __('dashboard.index.products_added') ?? 'Products Added' }}</span></h2>
+                <p class="text-muted mb-0">{{ __('dashboard.index.monthly_products') ?? 'Monthly products added' }} - {{ $selectedYear }}</p>
               </div>
-              <a class="btn btn-light btn-sm" href="{{ route('charts') }}">{{ __('dashboard.index.view_details') }}</a>
+              <div class="d-flex align-items-center gap-2">
+                <form method="GET" action="{{ route('dashboard.index') }}" class="d-flex align-items-center gap-2">
+                  <select name="year" class="form-select form-select-sm" onchange="this.form.submit()">
+                    @foreach($availableYears as $year)
+                      <option value="{{ $year }}" {{ $year == $selectedYear ? 'selected' : '' }}>{{ $year }}</option>
+                    @endforeach
+                  </select>
+                </form>
+                <a class="btn btn-light btn-sm" href="{{ route('products.index') }}">{{ __('dashboard.index.view_details') }}</a>
+              </div>
             </div>
 
-            <div class="chart-bars" aria-label="Sales performance chart">
-              <div class="chart-column bar-42"><span></span><small>{{ __('dashboard.months.jan') }}</small></div>
-              <div class="chart-column bar-58"><span></span><small>{{ __('dashboard.months.feb') }}</small></div>
-              <div class="chart-column bar-51"><span></span><small>{{ __('dashboard.months.mar') }}</small></div>
-              <div class="chart-column bar-72"><span></span><small>{{ __('dashboard.months.apr') }}</small></div>
-              <div class="chart-column bar-66"><span></span><small>{{ __('dashboard.months.may') }}</small></div>
-              <div class="chart-column bar-83"><span></span><small>{{ __('dashboard.months.jun') }}</small></div>
-            </div>
+            <div class="chart-bars" aria-label="Products added chart"
+              style="height: 250px; display: flex; align-items: flex-end; justify-content: space-around; padding: 20px 10px 10px 10px;">
+            @php
+              $months = [
+                __('dashboard.months.jan'), __('dashboard.months.feb'), __('dashboard.months.mar'),
+                __('dashboard.months.apr'), __('dashboard.months.may'), __('dashboard.months.jun'),
+                __('dashboard.months.jul'), __('dashboard.months.aug'), __('dashboard.months.sep'),
+                __('dashboard.months.oct'), __('dashboard.months.nov'), __('dashboard.months.dec'),
+              ];
+              // reserve space for the count label + month label so bars don't overflow the 250px box
+              $maxBarHeight = 180;
+            @endphp
+
+            @for ($i = 0; $i < 12; $i++)
+              @php
+                $count = $monthlyProducts[$i] ?? 0;
+                $barHeight = $maxProducts > 0 ? ($count / $maxProducts) * $maxBarHeight : 0;
+                $barHeight = max($barHeight, 4); // tiny visible sliver even at 0
+              @endphp
+              <div class="chart-column"
+                  style="flex: 1; height: 100%; display: flex; flex-direction: column; align-items: center; justify-content: flex-end; margin: 0 4px;">
+                <span style="font-size: 11px; margin-bottom: 5px; font-weight: 600;">{{ $count }}</span>
+                <div style="width: 100%; max-width: 50px; height: {{ $barHeight }}px; background: linear-gradient(180deg, #667eea 0%, #764ba2 100%); border-radius: 8px 8px 4px 4px;"></div>
+                <small style="margin-top: 8px; font-size: 11px; color: #6c757d;">{{ $months[$i] }}</small>
+              </div>
+            @endfor
+          </div>
           </div>
         </div>
 

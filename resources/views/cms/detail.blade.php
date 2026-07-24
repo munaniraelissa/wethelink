@@ -340,32 +340,7 @@
                     {{ number_format($product->price) }}RWF
                 </h3>
                 <p class="mb-4">{{ $product->short_description ?? 'No description available for this product.' }}</p>
-                @if ($product->company)
-                    <div class="border rounded bg-light p-3 mb-4">
-                        <div class="d-flex align-items-center">
-                            <a href="{{ route('shop', ['manufacturer' => $product->company_id]) }}"
-                                class="d-inline-flex align-items-center justify-content-center bg-white border rounded mr-3 flex-shrink-0"
-                                style="width: 92px; height: 92px;">
-                                @if ($product->company->logo)
-                                    <img src="{{ asset('storage/' . $product->company->logo) }}"
-                                        alt="{{ $product->company->name }}"
-                                        style="max-width: 80px; max-height: 80px; object-fit: contain;">
-                                @else
-                                    <i class="fas fa-building text-muted fa-2x"></i>
-                                @endif
-                            </a>
-                            <div class="flex-grow-1">
-                                <small class="text-uppercase text-muted d-block mb-1">Manufacturer</small>
-                                <h5 class="mb-1">{{ $product->company->name }}</h5>
-                                <p class="mb-2 text-muted">View more products from this company.</p>
-                                <a href="{{ route('shop', ['manufacturer' => $product->company_id]) }}"
-                                    class="btn btn-sm btn-outline-primary">
-                                    View Company Products
-                                </a>
-                            </div>
-                        </div>
-                    </div>
-                @endif
+                
                 {{-- <div class="d-flex mb-3">
                     <p class="text-dark font-weight-medium mb-0 mr-3">Sizes:</p>
                     <form>
@@ -584,6 +559,38 @@
         </div>
     </div>
     <!-- Shop Detail End -->
+
+    <div class="container-fluid pt-5">
+        <div class="row px-xl-5 pb-3">
+            @if ($product->company)
+                <div class="border rounded bg-light p-3 mb-4">
+                    <div class="d-flex align-items-center">
+                        <a href="{{ route('shop', ['manufacturer' => $product->company_id]) }}"
+                            class="d-inline-flex align-items-center justify-content-center bg-white border rounded mr-3 flex-shrink-0"
+                            style="width: 92px; height: 92px;">
+                            @if ($product->company->logo)
+                                <img src="{{ asset('storage/' . $product->company->logo) }}"
+                                    alt="{{ $product->company->name }}"
+                                    style="max-width: 80px; max-height: 80px; object-fit: contain;">
+                            @else
+                                <i class="fas fa-building text-muted fa-2x"></i>
+                            @endif
+                        </a>
+                        <div class="flex-grow-1">
+                            <small class="text-uppercase text-muted d-block mb-1">Manufacturer</small>
+                            <h5 class="mb-1">{{ $product->company->name }}</h5>
+                            <p class="mb-2 text-muted">View more products from this company.</p>
+                            <a href="{{ route('shop', ['manufacturer' => $product->company_id]) }}"
+                                class="btn btn-sm btn-outline-primary">
+                                View Company Products
+                            </a>
+                        </div>
+                    </div>
+                </div>
+            @endif
+        </div>
+    </div>
+
 
 
     <!-- Products Start -->
