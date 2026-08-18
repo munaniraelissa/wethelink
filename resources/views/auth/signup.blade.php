@@ -191,7 +191,7 @@
                 }
 
                 if (data.requires_approval) {
-                    successMessage.textContent = `${data.message} Please contact the admin on ${data.admin_phone || 'the provided contact number'} for assistance.`;
+                    successMessage.textContent = `${data.message} Please contact the support team on ${data.admin_email || 'the provided contact number'} or on  ${data.admin_phone || 'the provided contact number'} for assistance.`;
                     successAlert.style.display = 'block';
                     submitBtn.disabled = false;
                     submitBtn.textContent = '{{ __("cms.auth.create_account_button") }}';

@@ -21,11 +21,11 @@ class AuthController extends Controller
         $user = User::where('email', $request->input('email'))->first();
 
         if ($user && $user->status !== 'active') {
-            $superAdminEmail = env('SUPER_ADMIN_EMAIL', 'admin@example.com');
-            $superAdminPhone = env('SUPER_ADMIN_PHONE', '+2500000000');
+            $superAdminEmail = env('SUPER_ADMIN_EMAIL', 'info@wethelink.com');
+            $superAdminPhone = env('SUPER_ADMIN_PHONE', '+250 784 360 366');
 
             return redirect()->route('login')
-                ->with('inactive_account', 'Your account is inactive. Please contact the admin via email ' . $superAdminEmail . ' or phone ' . $superAdminPhone . ' to activate your account.')
+                ->with('inactive_account', 'Your account is inactive. Please contact the support team via email ' . $superAdminEmail . ' or phone ' . $superAdminPhone . ' to activate your account.')
                 ->withInput($request->only('email'));
         }
 

@@ -9,10 +9,10 @@
 
     <div class="card mb-4">
         <div class="card-body">
-            <h5 class="card-title text-primary">Basic Information</h5>
+            <h5 class="card-title text-primary">{{ __('cms.companies.company_details_overview') }}</h5>
             <div class="row g-3 mt-3">
                 <div class="col-md-6">
-                    <label class="form-label">Company Name <span class="text-danger">*</span></label>
+                    <label class="form-label">{{ __('cms.companies.company_name') }} <span class="text-danger">*</span></label>
                     <input type="text" name="name" value="{{ old('name', $company->name ?? '') }}"
                            class="form-control @error('name') is-invalid @enderror" required>
                     @error('name')
@@ -21,7 +21,7 @@
                 </div>
 
                 <div class="col-md-6">
-                    <label class="form-label">Status <span class="text-danger">*</span></label>
+                    <label class="form-label">{{ __('cms.companies.status') }} <span class="text-danger">*</span></label>
                     <select name="status" class="form-select @error('status') is-invalid @enderror" required>
                         @foreach(['pending','active','inactive','blocked'] as $s)
                             <option value="{{ $s }}" @selected(old('status', $company->status ?? 'pending') === $s)>{{ ucfirst($s) }}</option>
@@ -33,7 +33,7 @@
                 </div>
 
                 <div class="col-md-6">
-                    <label class="form-label">Email</label>
+                    <label class="form-label">{{ __('cms.companies.email') }}</label>
                     <input type="email" name="email" value="{{ old('email', $company->email ?? '') }}"
                            class="form-control @error('email') is-invalid @enderror">
                     @error('email')
@@ -42,7 +42,7 @@
                 </div>
 
                 <div class="col-md-6">
-                    <label class="form-label">Telephone</label>
+                    <label class="form-label">{{ __('cms.companies.telephone') }}</label>
                     <input type="text" name="telephone" value="{{ old('telephone', $company->telephone ?? '') }}"
                            class="form-control @error('telephone') is-invalid @enderror">
                     @error('telephone')
@@ -51,7 +51,7 @@
                 </div>
 
                 <div class="col-md-6">
-                    <label class="form-label">Website</label>
+                    <label class="form-label">{{ __('cms.companies.website') }}</label>
                     <input type="url" name="website" value="{{ old('website', $company->website ?? '') }}"
                            placeholder="https://" class="form-control @error('website') is-invalid @enderror">
                     @error('website')
@@ -60,10 +60,19 @@
                 </div>
 
                 <div class="col-md-6">
-                    <label class="form-label">Industry</label>
+                    <label class="form-label">{{ __('cms.companies.industry') }}</label>
                     <input type="text" name="industry" value="{{ old('industry', $company->industry ?? '') }}"
                            class="form-control @error('industry') is-invalid @enderror">
                     @error('industry')
+                        <div class="invalid-feedback">{{ $message }}</div>
+                    @enderror
+                </div>
+
+                <div class="col-md-6">
+                    <label class="form-label">{{ __('cms.companies.description') }}</label>
+                    <textarea name="description" rows="4"
+                              class="form-control @error('description') is-invalid @enderror">{{ old('description', $company->description ?? '') }}</textarea>
+                    @error('description')
                         <div class="invalid-feedback">{{ $message }}</div>
                     @enderror
                 </div>
@@ -73,10 +82,10 @@
 
     <div class="card mb-4">
         <div class="card-body">
-            <h5 class="card-title text-primary">Legal & Registration</h5>
+            <h5 class="card-title text-primary">{{ __('cms.companies.legal') }}</h5>
             <div class="row g-3 mt-3">
                 <div class="col-md-6">
-                    <label class="form-label">Tax Number</label>
+                    <label class="form-label">{{ __('cms.companies.tax_number') }}</label>
                     <input type="text" name="tax_number" value="{{ old('tax_number', $company->tax_number ?? '') }}"
                            class="form-control @error('tax_number') is-invalid @enderror">
                     @error('tax_number')
@@ -85,7 +94,7 @@
                 </div>
 
                 <div class="col-md-6">
-                    <label class="form-label">Registration Number</label>
+                    <label class="form-label">{{ __('cms.companies.registration_number') }}</label>
                     <input type="text" name="registration_number" value="{{ old('registration_number', $company->registration_number ?? '') }}"
                            class="form-control @error('registration_number') is-invalid @enderror">
                     @error('registration_number')
@@ -98,12 +107,12 @@
 
     <div class="card mb-4">
         <div class="card-body">
-            <h5 class="card-title text-primary">Business Settings</h5>
+            <h5 class="card-title text-primary">{{ __('cms.companies.business') }}</h5>
             <div class="row g-3 mt-3">
                 <div class="col-md-6">
-                    <label class="form-label">Credit Limit</label>
+                    <label class="form-label">{{ __('cms.companies.credit_limit') }}</label>
                     <div class="input-group">
-                        <span class="input-group-text">$</span>
+                        <span class="input-group-text">RWF</span>
                         <input type="number" name="credit_limit" step="0.01" min="0"
                                value="{{ old('credit_limit', $company->credit_limit ?? 0) }}"
                                class="form-control @error('credit_limit') is-invalid @enderror">
@@ -114,7 +123,7 @@
                 </div>
 
                 <div class="col-md-6">
-                    <label class="form-label">Payment Terms (days)</label>
+                    <label class="form-label">{{ __('cms.companies.payment_terms_days') }}</label>
                     <input type="number" name="payment_terms_days" min="0"
                            value="{{ old('payment_terms_days', $company->payment_terms_days ?? 0) }}"
                            class="form-control @error('payment_terms_days') is-invalid @enderror">
@@ -128,21 +137,21 @@
 
     <div class="card mb-4">
         <div class="card-body">
-            <h5 class="card-title text-primary">Logo</h5>
+            <h5 class="card-title text-primary">{{ __('cms.companies.logo') }}</h5>
             @if(!empty($company->logo))
                 <div class="mb-3 d-flex align-items-center gap-3">
                     <img src="{{ Storage::url($company->logo) }}" alt="Current logo"
                          class="rounded-3" style="width:72px; height:72px; object-fit:cover;">
-                    <p class="mb-0 text-muted">Current logo. Upload a new one to replace it.</p>
+                    <p class="mb-0 text-muted">{{ __('cms.companies.current_logo') }}</p>
                 </div>
             @endif
             <div class="mb-3">
-                <label class="form-label">Upload logo</label>
+                <label class="form-label">{{ __('cms.companies.upload_logo') }}</label>
                 <input type="file" name="logo" accept="image/*" class="form-control @error('logo') is-invalid @enderror">
                 @error('logo')
                     <div class="invalid-feedback">{{ $message }}</div>
                 @enderror
-                <small class="form-text text-muted">JPEG, PNG, SVG, WebP — max 2MB.</small>
+                <small class="form-text text-muted">{{ __('cms.upload_image_hint') ?? 'JPEG, PNG, SVG, WebP — max 2MB.' }}</small>
             </div>
         </div>
     </div>

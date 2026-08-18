@@ -1,7 +1,7 @@
 {{-- resources/views/companies/edit.blade.php --}}
 @extends('dashboard.app')
 
-@section('title', 'Edit — ' . $company->name)
+@section('title', __('cms.companies.edit_company') . ' — ' . $company->name)
 
 @section('content')
 <main class="dashboard-content">
@@ -22,14 +22,14 @@
       <div class="page-heading-copy">
         <span class="page-icon"><i class="bi bi-building" aria-hidden="true"></i></span>
         <div>
-          <p class="eyebrow mb-1">Companies</p>
-          <h1 class="h3 mb-1">Edit Company</h1>
-          <p class="text-muted mb-0">Update the details for {{ $company->name }}.</p>
+          <p class="eyebrow mb-1">{{ __('cms.companies.title') }}</p>
+          <h1 class="h3 mb-1">{{ __('cms.companies.edit_company') }}</h1>
+          <p class="text-muted mb-0">{{ __('cms.companies.edit_company_description', ['company' => $company->name]) }}</p>
         </div>
       </div>
       <div class="heading-actions">
         <a href="{{ route('companies.show', $company) }}" class="btn btn-secondary btn-sm">
-          <i class="bi bi-arrow-left" aria-hidden="true"></i> Back
+          <i class="bi bi-arrow-left" aria-hidden="true"></i> {{ __('cms.back') }}
         </a>
       </div>
     </div>

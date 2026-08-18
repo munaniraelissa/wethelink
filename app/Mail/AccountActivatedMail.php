@@ -32,8 +32,8 @@ class AccountActivatedMail extends Mailable implements ShouldQueue
             with: [
                 'user' => $this->user,
                 'appName' => config('app.name', 'Wethelink'),
-                'adminEmail' => config('app.super_admin_email', ''),
-                'adminPhone' => config('app.super_admin_phone', '+250788565520'),
+                'adminEmail' => config('app.super_admin_email', 'info@wethelink.com'),
+                'adminPhone' => config('app.super_admin_phone', '+250 784 360 366'),
             ],
         );
     }

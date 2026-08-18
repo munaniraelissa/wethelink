@@ -9,7 +9,7 @@
             <div class="d-inline-flex">
                 <p class="m-0"><a href="{{ route('home') }}">{{ __('cms.page.home') }}</a></p>
                 <p class="m-0 px-2">-</p>
-                <p class="m-0">{{ __('cms.page.store') }}</p>
+                <p class="m-0">{{ __('cms.nav.products') }}</p>
             </div>
         </div>
     </div>
@@ -250,8 +250,8 @@
                                     <div class="d-flex justify-content-center">
                                         <h6>{{ number_format($product->price) }}RWF</h6>
                                         <!-- @if ($product->discount_price)
-    <h6 class="text-muted ml-2"><del>{{ number_format($product->price) }}RWF</del></h6>
-    @endif -->
+                                            <h6 class="text-muted ml-2"><del>{{ number_format($product->price) }}RWF</del></h6>
+                                            @endif -->
                                     </div>
                                     <p>
                                         {{ $product->minimum_order_quantity }} {{ $product->unit }} (MOQ) <BR>
@@ -290,7 +290,7 @@
                     @endforelse
 
                     <div class="col-12 pb-1">
-                        {{ $products->appends(request()->query())->links() }}
+                        {{ $products->appends(request()->query())->links('vendor.pagination.shop') }}
                     </div>
                 </div>
             </div>

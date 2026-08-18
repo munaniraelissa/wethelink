@@ -23,13 +23,15 @@ class ProductController extends Controller
 {
     public function index(Request $request)
     {
-        abort_if(!auth()->user()?->can('product-list'), 403);
+        $user = auth()->user();
+        abort_if(!$user?->can('product-list'), 403);
 
-        $company_id = auth()->user()->company_id;
-
-        $query = Product::where('company_id', $company_id)
-            ->with(['category', 'brand', 'images', 'company']) // Eager load the 'company' relationship
+        $query = Product::with(['category', 'brand', 'images', 'company'])
             ->orderBy('id', 'desc');
+
+        if (!$user->hasRole('Super Admin')) {
+            $query->where('company_id', $user->company_id);
+        }
 
         if ($request->filled('search')) {
             $search = $request->search;
@@ -50,12 +52,13 @@ class ProductController extends Controller
             $query->where('status', $request->status);
         }
 
-        $products = $query->paginate(15);
+        $products = $query->paginate(25)->withQueryString();
         $categories = Category::query()->orderBy('name')->get();
         $brands = Brand::query()->orderBy('name')->get();
         $statuses = ['draft', 'published', 'out_of_stock', 'inactive'];
+        $i=0;
 
-        return view('dashboard.products.index', compact('products', 'categories', 'brands', 'statuses'));
+        return view('dashboard.products.index', compact('products', 'categories', 'brands', 'statuses','i'));
     }
 
     public function create()
@@ -119,9 +122,23 @@ class ProductController extends Controller
             $company = Company::find($company_id);
             $companyName = $company ? $company->name : auth()->user()->company?->name;
             $companyPrefix = strtoupper(substr($companyName ?? 'GEN', 0, 3));
-            $lastProduct = Product::where('company_id', $company_id)->latest('id')->first();
-            $nextNumber = $lastProduct ? str_pad($lastProduct->id + 1, 5, '0', STR_PAD_LEFT) : '00001';
-            $validated['sku'] = $companyPrefix.'-'.$nextNumber;
+
+            $existingSkus = Product::where('sku', 'like', $companyPrefix.'-%')
+                ->pluck('sku');
+
+            $usedNumbers = [];
+            foreach ($existingSkus as $sku) {
+                if (preg_match('/^'.preg_quote($companyPrefix, '/').'\-(\d{5})$/', $sku, $matches)) {
+                    $usedNumbers[(int) $matches[1]] = true;
+                }
+            }
+
+            $nextNumber = 1;
+            while (isset($usedNumbers[$nextNumber])) {
+                $nextNumber++;
+            }
+
+            $validated['sku'] = $companyPrefix.'-'.str_pad($nextNumber, 5, '0', STR_PAD_LEFT);
         }
 
         $validated['company_id'] = $company_id;
@@ -195,24 +212,28 @@ class ProductController extends Controller
     {
         abort_if(!auth()->user()?->can('product-edit'), 403);
         $this->authorizeProduct($product);
-        $company_id = auth()->user()->company_id;
+        $user = auth()->user();
+        $company_id = $user->company_id;
         $categories = Category::query()->orderBy('name')->get();
         $brands = Brand::query()->orderBy('name')->get();
         $sizes = Size::query()->orderBy('name')->get();
         $colors = Color::query()->orderBy('name')->get();
         $locations = CompanyLocation::where('company_id', $company_id)->orderBy('name')->get();
         $statuses = ['draft', 'published', 'out_of_stock', 'inactive'];
+        $canSelectCompany = $this->canSelectProductCompany($user);
+        $companies = $canSelectCompany ? Company::query()->orderBy('name')->get() : collect();
 
         $product->load('sizes', 'colors', 'companyLocations', 'images', 'videos', 'variants');
 
-        return view('dashboard.products.edit', compact('product', 'categories', 'brands', 'sizes', 'colors', 'locations', 'statuses'));
+        return view('dashboard.products.edit', compact('product', 'categories', 'brands', 'sizes', 'colors', 'locations', 'statuses', 'canSelectCompany', 'companies'));
     }
 
     public function update(Request $request, Product $product)
     {
         abort_if(!auth()->user()?->can('product-edit'), 403);
         $this->authorizeProduct($product);
-        $company_id = auth()->user()->company_id;
+        $user = auth()->user();
+        $company_id = $product->company_id; // keep current owner unless explicitly reassigned
 
         $validated = $request->validate([
             'category_id' => ['sometimes', 'required', 'integer', Rule::exists('categories', 'id')],
@@ -240,8 +261,15 @@ class ProductController extends Controller
             'product_videos' => 'nullable|array',
             'product_videos.*' => 'file|mimes:mp4,mov,ogg,qt|max:102400',
             'locations' => 'nullable|array',
+            'company_id' => ['nullable', 'integer', Rule::exists('companies', 'id')],
         ]);
 
+        if ($this->userHasPermission($user, 'select_product_company') && $request->filled('company_id')) {
+            $company_id = (int) $request->input('company_id');
+        }
+
+        unset($validated['company_id']); // don't let mass assignment override the resolved value below
+        $validated['company_id'] = $company_id;
         $validated['is_featured'] = $request->has('is_featured');
 
         if (isset($validated['name']) && !isset($validated['slug'])) {
@@ -399,7 +427,13 @@ class ProductController extends Controller
 
     private function authorizeProduct(Product $product)
     {
-        abort_if($product->company_id !== auth()->user()->company_id, 403);
+        $user = auth()->user();
+
+        if ($this->userHasPermission($user, 'select_product_company')) {
+            return;
+        }
+
+        abort_if($product->company_id !== $user->company_id, 403);
     }
 
     private function canSelectProductCompany($user): bool

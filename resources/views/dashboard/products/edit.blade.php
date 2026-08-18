@@ -85,6 +85,22 @@
                             @enderror
                         </div>
                     </div>
+                    @if($canSelectCompany)
+                        <div class="mb-3">
+                            <label class="form-label">{{ __('messages.assign_company') }}</label>
+                            <select name="company_id" id="companySelect" class="form-control @error('company_id') is-invalid @enderror">
+                                {{-- <option value="">{{ __('messages.no_change') ?? 'Keep current company' }}</option> --}}
+                                @foreach($companies as $company)
+                                    <option value="{{ $company->id }}" {{ old('company_id', $product->company_id) == $company->id ? 'selected' : '' }}>
+                                        {{ $company->name }}
+                                    </option>
+                                @endforeach
+                            </select>
+                            @error('company_id')
+                                <div class="invalid-feedback">{{ $message }}</div>
+                            @enderror
+                        </div>
+                    @endif
                     <div class="row">
                         <div class="col-md-6 mb-3">
                             <div class="d-flex align-items-end">
@@ -243,12 +259,11 @@
                         <!-- Existing Images -->
                         <div class="d-flex flex-wrap gap-2 mb-3">
                             @foreach($product->images as $image)
-                                <div class="position-relative">
+                                <div class="existing-media-item position-relative" style="width: 150px;">
                                     <img src="{{ asset('storage/' . $image->image) }}" class="img-thumbnail" style="width: 150px; height: 150px; object-fit: cover;">
-                                    <div class="form-check mt-1">
-                                        <input class="form-check-input" type="checkbox" name="delete_images[]" value="{{ $image->id }}" id="delImg{{ $image->id }}">
-                                        <label class="form-check-label small text-danger" for="delImg{{ $image->id }}">Delete</label>
-                                    </div>
+                                    <button type="button" class="btn btn-danger btn-sm position-absolute top-0 end-0 m-1 remove-existing-media" style="z-index: 1000; pointer-events: auto;" data-type="image" data-id="{{ $image->id }}" aria-label="Remove">
+                                        <i class="bi bi-x-lg"></i>
+                                    </button>
                                 </div>
                             @endforeach
                         </div>
@@ -265,6 +280,8 @@
                         </div>
                     </div>
 
+                    <div id="deleteImageInputs"></div>
+
                     <!-- Product Videos -->
                     <div class="mb-4">
                         <h5 class="mb-2">{{ __('messages.product_videos') }}</h5>
@@ -272,12 +289,11 @@
                         <!-- Existing Videos -->
                         <div class="d-flex flex-wrap gap-2 mb-3">
                             @foreach($product->videos as $video)
-                                <div class="position-relative">
+                                <div class="existing-media-item position-relative" style="width: 200px;">
                                     <video src="{{ asset('storage/' . $video->video) }}" style="max-width: 200px; max-height: 150px;" controls></video>
-                                    <div class="form-check mt-1">
-                                        <input class="form-check-input" type="checkbox" name="delete_videos[]" value="{{ $video->id }}" id="delVid{{ $video->id }}">
-                                        <label class="form-check-label small text-danger" for="delVid{{ $video->id }}">Delete</label>
-                                    </div>
+                                    <button type="button" class="btn btn-danger btn-sm position-absolute top-0 end-0 m-1 remove-existing-media" style="z-index: 1000; pointer-events: auto;" data-type="video" data-id="{{ $video->id }}" aria-label="Remove">
+                                        <i class="bi bi-x-lg"></i>
+                                    </button>
                                 </div>
                             @endforeach
                         </div>
@@ -293,6 +309,8 @@
                             <!-- Preview of new videos will be shown here -->
                         </div>
                     </div>
+
+                    <div id="deleteVideoInputs"></div>
 
                     <!-- Locations -->
                     {{-- <div class="mb-4">
@@ -361,24 +379,91 @@
                 });
             }
 
-            // Product Images/Videos Preview Logic (Reuse from create.blade.php)
+            let selectedImages = [];
+            let selectedVideos = [];
+
+            function updateInputFiles(input, files) {
+                const dataTransfer = new DataTransfer();
+                files.forEach(file => dataTransfer.items.add(file));
+                input.files = dataTransfer.files;
+            }
+
+            function renderImagePreviews(files) {
+                productImagesPreview.innerHTML = '';
+                files.forEach((file, index) => {
+                    const reader = new FileReader();
+                    reader.onload = function(event) {
+                        const div = document.createElement('div');
+                        div.className = 'position-relative me-2 mb-2';
+                        div.style.width = '150px';
+                        div.innerHTML = `
+                            <button type="button" class="btn btn-danger btn-sm position-absolute top-0 end-0 m-1 remove-preview" data-type="image" data-index="${index}" aria-label="Remove">
+                                <i class="bi bi-x-lg"></i>
+                            </button>
+                            <img src="${event.target.result}" class="img-thumbnail" style="width: 150px; height: 150px; object-fit: cover;">
+                        `;
+                        productImagesPreview.appendChild(div);
+                    };
+                    reader.readAsDataURL(file);
+                });
+            }
+
             const productImagesInput = document.getElementById('productImagesInput');
             const productImagesPreview = document.getElementById('productImagesPreview');
-            
+
             productImagesInput.addEventListener('change', function(e) {
-                productImagesPreview.innerHTML = '';
-                if (e.target.files.length > 0) {
-                    Array.from(e.target.files).forEach((file) => {
-                        const reader = new FileReader();
-                        reader.onload = function(event) {
-                            const div = document.createElement('div');
-                            div.className = 'position-relative';
-                            div.innerHTML = `<img src="${event.target.result}" class="img-thumbnail" style="max-width: 150px;">`;
-                            productImagesPreview.appendChild(div);
-                        };
-                        reader.readAsDataURL(file);
-                    });
-                }
+                selectedImages = Array.from(e.target.files);
+                renderImagePreviews(selectedImages);
+            });
+
+            function renderVideoPreviews(files) {
+                productVideosPreview.innerHTML = '';
+                files.forEach((file, index) => {
+                    const div = document.createElement('div');
+                    div.className = 'position-relative me-2 mb-2';
+                    div.style.width = '200px';
+                    div.innerHTML = `
+                        <button type="button" class="btn btn-danger btn-sm position-absolute top-0 end-0 m-1 remove-preview" data-type="video" data-index="${index}" aria-label="Remove">
+                            <i class="bi bi-x-lg"></i>
+                        </button>
+                    `;
+                    const video = document.createElement('video');
+                    video.src = URL.createObjectURL(file);
+                    video.controls = true;
+                    video.style.maxWidth = '200px';
+                    video.style.maxHeight = '150px';
+                    video.style.display = 'block';
+                    div.appendChild(video);
+                    productVideosPreview.appendChild(div);
+                });
+            }
+
+            const productVideosInput = document.getElementById('productVideosInput');
+            const productVideosPreview = document.getElementById('productVideosPreview');
+            const deleteImageInputs = document.getElementById('deleteImageInputs');
+            const deleteVideoInputs = document.getElementById('deleteVideoInputs');
+
+            productVideosInput.addEventListener('change', function(e) {
+                selectedVideos = Array.from(e.target.files);
+                renderVideoPreviews(selectedVideos);
+            });
+
+            productImagesPreview.addEventListener('click', function(e) {
+                const btn = e.target.closest('.remove-preview');
+                if (!btn || btn.dataset.type !== 'image') return;
+                const index = Number(btn.dataset.index);
+                selectedImages.splice(index, 1);
+                updateInputFiles(productImagesInput, selectedImages);
+                renderImagePreviews(selectedImages);
+            });
+
+            productVideosPreview.addEventListener('click', function(e) {
+                const btn = e.target.closest('.remove-preview');
+                if (!btn || btn.dataset.type !== 'video') return;
+                const index = Number(btn.dataset.index);
+                selectedVideos.splice(index, 1);
+                updateInputFiles(productVideosInput, selectedVideos);
+                renderVideoPreviews(selectedVideos);
             });
 
             // ... (Other event listeners and functions reused from create.blade.php)
@@ -427,15 +512,47 @@
                 variantIndex++;
             }
 
-            document.getElementById('addVariantBtn').addEventListener('click', function() {
-                addVariantRow();
-            });
+            const addVariantBtn = document.getElementById('addVariantBtn');
+            if (addVariantBtn) {
+                addVariantBtn.addEventListener('click', function() {
+                    addVariantRow();
+                });
+            }
 
             document.addEventListener('click', function(e) {
                 if (e.target.closest('.remove-variant')) {
                     e.target.closest('tr').remove();
                 }
             });
+
+            document.addEventListener('click', function(e) {
+                const button = e.target.closest('.remove-existing-media');
+                if (!button) {
+                    return;
+                }
+
+                const wrapper = button.closest('.existing-media-item');
+                const id = button.dataset.id;
+                const type = button.dataset.type;
+                if (wrapper) {
+                    wrapper.classList.add('d-none');
+                }
+
+                if (type === 'image' && deleteImageInputs) {
+                    const existing = deleteImageInputs.querySelector(`input[value="${id}"]`);
+                    if (!existing) {
+                        deleteImageInputs.insertAdjacentHTML('beforeend', `<input type="hidden" name="delete_images[]" value="${id}">`);
+                    }
+                }
+
+                if (type === 'video' && deleteVideoInputs) {
+                    const existing = deleteVideoInputs.querySelector(`input[value="${id}"]`);
+                    if (!existing) {
+                        deleteVideoInputs.insertAdjacentHTML('beforeend', `<input type="hidden" name="delete_videos[]" value="${id}">`);
+                    }
+                }
+            });
+            
         });
     </script>
 </main>

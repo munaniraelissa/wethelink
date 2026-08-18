@@ -40,7 +40,7 @@
                                         </div>
 
                                         @if($manufacturer->status === 'active')
-                                            <span class="badge badge-success mb-3">{{ __('cms.manufacturers.verified') }}</span>
+                                            <span class="badge badge-success mb-3">{{ __('cms.manufacturers.verified') }}<i class="fas fa-check-circle text-primary" title="Active"></i></span>
                                         @else
                                             <span class="badge badge-secondary mb-3">{{ $manufacturer->status }}</span>
                                         @endif

@@ -169,7 +169,7 @@ return [
     ],
 
     'contact_messages' => [
-        'title' => 'Ubutumwa Bw\'Vugana',
+        'title' => 'Ubutumwa bwoherejwe',
         'description' => 'Gukurikirana ubutumwa bwo muri fomu ya vugana',
         'unread' => 'Usoma Nti',
         'new' => 'Bishya',

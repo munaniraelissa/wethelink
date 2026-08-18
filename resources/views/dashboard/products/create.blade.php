@@ -141,7 +141,7 @@
                         </div>
                     </div>
                     <div class="mb-3">
-                        <label class="form-label">Short Description</label>
+                        <label class="form-label">{{ __('messages.short_description') }}</label>
                         <input type="text" name="short_description" class="form-control @error('short_description') is-invalid @enderror" value="{{ old('short_description') }}">
                         @error('short_description')
                             <div class="invalid-feedback">{{ $message }}</div>
@@ -444,47 +444,89 @@
             const colors = @json($colors);
             let variantIndex = 0;
 
-            // Product Images Preview
+            let selectedImages = [];
+            let selectedVideos = [];
+
+            function updateInputFiles(input, files) {
+                const dataTransfer = new DataTransfer();
+                files.forEach(file => dataTransfer.items.add(file));
+                input.files = dataTransfer.files;
+            }
+
+            function renderImagePreviews(files) {
+                productImagesPreview.innerHTML = '';
+                files.forEach((file, index) => {
+                    const reader = new FileReader();
+                    reader.onload = function(event) {
+                        const div = document.createElement('div');
+                        div.className = 'position-relative me-2 mb-2';
+                        div.style.width = '150px';
+                        div.innerHTML = `
+                            <button type="button" class="btn btn-danger btn-sm position-absolute top-0 end-0 m-1 remove-preview" data-type="image" data-index="${index}" aria-label="Remove">
+                                <i class="bi bi-x-lg"></i>
+                            </button>
+                            <img src="${event.target.result}" class="img-thumbnail" style="width: 150px; height: 150px; object-fit: cover;">
+                        `;
+                        productImagesPreview.appendChild(div);
+                    };
+                    reader.readAsDataURL(file);
+                });
+            }
+
             const productImagesInput = document.getElementById('productImagesInput');
             const productImagesPreview = document.getElementById('productImagesPreview');
-            
+
             productImagesInput.addEventListener('change', function(e) {
-                productImagesPreview.innerHTML = '';
-                if (e.target.files.length > 0) {
-                    Array.from(e.target.files).forEach((file, index) => {
-                        const reader = new FileReader();
-                        reader.onload = function(event) {
-                            const div = document.createElement('div');
-                            div.className = 'position-relative';
-                            div.innerHTML = `
-                                <img src="${event.target.result}" class="img-thumbnail" style="max-width: 150px;">
-                            `;
-                            productImagesPreview.appendChild(div);
-                        };
-                        reader.readAsDataURL(file);
-                    });
-                }
+                selectedImages = Array.from(e.target.files);
+                renderImagePreviews(selectedImages);
             });
 
-            // Product Videos Preview
+            productImagesPreview.addEventListener('click', function(e) {
+                const btn = e.target.closest('.remove-preview');
+                if (!btn || btn.dataset.type !== 'image') return;
+                const index = Number(btn.dataset.index);
+                selectedImages.splice(index, 1);
+                updateInputFiles(productImagesInput, selectedImages);
+                renderImagePreviews(selectedImages);
+            });
+
+            function renderVideoPreviews(files) {
+                productVideosPreview.innerHTML = '';
+                files.forEach((file, index) => {
+                    const div = document.createElement('div');
+                    div.className = 'position-relative me-2 mb-2';
+                    div.style.width = '200px';
+                    div.innerHTML = `
+                        <button type="button" class="btn btn-danger btn-sm position-absolute top-0 end-0 m-1 remove-preview" data-type="video" data-index="${index}" aria-label="Remove">
+                            <i class="bi bi-x-lg"></i>
+                        </button>
+                    `;
+                    const video = document.createElement('video');
+                    video.src = URL.createObjectURL(file);
+                    video.controls = true;
+                    video.style.maxWidth = '200px';
+                    video.style.maxHeight = '150px';
+                    video.style.display = 'block';
+                    div.appendChild(video);
+                    productVideosPreview.appendChild(div);
+                });
+            }
+
             const productVideosInput = document.getElementById('productVideosInput');
             const productVideosPreview = document.getElementById('productVideosPreview');
-            
+
             productVideosInput.addEventListener('change', function(e) {
-                productVideosPreview.innerHTML = '';
-                if (e.target.files.length > 0) {
-                    Array.from(e.target.files).forEach((file, index) => {
-                        const div = document.createElement('div');
-                        div.className = 'position-relative';
-                        const video = document.createElement('video');
-                        video.src = URL.createObjectURL(file);
-                        video.controls = true;
-                        video.style.maxWidth = '200px';
-                        video.style.maxHeight = '150px';
-                        div.appendChild(video);
-                        productVideosPreview.appendChild(div);
-                    });
-                }
+                selectedVideos = Array.from(e.target.files);
+                renderVideoPreviews(selectedVideos);
+            });
+
+            productVideosPreview.addEventListener('click', function(e) {
+                const btn = e.target.closest('.remove-preview');
+                if (!btn || btn.dataset.type !== 'video') return;
+                const index = Number(btn.dataset.index);
+                selectedVideos.splice(index, 1);
+                updateInputFiles(productVideosInput, selectedVideos);
+                renderVideoPreviews(selectedVideos);
             });
 
             // Add Category

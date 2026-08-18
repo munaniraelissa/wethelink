@@ -1,6 +1,6 @@
 @extends('dashboard.app')
 
-@section('title', 'Companies')
+@section('title', __('cms.companies.title'))
 
 @section('content')
 <main class="dashboard-content">
@@ -9,14 +9,14 @@
       <div>
         <span class="page-icon"><i class="bi bi-building" aria-hidden="true"></i></span>
         <div>
-          <p class="eyebrow mb-1">Companies</p>
-          <h1 class="h3 mb-1">Company list</h1>
-          <p class="text-muted mb-0">Manage registered companies and their status.</p>
+          <p class="eyebrow mb-1">{{ __('cms.companies.title') }}</p>
+          <h1 class="h3 mb-1">{{ __('cms.companies.list_title') }}</h1>
+          <p class="text-muted mb-0">{{ __('cms.companies.list_subtitle') }}</p>
         </div>
       </div>
       <div class="heading-actions">
         <a class="btn btn-primary btn-sm" href="{{ route('companies.create') }}">
-          <i class="bi bi-plus-circle" aria-hidden="true"></i> Add Company
+          <i class="bi bi-plus-circle" aria-hidden="true"></i> {{ __('cms.companies.new_company') }}
         </a>
       </div>
     </div>
@@ -33,9 +33,9 @@
         <div>
           <h2 class="h5 mb-1 section-title">
             <i class="bi bi-table" aria-hidden="true"></i>
-            <span>Companies</span>
+            <span>{{ __('cms.companies.title') }}</span>
           </h2>
-          <p class="text-muted mb-0">Browse all companies on the platform.</p>
+          <p class="text-muted mb-0">{{ __('cms.companies.list_subtitle') }}</p>
         </div>
       </div>
 
@@ -43,17 +43,19 @@
         <table class="table align-middle mb-0">
           <thead>
             <tr>
-              <th scope="col">Name</th>
-              <th scope="col">Email</th>
-              <th scope="col">Industry</th>
-              {{-- <th scope="col">Locations</th> --}}
-              <th scope="col">Status</th>
-              <th scope="col" class="text-end">Actions</th>
+              <th scope="col">#</th>
+              <th scope="col">{{ __('cms.companies.company_name') }}</th>
+              <th scope="col">{{ __('cms.companies.email') }}</th>
+              <th scope="col">{{ __('cms.companies.industry') }}</th>
+              {{-- <th scope="col">{{ __('cms.companies.locations') }}</th> --}}
+              <th scope="col">{{ __('cms.companies.status') }}</th>
+              <th scope="col" class="text-end">{{ __('cms.companies.actions') ?? 'Actions' }}</th>
             </tr>
           </thead>
           <tbody>
             @forelse($companies as $company)
               <tr>
+                <td>{{ $loop->iteration + ($companies->currentPage() - 1) * $companies->perPage() }}</td>
                 <td>
                   <p class="fw-semibold mb-0">{{ $company->name }}</p>
                   <small class="text-muted">{{ $company->slug }}</small>
@@ -71,19 +73,19 @@
                   </span>
                 </td>
                 <td class="text-end">
-                  <a class="btn btn-light btn-sm" href="{{ route('companies.show', $company) }}">View</a>
-                  <a class="btn btn-light btn-sm" href="{{ route('companies.edit', $company) }}">Edit</a>
+                  <a class="btn btn-light btn-sm" href="{{ route('companies.show', $company) }}">{{ __('cms.companies.view') }}</a>
+                  <a class="btn btn-light btn-sm" href="{{ route('companies.edit', $company) }}">{{ __('cms.companies.edit') }}</a>
                   <form action="{{ route('companies.destroy', $company) }}" method="POST" style="display:inline;">
                     @csrf
                     @method('DELETE')
-                    <button type="submit" class="btn btn-danger btn-sm" onclick="return confirm('Delete this company?');">Delete</button>
+                    <button type="submit" class="btn btn-danger btn-sm" onclick="return confirm('{{ __('cms.companies.delete') }}?');">{{ __('cms.companies.delete') }}</button>
                   </form>
                 </td>
               </tr>
             @empty
               <tr>
                 <td colspan="6" class="text-center py-4">
-                  <p class="text-muted">No companies found.</p>
+                  <p class="text-muted">{{ __('cms.companies.no_companies') }}</p>
                 </td>
               </tr>
             @endforelse
@@ -94,7 +96,7 @@
       @if($companies->hasPages())
         <div class="d-flex flex-column flex-sm-row align-items-sm-center justify-content-between gap-3 mt-3 px-3 pb-3">
           <p class="text-muted small mb-0">
-            Showing {{ $companies->firstItem() }} to {{ $companies->lastItem() }} of {{ $companies->total() }} results
+            {{ __('cms.companies.showing_results', ['first' => $companies->firstItem(), 'last' => $companies->lastItem(), 'total' => $companies->total()]) }}
           </p>
           {{ $companies->links() }}
         </div>

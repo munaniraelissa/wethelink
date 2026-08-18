@@ -63,6 +63,7 @@
         <table class="table align-middle mb-0">
           <thead>
             <tr>
+              <th scope="col">#</th>
               <th scope="col">{{ __('products.featured') }}</th>
               <th scope="col">{{ __('products.name') }}</th>
               <th scope="col">{{ __('products.category') }}</th>
@@ -70,7 +71,7 @@
               <th scope="col">{{ __('products.company') ?? 'Company' }}</th>
               <th scope="col">{{ __('products.moq') ?? 'MOQ' }}</th>
               <th scope="col">{{ __('products.price') }}</th>
-              <th scope="col">{{ __('products.stock') }}</th>
+              {{-- <th scope="col">{{ __('products.stock') }}</th> --}}
               <th scope="col">{{ __('products.status') }}</th>
               <th scope="col" class="text-end">{{ __('products.actions') }}</th>
             </tr>
@@ -78,6 +79,7 @@
           <tbody>
             @forelse($products as $product)
               <tr>
+                <td>{{ $loop->iteration }}</td>
                 <td>
                   @php
                       $featuredImage = $product->images->where('is_featured', 1)->first();
@@ -101,13 +103,13 @@
                 <td>{{ $product->minimum_order_quantity }}</td>
                 <td>
                   @if($product->discount_price)
-                    <span class="text-decoration-line-through text-muted">${{ number_format($product->price, 2) }}</span>
-                    <span class="text-success fw-bold">${{ number_format($product->discount_price, 2) }}</span>
+                    <span class="text-decoration-line-through text-muted">{{ number_format($product->price, 2) }}RWF</span>
+                    <span class="text-success fw-bold">{{ number_format($product->discount_price, 2) }}RWF</span>
                   @else
-                    ${{ number_format($product->price, 2) }}
+                    {{ number_format($product->price) }}RWF
                   @endif
                 </td>
-                <td>{{ $product->quantity }}</td>
+                {{-- <td>{{ $product->quantity }}</td> --}}
                 <td>
                   @php
                     $statusBadges = [
@@ -152,9 +154,12 @@
           <p class="text-muted small mb-0">
             {{ __('products.showing') }} {{ $products->firstItem() }} {{ __('products.to') }} {{ $products->lastItem() }} {{ __('products.of') }} {{ $products->total() }}
           </p>
-          {{ $products->links() }}
         </div>
       @endif
+      
+          <div class="col-12 pb-1">
+              {{ $products->appends(request()->query())->links('vendor.pagination.shop') }}
+          </div>
     </section>
   </div>
 </main>

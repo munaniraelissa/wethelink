@@ -26,6 +26,8 @@ return [
     'yes' => 'Yes',
     'no' => 'No',
     'no_items' => 'No item',
+    'validation_errors' => 'Validation Errors',
+    'short_description' => 'Short Description',
 
     // Categories
     'categories' => 'Categories',

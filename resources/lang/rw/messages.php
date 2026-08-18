@@ -90,9 +90,9 @@ return [
     'status' => 'Imiterere',
     'featured' => 'Ifashwe mu bikoresha',
     'featured_image' => 'Ishusho ifashwe mu bikoresha',
-    'product_images' => 'Ibishusho byibicuruzwa',
-    'product_videos' => 'Videyo byibicuruzwa',
-    'select_image' => 'Hitamo Ishusho',
+    'product_images' => 'Amafoto y\'igicuruzwa',
+    'product_videos' => 'Videyo y\'igicuruzwa',
+    'select_image' => 'Hitamo Ifoto',
     'select_video' => 'Hitamo Videyo',
     'preview' => 'Rebere',
     'drag_to_reorder' => 'Kwandika tugende ibyo kuzungurura',
@@ -100,6 +100,7 @@ return [
     'locations' => 'Aho ziri',
     'assign_company' => 'Shyiraho igicuruzwa kuri kompanyi',
     'search_company' => 'Shakisha ikompanyi',
+    'short_description' => 'Ibisobanuro bigufi',
 
     // Product Status
     'draft' => 'Ntacyo',

@@ -31,7 +31,7 @@ class UserPendingApprovalMail extends Mailable implements ShouldQueue
             view: 'emails.user-pending-approval',
             with: [
                 'user' => $this->user,
-                'adminPhone' => config('app.super_admin_phone', '+250788565520'),
+                'adminPhone' => config('app.super_admin_phone', '+250 784 360 366'),
                 'signupMessage' => $this->signupMessage,
             ],
         );

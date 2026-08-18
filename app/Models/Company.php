@@ -16,6 +16,7 @@ class Company extends Model
         'tax_number',
         'registration_number',
         'industry',
+        'description',
         'credit_limit',
         'payment_terms_days',
         'status',

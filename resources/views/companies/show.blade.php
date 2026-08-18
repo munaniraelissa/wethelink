@@ -10,17 +10,17 @@
       <div class="page-heading-copy">
         <span class="page-icon"><i class="bi bi-building" aria-hidden="true"></i></span>
         <div>
-          <p class="eyebrow mb-1">Companies</p>
+          <p class="eyebrow mb-1">{{ __('cms.companies.title') }}</p>
           <h1 class="h3 mb-1">{{ $company->name }}</h1>
-          <p class="text-muted mb-0">Company details and location overview.</p>
+          <p class="text-muted mb-0">{{ __('cms.companies.company_details_overview') }}</p>
         </div>
       </div>
       <div class="heading-actions">
         <a href="{{ route('companies.index') }}" class="btn btn-secondary btn-sm">
-          <i class="bi bi-arrow-left" aria-hidden="true"></i> Back
+          <i class="bi bi-arrow-left" aria-hidden="true"></i> {{ __('cms.back') }}
         </a>
         <a href="{{ route('companies.edit', $company) }}" class="btn btn-primary btn-sm">
-          <i class="bi bi-pencil" aria-hidden="true"></i> Edit
+          <i class="bi bi-pencil" aria-hidden="true"></i> {{ __('cms.companies.edit') }}
         </a>
       </div>
     </div>
@@ -56,11 +56,11 @@
           <div class="card-body">
             <h5 class="card-title text-primary">Contact</h5>
             <dl class="row mb-0">
-              <dt class="col-5 text-muted">Email</dt>
+              <dt class="col-5 text-muted">{{ __('cms.companies.email') }}</dt>
               <dd class="col-7 mb-2">@if($company->email)<a href="mailto:{{ $company->email }}">{{ $company->email }}</a>@else —@endif</dd>
-              <dt class="col-5 text-muted">Phone</dt>
+              <dt class="col-5 text-muted">{{ __('cms.companies.phone') }}</dt>
               <dd class="col-7 mb-2">{{ $company->telephone ?? '—' }}</dd>
-              <dt class="col-5 text-muted">Website</dt>
+              <dt class="col-5 text-muted">{{ __('cms.companies.website') }}</dt>
               <dd class="col-7">@if($company->website)<a href="{{ $company->website }}" target="_blank">{{ $company->website }}</a>@else —@endif</dd>
             </dl>
           </div>
@@ -72,9 +72,9 @@
           <div class="card-body">
             <h5 class="card-title text-primary">Legal</h5>
             <dl class="row mb-0">
-              <dt class="col-6 text-muted">Tax Number</dt>
+              <dt class="col-6 text-muted">{{ __('cms.companies.tax_number') }}</dt>
               <dd class="col-6 mb-2">{{ $company->tax_number ?? '—' }}</dd>
-              <dt class="col-6 text-muted">Reg. Number</dt>
+              <dt class="col-6 text-muted">{{ __('cms.companies.registration_number') }}</dt>
               <dd class="col-6">{{ $company->registration_number ?? '—' }}</dd>
             </dl>
           </div>
@@ -86,11 +86,11 @@
           <div class="card-body">
             <h5 class="card-title text-primary">Business</h5>
             <dl class="row mb-0">
-              <dt class="col-6 text-muted">Credit Limit</dt>
-              <dd class="col-6 mb-2">${{ number_format($company->credit_limit, 2) }}</dd>
-              <dt class="col-6 text-muted">Payment terms</dt>
+              <dt class="col-6 text-muted">{{ __('cms.companies.credit_limit') }}</dt>
+              <dd class="col-6 mb-2">{{ number_format($company->credit_limit) }} RWF</dd>
+              <dt class="col-6 text-muted">{{ __('cms.companies.payment_terms_short') }}</dt>
               <dd class="col-6 mb-2">{{ $company->payment_terms_days }} days</dd>
-              <dt class="col-6 text-muted">Created</dt>
+              <dt class="col-6 text-muted">{{ __('cms.companies.created') }}</dt>
               <dd class="col-6">{{ $company->created_at->format('d M Y') }}</dd>
             </dl>
           </div>

@@ -10,6 +10,31 @@
   <link rel="stylesheet" href="{{ asset('dashboard/assets/vendors/bootstrap-icons/bootstrap-icons.css') }}">
   <link rel="stylesheet" href="{{ asset('dashboard/assets/css/style.css') }}">
   <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet">
+  <style>
+    /* Ensure DataTables controls appear above other layout elements and are visible */
+    .dataTables_wrapper {
+      overflow: visible !important;
+    }
+    .dataTables_wrapper .dt-buttons {
+      position: relative !important;
+      z-index: 1100 !important; /* higher than sidebar (1040) */
+      display: flex !important;
+      gap: 0.5rem;
+      flex-wrap: wrap;
+      margin-bottom: .75rem;
+    }
+    .dataTables_wrapper .dataTables_filter {
+      position: relative !important;
+      z-index: 1100 !important;
+      margin-left: auto;
+    }
+    /* Prevent DataTables popups or printed overlays from being clipped by parent containers */
+    .dt-button, .dt-button:active, .dt-button:focus {
+      z-index: 1100 !important;
+    }
+  </style>
+  <link rel="stylesheet" href="https://cdn.datatables.net/1.13.5/css/dataTables.bootstrap5.min.css">
+  <link rel="stylesheet" href="https://cdn.datatables.net/buttons/2.4.1/css/buttons.bootstrap5.min.css">
   <link rel="icon" type="image/png" href="{{ asset('favicon/favicon-96x96.png') }}" sizes="96x96" />
   <link rel="icon" type="image/svg+xml" href="{{ asset('favicon/favicon.svg') }}" />
   <link rel="shortcut icon" href="{{ asset('favicon/favicon.ico') }}" />
@@ -241,6 +266,16 @@
 
   <script src="{{ asset('dashboard/assets/js/bootstrap.bundle.min.js') }}"></script>
   <script src="{{ asset('dashboard/assets/js/main.js') }}"></script>
+  <script src="https://code.jquery.com/jquery-3.7.0.min.js" crossorigin="anonymous"></script>
+  <script src="https://cdn.datatables.net/1.13.5/js/jquery.dataTables.min.js"></script>
+  <script src="https://cdn.datatables.net/1.13.5/js/dataTables.bootstrap5.min.js"></script>
+  <script src="https://cdn.datatables.net/buttons/2.4.1/js/dataTables.buttons.min.js"></script>
+  <script src="https://cdn.datatables.net/buttons/2.4.1/js/buttons.bootstrap5.min.js"></script>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/jszip/3.10.1/jszip.min.js" crossorigin="anonymous"></script>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/pdfmake/0.2.7/pdfmake.min.js" crossorigin="anonymous"></script>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/pdfmake/0.2.7/vfs_fonts.js" crossorigin="anonymous"></script>
+  <script src="https://cdn.datatables.net/buttons/2.4.1/js/buttons.html5.min.js"></script>
+  <script src="https://cdn.datatables.net/buttons/2.4.1/js/buttons.print.min.js"></script>
   <script>
     document.addEventListener('DOMContentLoaded', function() {
       const toggleButtons = document.querySelectorAll('.toggle-password');
@@ -264,5 +299,7 @@
       });
     });
   </script>
+
+  @yield('scripts')
 </body>
 </html>
