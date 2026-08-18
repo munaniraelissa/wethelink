@@ -110,7 +110,12 @@ class CmsController extends Controller
             ->whereIn('status', ['published', 'out_of_stock']);
 
         if ($request->filled('category')) {
-            $query->where('category_id', $request->category);
+            $selectedCategory = Category::with('children')->find($request->category);
+
+            if ($selectedCategory) {
+                $categoryIds = $selectedCategory->descendantIds();
+                $query->whereIn('category_id', $categoryIds);
+            }
         }
 
         if ($request->filled('manufacturer')) {
@@ -123,9 +128,9 @@ class CmsController extends Controller
             $searchValue = strtolower($search);
 
             $query->where(function ($productQuery) use ($terms, $searchValue) {
-                $productQuery->whereRaw('LOWER(name) LIKE ?', ['%' . $searchValue . '%'])
-                    ->orWhereRaw('LOWER(sku) LIKE ?', ['%' . $searchValue . '%'])
-                    ->orWhereRaw('LOWER(barcode) LIKE ?', ['%' . $searchValue . '%']);
+                $productQuery->whereRaw('LOWER(name) LIKE ?', ['%'.$searchValue.'%'])
+                    ->orWhereRaw('LOWER(sku) LIKE ?', ['%'.$searchValue.'%'])
+                    ->orWhereRaw('LOWER(barcode) LIKE ?', ['%'.$searchValue.'%']);
 
                 foreach ($terms as $term) {
                     $termValue = strtolower(trim($term));
@@ -135,11 +140,11 @@ class CmsController extends Controller
 
                     $productQuery->orWhereHas('category', function ($categoryQuery) use ($termValue) {
                         $categoryQuery->where('is_active', true)
-                            ->whereRaw('LOWER(name) LIKE ?', ['%' . $termValue . '%']);
+                            ->whereRaw('LOWER(name) LIKE ?', ['%'.$termValue.'%']);
                     })
                     ->orWhereHas('company', function ($companyQuery) use ($termValue) {
                         $companyQuery->where('status', 'active')
-                            ->whereRaw('LOWER(name) LIKE ?', ['%' . $termValue . '%']);
+                            ->whereRaw('LOWER(name) LIKE ?', ['%'.$termValue.'%']);
                     });
                 }
             });
@@ -157,14 +162,14 @@ class CmsController extends Controller
 
             $searchCategories = Category::query()
                 ->where('is_active', true)
-                ->whereRaw('LOWER(name) LIKE ?', ['%' . $normalized . '%'])
+                ->whereRaw('LOWER(name) LIKE ?', ['%'.$normalized.'%'])
                 ->orderBy('name')
                 ->take(6)
                 ->get();
 
             $searchCompanies = Company::query()
                 ->where('status', 'active')
-                ->whereRaw('LOWER(name) LIKE ?', ['%' . $normalized . '%'])
+                ->whereRaw('LOWER(name) LIKE ?', ['%'.$normalized.'%'])
                 ->orderBy('name')
                 ->take(6)
                 ->get();
@@ -175,7 +180,7 @@ class CmsController extends Controller
                 'products' => function ($q) {
                     $q->whereIn('status', ['published', 'out_of_stock']);
                 },
-                'users'
+                'users',
             ])
             ->with(['products' => function ($query) {
                 $query->whereIn('status', ['published', 'out_of_stock'])->with('images')->latest()->take(3);
@@ -198,7 +203,7 @@ class CmsController extends Controller
                 'products' => function ($q) {
                     $q->whereIn('status', ['published', 'out_of_stock']);
                 },
-                'users'
+                'users',
             ])
             ->with(['products' => function ($query) {
                 $query->whereIn('status', ['published', 'out_of_stock'])->with('images')->latest()->take(3);
@@ -220,7 +225,7 @@ class CmsController extends Controller
             'images',
             'videos',
             'company',
-            'reviews.user'
+            'reviews.user',
         ])->where('slug', $slug)
         ->whereIn('status', ['published', 'out_of_stock'])
         ->firstOrFail();
@@ -243,6 +248,7 @@ class CmsController extends Controller
             'companyProducts'
         ));
     }
+
     /**
      * Display the contact page.
      *
@@ -258,7 +264,6 @@ class CmsController extends Controller
     /**
      * Store the contact message.
      *
-     * @param  \Illuminate\Http\Request  $request
      * @return \Illuminate\Http\JsonResponse
      */
     public function storeContactMessage(Request $request)
@@ -283,7 +288,7 @@ class CmsController extends Controller
                 }
             } catch (\Exception $mailException) {
                 // Log the email error but don't fail the request
-                \Illuminate\Support\Facades\Log::error('Contact form email failed: ' . $mailException->getMessage());
+                \Illuminate\Support\Facades\Log::error('Contact form email failed: '.$mailException->getMessage());
             }
 
             return response()->json([
@@ -291,10 +296,11 @@ class CmsController extends Controller
                 'message' => __('cms.contact.message_sent_successfully'),
             ]);
         } catch (\Exception $e) {
-            \Illuminate\Support\Facades\Log::error('Contact form error: ' . $e->getMessage());
+            \Illuminate\Support\Facades\Log::error('Contact form error: '.$e->getMessage());
+
             return response()->json([
                 'success' => false,
-                'message' => __('cms.contact.message_sent_error') . ' - ' . $e->getMessage(),
+                'message' => __('cms.contact.message_sent_error').' - '.$e->getMessage(),
             ], 500);
         }
     }

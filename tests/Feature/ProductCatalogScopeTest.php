@@ -152,6 +152,71 @@ class ProductCatalogScopeTest extends TestCase
         Storage::disk('public')->assertMissing('product_videos/thumb-1.jpg');
     }
 
+    public function test_parent_category_filter_includes_child_products_but_child_filter_stays_specific(): void
+    {
+        $company = Company::create([
+            'name' => 'Catalog Company',
+            'slug' => 'catalog-company',
+            'email' => 'catalog-company@example.com',
+            'telephone' => '2501111111',
+            'status' => 'active',
+        ]);
+
+        $parentCategory = Category::create([
+            'company_id' => $company->id,
+            'name' => 'Parent Category',
+            'slug' => 'parent-category',
+            'is_active' => true,
+        ]);
+
+        $childCategory = Category::create([
+            'company_id' => $company->id,
+            'parent_id' => $parentCategory->id,
+            'name' => 'Child Category',
+            'slug' => 'child-category',
+            'is_active' => true,
+        ]);
+
+        $otherCategory = Category::create([
+            'company_id' => $company->id,
+            'name' => 'Other Category',
+            'slug' => 'other-category',
+            'is_active' => true,
+        ]);
+
+        Product::create([
+            'company_id' => $company->id,
+            'category_id' => $childCategory->id,
+            'name' => 'Parent Child Product',
+            'slug' => 'parent-child-product',
+            'sku' => 'CAT-001',
+            'price' => 100,
+            'status' => 'published',
+            'quantity' => 5,
+        ]);
+
+        Product::create([
+            'company_id' => $company->id,
+            'category_id' => $otherCategory->id,
+            'name' => 'Other Category Product',
+            'slug' => 'other-category-product',
+            'sku' => 'CAT-002',
+            'price' => 200,
+            'status' => 'published',
+            'quantity' => 8,
+        ]);
+
+        $parentResponse = $this->get(route('shop', ['category' => $parentCategory->id]));
+        $parentResponse->assertOk();
+        $parentResponse->assertSee('Parent Child Product');
+        $parentResponse->assertDontSee('Other Category Product');
+
+        $childResponse = $this->get(route('shop', ['category' => $childCategory->id]));
+        $childResponse->assertOk();
+        $childResponse->assertSee('Parent Child Product');
+        $childResponse->assertDontSee('Other Category Product');
+    }
+
     public function test_authenticated_user_can_change_password_from_profile(): void
     {
         $company = Company::create([
