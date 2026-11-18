@@ -5,6 +5,7 @@ namespace Tests\Feature;
 use App\Models\Category;
 use App\Models\Company;
 use App\Models\Product;
+use App\Models\Review;
 use Illuminate\Foundation\Testing\RefreshDatabase;
 use Tests\TestCase;
 
@@ -29,7 +30,7 @@ class PublicSearchTest extends TestCase
             'is_active' => true,
         ]);
 
-        Product::create([
+        $product = Product::create([
             'company_id' => $company->id,
             'category_id' => $category->id,
             'name' => 'Portable Lantern',
@@ -41,11 +42,18 @@ class PublicSearchTest extends TestCase
             'quantity' => 10,
         ]);
 
+        Review::create([
+            'product_id' => $product->id,
+            'rating' => 5,
+            'comment' => 'Excellent product',
+        ]);
+
         $response = $this->get(route('shop', ['search' => 'lighting']));
 
         $response->assertOk();
         $response->assertSee('Portable Lantern');
         $response->assertSee('Solar Lighting');
         $response->assertSee('Bright Supply');
+        $response->assertSee('(1 Reviews)');
     }
 }

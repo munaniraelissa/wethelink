@@ -36,7 +36,7 @@
                             <a href="{{ route('shop', ['category' => $category->id]) }}"
                                class="cat-img position-relative overflow-hidden mb-3 d-flex align-items-center justify-content-center"
                                style="width: 100px; height: 100px; border-radius: 50%; margin: 0 auto;">
-                                <img class="img-fluid h-100 category-img"
+                                <img class="img-fluid h-100 category-img" loading="lazy" decoding="async"
                                     src="{{ $category->image ? asset('storage/' . $category->image) : '/cms/img/cat-1.jpg' }}"
                                     alt="{{ $category->name }}" style="object-fit: cover; width: 100%; height: 100%;">
                             </a>
@@ -92,7 +92,7 @@
                             <div class="card-header product-img position-relative overflow-hidden bg-white border p-0" style="height: 300px;">
                                 @php $featured = $product->images->where('is_featured', true)->first() ?? $product->images->first(); @endphp
                                 @if($featured)
-                                    <img class="img-fluid w-100 h-100" src="{{ asset('storage/' . $featured->image) }}" alt="{{ $product->name }}">
+                                    <img class="img-fluid w-100 h-100" src="{{ asset('storage/' . $featured->image) }}" alt="{{ $product->name }}" loading="lazy" decoding="async">
                                 @else
                                     <div class="bg-light d-flex align-items-center justify-content-center h-100">
                                         <i class="fas fa-image fa-3x text-muted"></i>
@@ -181,7 +181,7 @@
                             <div class="card-header product-img position-relative overflow-hidden bg-white border p-0" style="height: 300px;">
                                 @php $featured = $product->images->where('is_featured', true)->first() ?? $product->images->first(); @endphp
                                 @if($featured)
-                                    <img class="img-fluid w-100 h-100" src="{{ asset('storage/' . $featured->image) }}" alt="{{ $product->name }}">
+                                    <img class="img-fluid w-100 h-100" src="{{ asset('storage/' . $featured->image) }}" alt="{{ $product->name }}" loading="lazy" decoding="async">
                                 @else
                                     <div class="bg-light d-flex align-items-center justify-content-center h-100">
                                         <i class="fas fa-image fa-3x text-muted"></i>
@@ -250,7 +250,7 @@
                         <div class="vendor-item border p-4 text-center">
                             <div class="d-flex align-items-center justify-content-center" style="height: 120px;">
                                 @if($company->logo)
-                                    <img src="{{ asset('storage/' . $company->logo) }}" alt="{{ $company->name }}" style="max-height: 100px; max-width: 100%; object-fit: contain;">
+                                    <img src="{{ asset('storage/' . $company->logo) }}" alt="{{ $company->name }}" style="max-height: 100px; max-width: 100%; object-fit: contain;" loading="lazy" decoding="async">
                                 @else
                                     <div class="text-center text-muted">
                                         <i class="fas fa-building fa-3x mb-2"></i>

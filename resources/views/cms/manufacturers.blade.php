@@ -28,7 +28,7 @@
                                         <div class="d-flex align-items-center mb-3">
                                             <div class="bg-light rounded-circle d-flex align-items-center justify-content-center mr-3" style="width:64px;height:64px;overflow:hidden;">
                                                 @if($manufacturer->logo)
-                                                    <img src="{{ asset('storage/' . $manufacturer->logo) }}" alt="{{ $manufacturer->name }}" class="img-fluid w-100 h-100">
+                                                    <img src="{{ asset('storage/' . $manufacturer->logo) }}" alt="{{ $manufacturer->name }}" class="img-fluid w-100 h-100" loading="lazy" decoding="async">
                                                 @else
                                                     <i class="fas fa-industry fa-lg text-primary"></i>
                                                 @endif
@@ -66,7 +66,7 @@
                                                             <div class="card-header product-img position-relative overflow-hidden bg-white border p-0" style="height: 300px;">
                                                                 @php $featured = $product->images->where('is_featured', true)->first() ?? $product->images->first(); @endphp
                                                                 @if($featured)
-                                                                    <img class="img-fluid w-100 h-100" src="{{ asset('storage/' . $featured->image) }}" alt="{{ $product->name }}">
+                                                                    <img class="img-fluid w-100 h-100" src="{{ asset('storage/' . $featured->image) }}" alt="{{ $product->name }}" loading="lazy" decoding="async">
                                                                 @else
                                                                     <div class="bg-light d-flex align-items-center justify-content-center h-100">
                                                                         <i class="fas fa-image fa-3x text-muted"></i>
@@ -90,7 +90,7 @@
                                                                     <small class="fas fa-star"></small>
                                                                     <small class="fas fa-star-half-alt"></small>
                                                                     <small class="far fa-star"></small>
-                                                                    <small class="pt-1">({{ count($product->reviews ?? []) }} Reviews)</small>
+                                                                    <small class="pt-1">({{ $product->reviews_count }} Reviews)</small>
                                                                 </div>
                                                             </p>
                                                         </div>

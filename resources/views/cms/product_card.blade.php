@@ -3,7 +3,7 @@
         <div class="card-header product-img position-relative overflow-hidden bg-white border p-0" style="height: 300px;">
             @php $featured = $product->images->where('is_featured', true)->first() ?? $product->images->first(); @endphp
             @if($featured)
-                <img class="img-fluid w-100 h-100" src="{{ asset('storage/' . $featured->image) }}" alt="{{ $product->name }}">
+                <img class="img-fluid w-100 h-100" src="{{ asset('storage/' . $featured->image) }}" alt="{{ $product->name }}" loading="lazy" decoding="async">
             @else
                 <div class="bg-light d-flex align-items-center justify-content-center h-100">
                     <i class="fas fa-image fa-3x text-muted"></i>

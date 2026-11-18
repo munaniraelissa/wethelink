@@ -48,12 +48,12 @@ Route::post('product/{id}/review', [ReviewController::class, 'store'])->name('re
 Route::get('/contact', [CmsController::class, 'contact'])->name('contact');
 Route::post('/contact', [CmsController::class, 'storeContactMessage'])->name('contact.store');
 Route::get('/about', function () {
-    $categories = Category::withCount('products')->get();
+    $categories = Category::with('children')->get();
 
     return view('cms.about', compact('categories'));
 })->name('about');
 Route::get('/help', function () {
-    $categories = Category::withCount('products')->get();
+    $categories = Category::with('children')->get();
 
     return view('cms.help', compact('categories'));
 })->name('help');

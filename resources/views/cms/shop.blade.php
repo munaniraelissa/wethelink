@@ -235,7 +235,7 @@
                                         style="height: 300px;">
                                         @php $featured = $product->images->where('is_featured', true)->first() ?? $product->images->first(); @endphp
                                         @if ($featured)
-                                            <img class="img-fluid w-100 h-100"
+                                            <img class="img-fluid w-100 h-100" loading="lazy" decoding="async"
                                                 src="{{ asset('storage/' . $featured->image) }}"
                                                 alt="{{ $product->name }}">
                                         @else
@@ -269,7 +269,7 @@
                                         <small class="fas fa-star"></small>
                                         <small class="fas fa-star-half-alt"></small>
                                         <small class="far fa-star"></small>
-                                        <small class="pt-1">({{ count($product->reviews ?? []) }} Reviews)</small>
+                                        <small class="pt-1">({{ $product->reviews_count }} Reviews)</small>
                                     </div>
                                     </p>
                                 </div>

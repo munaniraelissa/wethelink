@@ -185,7 +185,7 @@
 
                         @foreach ($topLevelCategories as $category)
                             @php
-                                $children = $category->children()->where('is_active', true)->orderBy('name')->get();
+                                $children = $category->children->where('is_active', true)->sortBy('name')->values();
                             @endphp
 
                             <div class="dropdown-wrapper">
