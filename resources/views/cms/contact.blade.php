@@ -1,4 +1,7 @@
 @extends('cms.app')
+@section('title', 'Contact Wethelink – B2B Marketplace in Kigali, Rwanda')
+@section('meta_description', 'Contact Wethelink in Kigali, Rwanda. Get help finding suppliers, listing your company or placing wholesale orders. Email info@wethelink.com or call +250 784 360 366.')
+
 @section('content')
     <!-- Page Header Start -->
     <div class="container-fluid bg-secondary mb-5">

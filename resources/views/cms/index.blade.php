@@ -31,16 +31,18 @@
         <div class="col-12">
             <div class="owl-carousel category-carousel">
                 @foreach($categories as $category)
-                    <div class="px-4">
-                        <div class="cat-item d-flex flex-column align-items-center text-center">
+                    <div class="px-2">
+                        <div class="cat-item d-flex flex-column align-items-center text-center w-100">
                             <a href="{{ route('shop', ['category' => $category->id]) }}"
                                class="cat-img position-relative overflow-hidden mb-3 d-flex align-items-center justify-content-center"
-                               style="width: 100px; height: 100px; border-radius: 50%; margin: 0 auto;">
+                               style="width: 100px; height: 100px; max-width: 100%; border-radius: 50%; margin: 0 auto;">
                                 <img class="img-fluid h-100 category-img" loading="lazy" decoding="async"
                                     src="{{ $category->image ? asset('storage/' . $category->image) : '/cms/img/cat-1.jpg' }}"
                                     alt="{{ $category->name }}" style="object-fit: cover; width: 100%; height: 100%;">
                             </a>
-                            <h6 class="font-weight-semi-bold m-0 text-truncate">{{ $category->name }}</h6>
+                            <a href="{{ route('shop', ['category' => $category->id]) }}" class="text-dark w-100" title="{{ $category->name }}">
+                                <h6 class="font-weight-semi-bold m-0 category-name">{{ $category->name }}</h6>
+                            </a>
                         </div>
                     </div>
                 @endforeach
@@ -48,6 +50,21 @@
         </div>
     </div>
 </div>
+    <style>
+        /* Keep each category name inside its own slot: wrap to max 2 lines, then "…" */
+        .category-carousel .category-name {
+            display: -webkit-box;
+            -webkit-box-orient: vertical;
+            -webkit-line-clamp: 2;
+            line-clamp: 2;
+            overflow: hidden;
+            overflow-wrap: anywhere;
+            word-break: break-word;
+            line-height: 1.3;
+            min-height: 2.6em; /* same height for 1- and 2-line names so rows stay aligned */
+            width: 100%;
+        }
+    </style>
     <!-- Categories End -->
 
 

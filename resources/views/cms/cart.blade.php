@@ -1,4 +1,7 @@
 @extends('cms.app')
+@section('title', 'Your Cart | Wethelink')
+@section('robots', 'noindex, nofollow')
+
 @section('content')
 
     <!-- Page Header Start -->

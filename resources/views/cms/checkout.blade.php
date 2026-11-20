@@ -1,4 +1,7 @@
 @extends('cms.app')
+@section('title', 'Checkout | Wethelink')
+@section('robots', 'noindex, nofollow')
+
 @section('content')
 
 

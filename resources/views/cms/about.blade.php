@@ -1,4 +1,7 @@
 @extends('cms.app')
+@section('title', 'About Wethelink – Rwanda\'s Trusted B2B Marketplace')
+@section('meta_description', 'Wethelink connects buyers with trusted manufacturers, suppliers, wholesalers, importers and exporters across Rwanda, East Africa and Africa. Learn how our B2B marketplace works.')
+
 
 @section('content')
     <div class="container-fluid bg-secondary mb-5">

@@ -211,6 +211,7 @@ class CmsController extends Controller
             'images',
             'videos',
             'company',
+            'category',
             'reviews.user',
         ])->where('slug', $slug)
         ->whereIn('status', ['published', 'out_of_stock'])

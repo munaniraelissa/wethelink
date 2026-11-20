@@ -1,4 +1,7 @@
 @extends('cms.app')
+@section('title', 'Help & FAQ – Buying and Selling Wholesale on Wethelink')
+@section('meta_description', 'Answers to common questions about finding suppliers, ordering wholesale and registering your company on Wethelink, Rwanda\'s B2B marketplace.')
+
 
 @section('content')
     <div class="container-fluid bg-secondary mb-5">

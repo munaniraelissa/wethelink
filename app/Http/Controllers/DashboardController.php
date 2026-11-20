@@ -31,13 +31,17 @@ class DashboardController extends Controller
             $availableYears = [date('Y')];
         }
 
+        // One grouped query instead of 12 separate COUNT queries.
+        $countsByMonth = Product::query()
+            ->when($company_id, fn ($q) => $q->where('company_id', $company_id))
+            ->whereYear('created_at', $selectedYear)
+            ->selectRaw('MONTH(created_at) as month, COUNT(*) as total')
+            ->groupBy('month')
+            ->pluck('total', 'month');
+
         $monthlyProducts = [];
         for ($month = 1; $month <= 12; $month++) {
-            $count = (clone $productQuery)
-                ->whereYear('created_at', $selectedYear)
-                ->whereMonth('created_at', $month)
-                ->count();
-            $monthlyProducts[] = $count;
+            $monthlyProducts[] = (int) ($countsByMonth[$month] ?? 0);
         }
 
         $maxProducts = max($monthlyProducts);

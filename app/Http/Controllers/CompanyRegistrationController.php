@@ -54,7 +54,7 @@ class CompanyRegistrationController extends Controller
         $validated['slug'] = Str::slug($validated['name']);
 
         if ($request->hasFile('logo')) {
-            $validated['logo'] = $request->file('logo')->store('companies/logos', 'public');
+            $validated['logo'] = \App\Support\ImageOptimizer::optimizePublic($request->file('logo')->store('companies/logos', 'public'));
         }
 
         $company = Company::create($validated);
@@ -96,7 +96,7 @@ class CompanyRegistrationController extends Controller
             if ($company->logo) {
                 Storage::disk('public')->delete($company->logo);
             }
-            $validated['logo'] = $request->file('logo')->store('companies/logos', 'public');
+            $validated['logo'] = \App\Support\ImageOptimizer::optimizePublic($request->file('logo')->store('companies/logos', 'public'));
         }
 
         // Regenerate slug only if name changed

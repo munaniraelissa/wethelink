@@ -59,7 +59,7 @@ class BrandController extends Controller
         $validated['is_active'] = $request->has('is_active');
 
         if ($request->hasFile('logo')) {
-            $logoPath = $request->file('logo')->store('brands', 'public');
+            $logoPath = \App\Support\ImageOptimizer::optimizePublic($request->file('logo')->store('brands', 'public'));
             $validated['logo'] = $logoPath;
         }
 
@@ -116,7 +116,7 @@ class BrandController extends Controller
             if ($brand->logo) {
                 \Storage::disk('public')->delete($brand->logo);
             }
-            $logoPath = $request->file('logo')->store('brands', 'public');
+            $logoPath = \App\Support\ImageOptimizer::optimizePublic($request->file('logo')->store('brands', 'public'));
             $validated['logo'] = $logoPath;
         }
 

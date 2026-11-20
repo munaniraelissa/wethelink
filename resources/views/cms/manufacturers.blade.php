@@ -1,4 +1,7 @@
 @extends('cms.app')
+@section('title', 'Manufacturers & Suppliers Directory in Rwanda | Verified Companies – Wethelink')
+@section('meta_description', 'Directory of verified manufacturers, wholesalers, distributors and importers in Rwanda and East Africa. See each company\'s products and contact suppliers directly on Wethelink.')
+
 @section('content')
 
 <div class="container-fluid bg-secondary mb-5">

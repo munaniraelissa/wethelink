@@ -1,4 +1,35 @@
 @extends('cms.app')
+
+@php
+    $seoCategory = request()->filled('category') ? $categories->firstWhere('id', (int) request('category')) : null;
+    $seoMaker = request()->filled('manufacturer') ? $manufacturers->firstWhere('id', (int) request('manufacturer')) : null;
+    if ($seoCategory) {
+        $seoTitle = \Illuminate\Support\Str::title($seoCategory->name).' Wholesale Suppliers in Rwanda | Buy in Bulk – Wethelink';
+        $seoDesc = 'Buy '.\Illuminate\Support\Str::title($seoCategory->name).' wholesale in Rwanda. Compare '.\Illuminate\Support\Str::title($seoCategory->name).' suppliers, manufacturers and distributors in Kigali, with prices in RWF and minimum order quantities, on Wethelink.';
+        $seoCanonical = route('shop', ['category' => $seoCategory->id]);
+    } elseif ($seoMaker) {
+        $seoTitle = $seoMaker->name.' Products – Wholesale Supplier in Rwanda | Wethelink';
+        $seoDesc = 'Browse all products from '.$seoMaker->name.' on Wethelink. Wholesale prices in RWF, minimum order quantities and direct contact with the supplier in Rwanda.';
+        $seoCanonical = route('shop', ['manufacturer' => $seoMaker->id]);
+    } else {
+        $seoTitle = 'Wholesale Products from Rwandan Suppliers & Manufacturers | Wethelink';
+        $seoDesc = 'Browse wholesale products from verified suppliers, manufacturers and importers in Rwanda and East Africa. Factory-direct prices in RWF and bulk orders on Wethelink.';
+        $seoCanonical = route('shop');
+    }
+    if ($products->currentPage() > 1) {
+        $seoTitle = $seoTitle.' – Page '.$products->currentPage();
+        $seoCanonical .= (str_contains($seoCanonical, '?') ? '&' : '?').'page='.$products->currentPage();
+    }
+@endphp
+
+@section('title', $seoTitle)
+@section('meta_description', $seoDesc)
+@section('canonical', $seoCanonical)
+@if (request()->filled('search'))
+    {{-- Internal search results are thin/duplicate pages for Google; let it follow the links only. --}}
+    @section('robots', 'noindex, follow')
+@endif
+
 @section('content')
 
 

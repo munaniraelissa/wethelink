@@ -149,7 +149,7 @@ class HomepageFeatureController extends Controller
 
             if ($uploadedImage) {
                 $fileName = Str::slug(pathinfo($uploadedImage->getClientOriginalName(), PATHINFO_FILENAME)).'-'.time().'.'.$uploadedImage->getClientOriginalExtension();
-                $uploadedImage->storeAs('homepage-hero', $fileName, 'public');
+                \App\Support\ImageOptimizer::optimizePublic($uploadedImage->storeAs('homepage-hero', $fileName, 'public'));
                 $imagePath = 'storage/homepage-hero/'.$fileName;
             }
 

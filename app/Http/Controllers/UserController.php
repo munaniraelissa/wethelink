@@ -290,7 +290,7 @@ class UserController extends Controller
             if ($user->avatar) {
                 \Illuminate\Support\Facades\Storage::disk('public')->delete($user->avatar);
             }
-            $updateData['avatar'] = $request->file('avatar')->store('avatars', 'public');
+            $updateData['avatar'] = \App\Support\ImageOptimizer::optimizePublic($request->file('avatar')->store('avatars', 'public'));
         }
 
         $user->update($updateData);

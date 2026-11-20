@@ -1,4 +1,85 @@
 @extends('cms.app')
+
+@php
+    $seoImage = $product->images->firstWhere('is_featured', true) ?? $product->images->first();
+    $seoImageUrl = $seoImage ? asset('storage/'.$seoImage->image) : asset('cms/logo/Logo.png');
+    $seoCompany = $product->company?->name;
+    $seoText = $product->meta_description
+        ?: ($product->short_description ?: \Illuminate\Support\Str::limit(strip_tags((string) $product->description), 150, ''));
+    $seoDescription = \Illuminate\Support\Str::limit(trim(
+        ($seoText ? rtrim($seoText, '. ').'. ' : '')
+        .'Buy wholesale'.($seoCompany ? ' from '.$seoCompany : '').' in Rwanda'
+        .($product->minimum_order_quantity ? ', MOQ '.$product->minimum_order_quantity.' '.$product->unit : '')
+        .' on Wethelink.'
+    ), 160);
+    $seoPrice = $product->discount_price ?: $product->price;
+@endphp
+
+@section('title', $product->name.($seoCompany ? ' – '.$seoCompany : '').' | Wholesale in Rwanda – Wethelink')
+@section('meta_description', $seoDescription)
+@section('meta_keywords', $product->meta_keywords ?: implode(', ', array_filter([$product->name, $product->category?->name, $seoCompany, $product->name.' wholesale Rwanda', $product->name.' suppliers Kigali'])))
+@section('canonical', route('product.detail', $product->slug))
+@section('og_type', 'product')
+@section('og_image', $seoImageUrl)
+
+@push('seo')
+    @php
+        $productSchema = [
+            '@context' => 'https://schema.org',
+            '@type' => 'Product',
+            'name' => $product->name,
+            'description' => strip_tags((string) ($product->description ?: $seoText)),
+            'image' => $product->images->map(fn ($img) => asset('storage/'.$img->image))->values()->all() ?: [$seoImageUrl],
+            'url' => route('product.detail', $product->slug),
+        ];
+        if ($product->sku) {
+            $productSchema['sku'] = $product->sku;
+        }
+        if ($product->barcode) {
+            $productSchema['mpn'] = $product->barcode;
+        }
+        if ($product->category) {
+            $productSchema['category'] = $product->category->name;
+        }
+        if ($seoCompany) {
+            $productSchema['brand'] = ['@type' => 'Brand', 'name' => $seoCompany];
+        }
+        if ($seoPrice) {
+            $productSchema['offers'] = array_filter([
+                '@type' => 'Offer',
+                'url' => route('product.detail', $product->slug),
+                'priceCurrency' => 'RWF',
+                'price' => number_format((float) $seoPrice, 2, '.', ''),
+                'availability' => $product->status === 'out_of_stock' ? 'https://schema.org/OutOfStock' : 'https://schema.org/InStock',
+                'itemCondition' => 'https://schema.org/NewCondition',
+                'seller' => $seoCompany ? ['@type' => 'Organization', 'name' => $seoCompany] : null,
+                'eligibleQuantity' => $product->minimum_order_quantity
+                    ? ['@type' => 'QuantitativeValue', 'minValue' => (int) $product->minimum_order_quantity]
+                    : null,
+            ]);
+        }
+        if ($product->reviews->count() > 0) {
+            $productSchema['aggregateRating'] = [
+                '@type' => 'AggregateRating',
+                'ratingValue' => round($product->reviews->avg('rating'), 1),
+                'reviewCount' => $product->reviews->count(),
+            ];
+        }
+        $productBreadcrumb = [
+            '@context' => 'https://schema.org',
+            '@type' => 'BreadcrumbList',
+            'itemListElement' => array_values(array_filter([
+                ['@type' => 'ListItem', 'position' => 1, 'name' => 'Home', 'item' => route('home')],
+                ['@type' => 'ListItem', 'position' => 2, 'name' => 'Products', 'item' => route('shop')],
+                $product->category ? ['@type' => 'ListItem', 'position' => 3, 'name' => $product->category->name, 'item' => route('shop', ['category' => $product->category_id])] : null,
+                ['@type' => 'ListItem', 'position' => $product->category ? 4 : 3, 'name' => $product->name],
+            ])),
+        ];
+    @endphp
+    <script type="application/ld+json">@json($productSchema, JSON_UNESCAPED_SLASHES | JSON_UNESCAPED_UNICODE | JSON_HEX_TAG)</script>
+    <script type="application/ld+json">@json($productBreadcrumb, JSON_UNESCAPED_SLASHES | JSON_UNESCAPED_UNICODE | JSON_HEX_TAG)</script>
+@endpush
+
 @section('content')
 
 

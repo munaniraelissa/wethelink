@@ -41,6 +41,9 @@ Route::view('/verify-email', 'auth.verify-email')->name('verification.notice');
 Route::view('/confirm-password', 'auth.confirm-password')->name('password.confirm');
 
 Route::get('/', [CmsController::class, 'index'])->name('home');
+Route::get('/sectors/{slug}', [\App\Http\Controllers\SeoController::class, 'sector'])->name('sector');
+Route::get('/sitemap.xml', [\App\Http\Controllers\SeoController::class, 'sitemap'])->name('sitemap');
+Route::get('/robots.txt', [\App\Http\Controllers\SeoController::class, 'robots'])->name('robots');
 Route::get('/shop', [CmsController::class, 'shop'])->name('shop');
 Route::get('/manufacturers', [CmsController::class, 'manufacturers'])->name('manufacturers');
 Route::get('/product/{slug}', [CmsController::class, 'detail'])->name('product.detail');

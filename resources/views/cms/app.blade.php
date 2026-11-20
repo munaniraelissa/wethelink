@@ -3,12 +3,82 @@
 
 <head>
     <meta charset="utf-8">
-    <title>Wethelink.com- Online Marketplace Company.</title>
     <meta content="width=device-width, initial-scale=1.0" name="viewport">
-    <meta name="description" content="Find Trusted Manufacturers, Suppliers, Retailers, Wholesalers, Buyers, Importers, and Exporters Across Rwanda, East Africa & Africa. Discover verified businesses, factory-direct products, and new trade opportunities on Wethelink.com, Rwanda's trusted B2B marketplace.">
-    <meta name="keywords" content="Trusted B2B Marketplace in Rwanda, Verified Suppliers Rwanda, Rwanda Wholesale Suppliers, Factory Price Products Rwanda, Direct Suppliers Rwanda, Rwanda Manufacturers Directory, Find Suppliers in Rwanda, Trusted B2B Marketplace, Wholesale Products Rwanda, Buy Wholesale in Rwanda, Munanira Elissa, Elissa Munanira, elissamunanira, elissa, munanira, Rwanda Retailers and Suppliers, Rwanda Factory Direct Products, Wholesale Prices Rwanda, Textile Suppliers Rwanda, Fabric Manufacturers Rwanda, Clothing Manufacturers Rwanda, Jeans Manufacturers Rwanda, Quality Denim Suppliers, Best B2B Platform Rwanda, Connect with Rwanda Manufacturers, Trusted B2B Marketplace East Africa, East Africa Wholesale Suppliers, Verified East Africa Businesses, Find Manufacturers in East Africa, B2B Trade Platform East Africa, Factory Price Products East Africa, Direct Suppliers East Africa, Trusted African B2B Marketplace, African Wholesale Network, Verified African Suppliers, African Manufacturers Directory, Gorilla Textile Jeans, Rwanda Jeans Manufacturer">
+
+    {{-- SEO: every page can override these with @section('title'), @section('meta_description'), etc. --}}
+    <title>@yield('title', config('seo.default_title'))</title>
+    <meta name="description" content="@yield('meta_description', config('seo.default_description'))">
+    @php
+        // Default keywords = site keywords + every sector's primary keywords from config/seo.php
+        $seoDefaultKeywords = collect(explode(',', config('seo.default_keywords')))
+            ->merge(collect(config('seo.sectors', []))->pluck('primary_keywords')->flatten())
+            ->map(fn ($k) => trim($k))->filter()->unique(fn ($k) => strtolower($k))->implode(', ');
+    @endphp
+    <meta name="keywords" content="@yield('meta_keywords', $seoDefaultKeywords)">
     <meta name="author" content="Wethelink">
+    <meta name="robots" content="@yield('robots', 'index, follow, max-image-preview:large')">
+    <link rel="canonical" href="@yield('canonical', url()->current())">
     <meta name="color-scheme" content="light">
+    <meta name="geo.region" content="RW">
+    <meta name="geo.placename" content="Kigali">
+
+    {{-- Social sharing (WhatsApp, Facebook, LinkedIn, X) --}}
+    <meta property="og:site_name" content="Wethelink">
+    <meta property="og:type" content="@yield('og_type', 'website')">
+    <meta property="og:title" content="@yield('title', config('seo.default_title'))">
+    <meta property="og:description" content="@yield('meta_description', config('seo.default_description'))">
+    <meta property="og:url" content="@yield('canonical', url()->current())">
+    <meta property="og:image" content="@yield('og_image', asset('cms/logo/Logo.png'))">
+    <meta property="og:locale" content="en_RW">
+    <meta name="twitter:card" content="summary_large_image">
+    <meta name="twitter:title" content="@yield('title', config('seo.default_title'))">
+    <meta name="twitter:description" content="@yield('meta_description', config('seo.default_description'))">
+    <meta name="twitter:image" content="@yield('og_image', asset('cms/logo/Logo.png'))">
+
+    @php
+        $seoOrganization = [
+            '@context' => 'https://schema.org',
+            '@type' => 'Organization',
+            'name' => 'Wethelink',
+            'url' => url('/'),
+            'logo' => asset('cms/logo/Logo.png'),
+            'description' => config('seo.default_description'),
+            'areaServed' => ['Rwanda', 'East Africa', 'Africa'],
+            'address' => ['@type' => 'PostalAddress', 'addressLocality' => 'Kigali', 'addressCountry' => 'RW'],
+        ];
+        if (config('seo.social')) {
+            $seoOrganization['sameAs'] = array_values(config('seo.social'));
+        }
+        // Tells search engines which sectors Wethelink covers and where each sector page is (not visible on the page).
+        $seoSectors = collect(config('seo.sectors', []));
+        if ($seoSectors->isNotEmpty()) {
+            $seoOrganization['knowsAbout'] = $seoSectors->pluck('name')->values()->all();
+            $seoOrganization['hasOfferCatalog'] = [
+                '@type' => 'OfferCatalog',
+                'name' => 'Wholesale suppliers by sector in Rwanda',
+                'itemListElement' => $seoSectors->map(fn ($sector, $slug) => [
+                    '@type' => 'OfferCatalog',
+                    'name' => $sector['name'],
+                    'description' => $sector['description'],
+                    'url' => route('sector', $slug),
+                ])->values()->all(),
+            ];
+        }
+        $seoWebsite = [
+            '@context' => 'https://schema.org',
+            '@type' => 'WebSite',
+            'name' => 'Wethelink',
+            'url' => url('/'),
+            'potentialAction' => [
+                '@type' => 'SearchAction',
+                'target' => route('shop').'?search={search_term_string}',
+                'query-input' => 'required name=search_term_string',
+            ],
+        ];
+    @endphp
+    <script type="application/ld+json">@json($seoOrganization, JSON_UNESCAPED_SLASHES | JSON_UNESCAPED_UNICODE | JSON_HEX_TAG)</script>
+    <script type="application/ld+json">@json($seoWebsite, JSON_UNESCAPED_SLASHES | JSON_UNESCAPED_UNICODE | JSON_HEX_TAG)</script>
+    @stack('seo')
 
     <!-- Favicon -->
     {{-- <link href="{{ asset('cms/img/favicon.ico') }}" rel="icon"> --}}
@@ -38,6 +108,67 @@
     <link rel="manifest" href="{{ asset('favicon/site.webmanifest') }}" />
 
     <style>
+        /* Header search: pill shape in the site's orange theme */
+        .site-search__box {
+            position: relative;
+            display: flex;
+            align-items: center;
+            background: #fff;
+            border: 2px solid #fd7e14;
+            border-radius: 50rem;
+            padding: 4px 4px 4px 0;
+            box-shadow: 0 2px 8px rgba(253, 126, 20, 0.12);
+            transition: box-shadow .2s ease, border-color .2s ease;
+        }
+        .site-search__box:focus-within {
+            border-color: #e8690a;
+            box-shadow: 0 0 0 4px rgba(253, 126, 20, 0.2);
+        }
+        .site-search__icon {
+            color: #fd7e14;
+            padding: 0 10px 0 18px;
+            font-size: 15px;
+        }
+        .site-search__input {
+            flex: 1;
+            min-width: 0;
+            border: 0;
+            outline: 0;
+            background: transparent;
+            height: 40px;
+            font-size: 15px;
+            color: #1c1c1c;
+        }
+        .site-search__input::placeholder {
+            color: #6c757d;
+            opacity: 1;
+            font-weight: 500;
+        }
+        .site-search__btn {
+            flex-shrink: 0;
+            width: 40px;
+            height: 40px;
+            border: 0;
+            border-radius: 50%;
+            background: #fd7e14;
+            color: #fff;
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+            cursor: pointer;
+            transition: background .2s ease;
+        }
+        .site-search__btn:hover,
+        .site-search__btn:focus {
+            background: #e8690a;
+            outline: 0;
+        }
+        @media (max-width: 575.98px) {
+            .site-search__icon { display: none; }
+            .site-search__input { padding-left: 16px; font-size: 14px; height: 36px; }
+            .site-search__btn { width: 36px; height: 36px; }
+        }
+
         .social-icon-link {
             display: inline-flex;
             align-items: center;
@@ -139,14 +270,15 @@
                 </a>
             </div>
             <div class="col-lg-6 col-6 text-left">
-                <form action="{{ route('shop') }}" method="GET">
-                    <div class="input-group">
-                        <input type="text" name="search" class="form-control" placeholder="{{ __('cms.search.placeholder') }}" value="{{ request('search') }}">
-                        <div class="input-group-append">
-                            <button type="submit" class="input-group-text bg-transparent text-primary border-0">
-                                <i class="fa fa-search"></i>
-                            </button>
-                        </div>
+                <form action="{{ route('shop') }}" method="GET" class="site-search" role="search">
+                    <div class="site-search__box">
+                        <i class="fa fa-search site-search__icon" aria-hidden="true"></i>
+                        <input type="text" name="search" class="site-search__input"
+                            placeholder="{{ __('cms.search.placeholder') }}" value="{{ request('search') }}"
+                            aria-label="{{ __('cms.search.placeholder') }}">
+                        <button type="submit" class="site-search__btn" aria-label="Search">
+                            <i class="fa fa-search"></i>
+                        </button>
                     </div>
                 </form>
             </div>
@@ -437,7 +569,7 @@
     <script src="{{ asset('cms/mail/contact.js') }}"></script>
 
     <!-- Template Javascript -->
-    <script src="{{ asset('cms/js/main.js') }}"></script>
+    <script src="{{ asset('cms/js/main.js') }}?v={{ @filemtime(public_path('cms/js/main.js')) }}"></script>
     @stack('scripts')
 </body>
 

@@ -172,7 +172,7 @@ class ProductController extends Controller
         // Handle Product Images
         if ($request->hasFile('new_product_images')) {
             foreach ($request->file('new_product_images') as $index => $imageFile) {
-                $imagePath = $imageFile->store('products', 'public');
+                $imagePath = \App\Support\ImageOptimizer::optimizePublic($imageFile->store('products', 'public'));
                 $productImage = new ProductImage();
                 $productImage->product_id = $product->id;
                 $productImage->image = $imagePath;
@@ -325,7 +325,7 @@ class ProductController extends Controller
         if ($request->hasFile('new_product_images')) {
             $currentMaxSortOrder = $product->images()->max('sort_order') ?? 0;
             foreach ($request->file('new_product_images') as $index => $imageFile) {
-                $imagePath = $imageFile->store('products', 'public');
+                $imagePath = \App\Support\ImageOptimizer::optimizePublic($imageFile->store('products', 'public'));
                 $productImage = new ProductImage();
                 $productImage->product_id = $product->id;
                 $productImage->image = $imagePath;

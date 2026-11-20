@@ -593,7 +593,7 @@ class ProductController extends Controller
     private function uploadImage($imageFile)
     {
         $filename = time() . '_' . Str::random(20) . '.' . $imageFile->getClientOriginalExtension();
-        return $imageFile->storeAs('products/images', $filename, 'public');
+        return \App\Support\ImageOptimizer::optimizePublic($imageFile->storeAs('products/images', $filename, 'public'));
     }
 
     /**

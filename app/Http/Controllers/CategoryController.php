@@ -69,7 +69,7 @@ class CategoryController extends Controller
         $validated['is_active'] = $request->has('is_active');
 
         if ($request->hasFile('image')) {
-            $imagePath = $request->file('image')->store('category', 'public');
+            $imagePath = \App\Support\ImageOptimizer::optimizePublic($request->file('image')->store('category', 'public'));
             $validated['image'] = $imagePath;
         }
         $category = Category::create($validated);
@@ -127,7 +127,7 @@ class CategoryController extends Controller
             if ($category->image) {
                 Storage::disk('public')->delete($category->image);
             }
-            $imagePath = $request->file('image')->store('category', 'public');
+            $imagePath = \App\Support\ImageOptimizer::optimizePublic($request->file('image')->store('category', 'public'));
             $validated['image'] = $imagePath;
         }
 
